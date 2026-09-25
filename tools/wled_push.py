@@ -78,6 +78,23 @@ def reachable(host: str) -> dict:
 # commands
 # --------------------------------------------------------------------------
 
+def _ddp_capable(ver: str) -> bool:
+    """
+    WLED >= 0.11 speaks DDP, which is what Hyperion needs.
+
+    The version line jumped 0.15.x -> 16.x, so any major of 1 or more is new
+    enough and only the 0.x series needs a minor check. An unparseable string
+    is treated as fine rather than crying wolf.
+    """
+    head = ver.split('-')[0].split('.')
+    try:
+        major = int(head[0])
+        minor = int(head[1]) if len(head) > 1 else 0
+    except (ValueError, IndexError):
+        return True
+    return major >= 1 or minor >= 11
+
+
 def cmd_probe(a) -> None:
     info = reachable(a.host)
     state = get(a.host, "/json/state")
@@ -97,11 +114,11 @@ def cmd_probe(a) -> None:
     print(f"  fps            {leds.get('fps', '?')}")
     print(f"  on / bri       {state.get('on')} / {state.get('bri')}")
 
-    ver = str(info.get("ver", ""))
-    if ver and not ver.startswith(("0.1", "1.")):
-        print(f"\n  note: unexpected version string {ver!r}")
-    print("\n  Hyperion needs WLED >= 0.11 for DDP, and >= 0.13.3 if you ever")
-    print("  want segment streaming. Anything current is fine.\n")
+    if not _ddp_capable(str(info.get("ver", ""))):
+        print()
+        print("  WARNING: this WLED predates DDP support (needs >= 0.11).")
+        print("  Hyperion cannot stream to it. Reflash a current build.")
+    print()
 
 
 def cmd_apply(a) -> None:
@@ -119,13 +136,21 @@ def cmd_apply(a) -> None:
     post(a.host, "/json/cfg", want)
     time.sleep(1.5)  # WLED re-inits the bus and rewrites cfg.json
 
-    after_info = get(a.host, "/json/info").get("leds", {})
     want_led = want["hw"]["led"]
+    want_bus = want_led["ins"][0]
+
+    after_led = get(a.host, "/json/cfg").get("hw", {}).get("led", {})
+    after_bus = (after_led.get("ins") or [{}])[0]
 
     ok = True
     checks = [
-        ("count", want_led["total"], after_info.get("count")),
-        ("maxpwr", want_led["maxpwr"], after_info.get("maxpwr")),
+        ("count", want_led["total"], after_led.get("total")),
+        ("bus len", want_bus["len"], after_bus.get("len")),
+        ("gpio", want_bus["pin"], after_bus.get("pin")),
+        ("type", want_bus["type"], after_bus.get("type")),
+        ("order", want_bus["order"], after_bus.get("order")),
+        ("bus maxpwr", want_bus["maxpwr"], after_bus.get("maxpwr")),
+        ("ledma", want_bus["ledma"], after_bus.get("ledma")),
     ]
     print(f"  {'-' * 46}")
     for name, expect, got in checks:
@@ -252,21 +277,62 @@ def cmd_presets(a) -> None:
     print("  That is a later stage and does NOT block screen sync.\n")
 
 
+def cmd_name(a) -> None:
+    """
+    Set the node name and its mDNS hostname.
+
+    Worth doing even though an IP works: with no access to the router's DHCP
+    reservations, mDNS is what keeps Hyperion pointed at the node when the
+    lease moves. Hyperion discovers WLED by mDNS, so `wled-desk.local` is a
+    more durable address here than any number.
+    """
+    reachable(a.host)
+    post(a.host, "/json/cfg", {"id": {"name": a.to, "mdns": a.to}})
+    time.sleep(1.5)
+    # Read back from /json/cfg, not /json/info: info carries "name" but has
+    # no "mdns" key at all, so verifying there reports a false failure.
+    ident = get(a.host, "/json/cfg").get("id", {})
+    got_name, got_mdns = ident.get("name"), ident.get("mdns")
+    print(f"\n  name  {got_name}")
+    print(f"  mdns  {got_mdns}  ->  http://{got_mdns}.local")
+    if got_name != a.to or got_mdns != a.to:
+        print(f"\n  Read-back does not match {a.to!r}. Set it by hand in")
+        print("  Config -> WiFi Setup -> mDNS address / Server description.\n")
+        sys.exit(2)
+    print("\n  Renamed. mDNS can take a minute to propagate.\n")
+
+
 # --------------------------------------------------------------------------
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--host", required=True, help="node IP or mDNS name")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("probe", help="version, LED count, power, wifi").set_defaults(fn=cmd_probe)
-    sub.add_parser("apply", help="push config/wled_desk_cfg.json and verify").set_defaults(fn=cmd_apply)
-    sub.add_parser("identify", help="light first and last LED").set_defaults(fn=cmd_identify)
-    sub.add_parser("presets", help="save presets 1-5").set_defaults(fn=cmd_presets)
-    sub.add_parser("off", help="turn the strip off").set_defaults(fn=cmd_off)
+    # --host belongs to every subcommand, not to the top-level parser, so that
+    # `wled_push.py probe --host X` works. On the top-level parser argparse
+    # only accepts it BEFORE the subcommand, which nobody types.
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--host", required=True, help="node IP or mDNS name")
 
-    w = sub.add_parser("walk", help="chase a pixel to verify strip orientation")
+    sub.add_parser("probe", parents=[common],
+                   help="version, LED count, power, wifi").set_defaults(fn=cmd_probe)
+    sub.add_parser("apply", parents=[common],
+                   help="push config/wled_desk_cfg.json and verify").set_defaults(fn=cmd_apply)
+    sub.add_parser("identify", parents=[common],
+                   help="light first and last LED").set_defaults(fn=cmd_identify)
+    sub.add_parser("presets", parents=[common],
+                   help="save presets 1-5").set_defaults(fn=cmd_presets)
+    sub.add_parser("off", parents=[common],
+                   help="turn the strip off").set_defaults(fn=cmd_off)
+
+    n = sub.add_parser("name", parents=[common],
+                       help="set the node name and mDNS hostname")
+    n.add_argument("--to", default="wled-desk", help="new name (default wled-desk)")
+    n.set_defaults(fn=cmd_name)
+
+    w = sub.add_parser("walk", parents=[common],
+                       help="chase a pixel to verify strip orientation")
     w.add_argument("--step", type=float, default=0.12, help="seconds per LED")
     w.set_defaults(fn=cmd_walk)
 

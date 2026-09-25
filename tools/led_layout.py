@@ -136,24 +136,32 @@ def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int) -> dict:
     cfg schema; wled_push.py reads the config back and diffs it rather than
     assuming the write landed.
     """
+    bus = {
+        "start": 0,
+        "len": total,
+        "pin": [pin],
+        "order": WLED_ORDER_GRB,
+        "rev": False,
+        "skip": 0,
+        "type": WLED_TYPE_WS281X,
+        "ref": False,
+        "rgbwm": 0,
+        "freq": 0,
+        # WLED 16.x carries the power limit per bus as well as globally.
+        # Verified against a live node: cfg.hw.led.ins[0] has its own maxpwr
+        # and ledma. Setting only the global pair leaves the bus on its own
+        # default (850 mA out of the box), which would silently clamp the
+        # strip no matter what the global limit says.
+        "maxpwr": abl_ma,
+        "ledma": ma_per_led,
+    }
     return {
         "hw": {
             "led": {
                 "total": total,
                 "maxpwr": abl_ma,
                 "ledma": ma_per_led,
-                "ins": [
-                    {
-                        "start": 0,
-                        "len": total,
-                        "pin": [pin],
-                        "order": WLED_ORDER_GRB,
-                        "rev": False,
-                        "skip": 0,
-                        "type": WLED_TYPE_WS281X,
-                        "ref": False,
-                    }
-                ],
+                "ins": [bus],
             }
         }
     }
