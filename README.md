@@ -5,9 +5,9 @@ WLED nodes. Nothing drilled, nothing permanent, nothing above 12 V.
 
 The first thing being built is the **screen sync light**: a WS2812 strip around
 the back of a 27" monitor, driven by an ESP32 running WLED, fed in real time by
-Hyperion running on the Ubuntu laptop that drives the screen.
+Hyperion running on the Windows PC that drives the screen.
 
-**Status:** hardware in hand, nothing built yet. Two facts are still needed
+**Status:** hardware in hand, nothing built yet. One measurement is needed
 before the strip can be cut — see [Blocked on](#blocked-on).
 
 ---
@@ -36,7 +36,7 @@ Screen sync is **L2 only**. It is not blocked by anything on order.
         |  Hyperion grabs the framebuffer, averages each
         |  edge region down to one colour per LED
         v
-  Ubuntu laptop  (Galaxy Book3 360, lid closed)
+  Windows PC  (Galaxy Book3 360, lid closed, DXGI DDA grabber)
         |
         |  DDP over UDP, port 4048, ~40 fps, over Wi-Fi
         v
@@ -58,7 +58,7 @@ WARLS/UDP-realtime on 21324. DDP is also what removes the old 490-LED ceiling.
 docs/
   HARDWARE.md          parts in hand, pinout, power budget
   BUILD_DESK_NODE.md   bench bring-up then final assembly, step by step
-  HYPERION.md          Ubuntu install, the Wayland gate, DDP config
+  HYPERION.md          Windows install, DXGI grabber, DDP config
   DECISIONS.md         what was rejected and why, so it is not re-proposed
 tools/
   led_layout.py        measurement -> cut plan + WLED bus cfg + Hyperion layout
@@ -92,7 +92,7 @@ python tools/wled_push.py presets --host 192.168.1.42
 ## Flashing, and why it happens exactly once
 
 WLED is prebuilt firmware. It gets flashed **once**, by hand, from
-[install.wled.me](https://install.wled.me) in Chrome over USB — a browser
+[install.wled.me](https://install.wled.me) in Chrome or Edge over USB — a browser
 dialog, not a command line, and not a scripted serial port.
 
 After that the node is on Wi-Fi and everything else in this project happens
@@ -108,19 +108,13 @@ not need to be.
 
 ## Blocked on
 
-1. **The monitor strip path, measured directly.** Width and height of the
-   rectangle the strip will actually follow on the flat back panel, roughly
-   2–3 cm in from the edge, routed clear of the VESA boss and the vents.
-   Two numbers. Not derived from the 61 x 36 cm outer size.
+**The monitor strip path, measured directly.** Width and height of the rectangle
+the strip will actually follow on the flat back panel, roughly 2-3 cm in from
+the edge, routed clear of the VESA boss and the vents. Two numbers. Not derived
+from the 61 x 36 cm outer size.
 
-2. **Which Ubuntu is on the laptop**, because Hyperion cannot grab the screen
-   under Wayland at all. `lsb_release -a` and `echo $XDG_SESSION_TYPE`.
-   See [docs/HYPERION.md](docs/HYPERION.md) — this decides whether stage D is
-   twenty minutes or a detour.
-
-Stages A and B (bench bring-up, flashing, Wi-Fi) need neither and can start now.
-
----
+Everything else can proceed now: flashing, Wi-Fi, bench bring-up, and the
+Hyperion install on Windows.
 
 ## Licence
 

@@ -6,11 +6,59 @@ on the uncut strip, where a mistake costs nothing.
 
 ---
 
-## Stage 1 — bench bring-up
+## Stage 1 - bench bring-up
 
-**Needs:** nothing you do not already own. **Time:** about an hour.
+**Needs:** the ESP32 and a micro-USB data cable. **Time:** about an hour.
 
-Build this on a breadboard with the **full 3 m strip uncut**.
+Flash the board **bare**, before anything is wired to it. A blank ESP32 on USB
+alone cannot be damaged by a wiring mistake that has not been made yet, and
+getting WLED onto the network first means the rest of the bring-up can be driven
+over HTTP instead of guessed at.
+
+### 1.1 Flash WLED
+
+Only the ESP32 and the USB cable. **No strip, no 5 V adapter, no breadboard.**
+Two 5 V sources fighting each other across the ESP32's regulator is how boards
+die, so the adapter stays out of this entirely.
+
+1. Chrome or Edge (Web Serial does not exist in Firefox) -> `install.wled.me`.
+2. Plug the ESP32 in by micro-USB. It must be a **data** cable; charge-only
+   cables are the most common reason no port appears. Windows 11 has the CP2102
+   driver built in, so if still nothing shows up it is the cable.
+3. On the page: **Mode = Basic**, version = **16.0.1** (the default, current
+   stable), variant = **Plain**. Not Ethernet, not DEBUG, not HUB75.
+4. **Install** -> pick the COM port that just appeared (it identifies as Silicon
+   Labs CP210x) -> tick **Erase device** for a clean first flash -> let it run.
+5. When it offers Wi-Fi, give it your **2.4 GHz** SSID. The ESP32 has no 5 GHz
+   radio. If the router publishes one name for both bands the join can fail
+   without saying why - use a 2.4-only SSID or the guest network.
+6. Name the node `wled-desk`.
+
+Then unplug USB.
+
+> Version note: WLED jumped from 0.15.x straight to 16.x, so 16.0.1 being the
+> default is not a beta. If you ever need the older line for a community
+> audio-reactive build, 0.15.4 is in the same dropdown - but that is a later
+> stage and screen sync does not care.
+
+### 1.2 Pin the IP down
+
+Find the node in your router's client list and **reserve the address by MAC**.
+Hyperion streams to it for the life of the project; a DHCP lease moving
+underneath it is an annoying evening.
+
+### 1.3 First contact
+
+```bash
+python tools/wled_push.py probe --host <ip>
+```
+
+Version, free heap, Wi-Fi signal and LED count should come back. Nothing is
+wired yet, so the LED count is whatever the default is - that is expected.
+
+### 1.4 Now wire it, with the power off
+
+Breadboard, using the **full 3 m strip uncut**.
 
 ```
   5 V 5 A adapter
@@ -36,37 +84,10 @@ Build this on a breadboard with the **full 3 m strip uncut**.
           GND -> GND rail
 ```
 
-### 1.1 Flash WLED
+Check the 1000 uF polarity twice - backwards is the one mistake on this board
+that makes a mess. Then plug the 5 V adapter in. USB stays out from here on.
 
-With the **5 V adapter unplugged** — USB only. Two 5 V sources fighting each
-other across the ESP32's regulator is how boards die.
-
-1. Chrome on the Windows laptop, go to `install.wled.me`.
-2. Connect the ESP32 by USB. Windows 11 has the CP2102 driver built in; if no
-   port appears, that is the driver, not the board.
-3. Install, pick the latest stable release, let it finish.
-4. When it offers Wi-Fi setup, give it your **2.4 GHz** SSID. The ESP32 has no
-   5 GHz radio. If your router publishes one name for both bands, the join can
-   fail silently — split the SSID or use the 2.4-only guest network.
-5. Name the node `wled-desk`.
-
-Then unplug USB, plug the 5 V adapter in.
-
-### 1.2 Pin the IP down
-
-Find the node's IP in your router's client list and **reserve it by MAC**.
-Hyperion will stream to this address for the life of the project; a DHCP lease
-moving underneath it is an annoying evening.
-
-### 1.3 First contact
-
-```bash
-python tools/wled_push.py probe --host <ip>
-```
-
-You should get the version, free heap, Wi-Fi signal and LED count back.
-
-### 1.4 Light it up — carefully
+### 1.5 Light it up - carefully
 
 In the WLED web UI, **before touching brightness**:
 
@@ -76,21 +97,24 @@ In the WLED web UI, **before touching brightness**:
 
 Then set brightness to about 25% and pick a solid colour.
 
-> 180 LEDs at full white is 10.8 A. The bench wiring — breadboard rails,
-> single-ended feed, jumper wire — is nowhere near that. The ABL cap and the
-> low brightness are what keep this test boring. Do not raise either until the
-> strip is cut down and properly injected.
+> 180 LEDs at full white is 10.8 A. The bench wiring - breadboard rails, a
+> single-ended feed, jumper wire - is nowhere near that. The ABL cap and the low
+> brightness are what keep this test boring. Do not raise either until the strip
+> is cut down and properly injected.
 
 **What success looks like:** every LED lights, the colour you picked is the
-colour you get (if red and green are swapped, the colour order is RGB not GRB),
-and nothing gets warm except mildly the strip.
+colour you get (red and green swapped means the order is RGB, not GRB), and
+nothing gets warm except mildly the strip.
 
 **If only the first LED lights:** data is not reaching the rest. Check the
 330 ohm is in series and not to ground, and that pin 1 of the 74HCT125 is
 actually at GND.
 
-**If nothing lights:** check DIN vs DOUT — the strip has an arrow, and data
-only flows one way.
+**If nothing lights:** check DIN vs DOUT - the strip has an arrow, and data only
+flows one way.
+
+**If the ESP32 resets when the strip brightens:** the adapter is sagging or the
+1000 uF is not actually across the rail.
 
 Stage 1 is done. **Do not cut anything yet.**
 

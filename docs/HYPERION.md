@@ -1,88 +1,56 @@
-# Hyperion on the Ubuntu laptop
+# Hyperion on Windows
 
 Hyperion grabs the framebuffer, averages each edge region down to one colour
-per LED, and streams the result to WLED. It runs on the Samsung Galaxy Book3
-360 that drives the Dell over the Hyper dock, lid closed.
+per LED, and streams the result to WLED. It runs on the same Windows PC that
+drives the Dell.
 
----
-
-## Read this before installing anything
-
-**Hyperion cannot capture the screen under Wayland.** This is not a
-configuration problem to work around — `X11Grabber`, `XcbGrabber` and
-`QtGrabber` all check for `WAYLAND_DISPLAY` and refuse to start, and the X11
-grabber returns the error *"Grabber does not work under Wayland!"* outright.
-`DRMFrameGrabber` needs to be sole DRM master, which it cannot be while GNOME
-Shell is running.
-
-The pull request adding PipeWire / `xdg-desktop-portal` grabbers
-([#2033](https://github.com/hyperion-project/hyperion.ng/pull/2033)) was
-**still open and in review on 19 Sep 2026**, with unresolved review comments
-and the author noting it had only been tested against KDE's portal backend,
-never GNOME's. It is not something to plan around yet.
-
-So check first:
-
-```bash
-lsb_release -a
-echo "session: $XDG_SESSION_TYPE"
-```
-
-| Result | What it means |
-|---|---|
-| `x11` | Nothing to do. Install and go. |
-| `wayland`, Ubuntu **24.04 LTS** | Log out, click the gear at the login screen, pick **"Ubuntu on Xorg"**. Done. |
-| `wayland`, Ubuntu **25.10 or 26.04** | The GNOME Xorg session was removed in 25.10. See below. |
-
-### If GNOME is Wayland-only
-
-Options, cheapest first:
-
-1. **Install a second desktop session that still uses X11** and log into it
-   when you want screen sync. `sudo apt install xfce4` adds an "Xfce Session"
-   entry at the login screen. Ugly but it works today, costs nothing, and does
-   not disturb your normal GNOME session.
-2. **Wait for #2033.** Free, but unscheduled and untested on GNOME.
-3. **Capture the HDMI instead of the desktop.** HDMI splitter into a USB
-   capture dongle, Hyperion's USB grabber. Works regardless of display server
-   and is what most Ambilight builds actually use, but it costs money and adds
-   a box and two cables behind the desk. Price it properly before choosing it
-   — do not assume a figure.
-
-Option 1 is the right first move. Try it, confirm the glow works, then decide
-whether it is worth more than that.
+> **Earlier revisions of this file planned for Ubuntu.** That is no longer the
+> plan, and it is a straight simplification: Hyperion cannot capture the screen
+> under Wayland at all, and modern Ubuntu GNOME is Wayland-only. On Windows
+> there is a native, hardware-accelerated grabber and none of that applies.
+> The Wayland notes are kept at the bottom only so the reasoning is not lost.
 
 ---
 
 ## Install
 
-Official repo, from the Hyperion docs:
+Windows x64 installer from the
+[Hyperion releases page](https://github.com/hyperion-project/hyperion.ng/releases)
+— the asset named `Hyperion-<version>-Windows-x64.exe`. (There is an
+`arm64` build too; this machine is Intel, so x64.)
 
-```bash
-curl -sSL https://releases.hyperion-project.org/install | bash
-```
+It installs as a normal desktop app with a tray icon. Web UI at
+**http://localhost:8090**.
 
-Or manually:
+---
 
-```bash
-sudo apt-get update && sudo apt-get install wget gpg apt-transport-https lsb-release
-curl -fsSL https://releases.hyperion-project.org/hyperion.pub.key \
-  | sudo gpg --dearmor -o /usr/share/keyrings/hyperion.pub.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperion.pub.gpg] https://apt.releases.hyperion-project.org/ $(lsb_release -cs) main" \
-  | sudo tee /etc/apt/sources.list.d/hyperion.list
-sudo apt-get update && sudo apt-get install hyperion
-```
+## Capture source
 
-Note the repo host is `apt.releases.hyperion-project.org`. Older guides point
-at `apt.hyperion-project.org`, which is wrong and will just 404 at you.
+Configuration -> Capturing Hardware -> Platform Capture.
 
-Then:
+Hyperion's Windows grabber uses **DXGI DDA** (Desktop Duplication API), which
+is GPU-accelerated and cheap — it is the right default.
 
-```bash
-sudo systemctl enable --now hyperion@$USER
-```
+Settings worth changing from default:
 
-Web UI at **http://localhost:8090**.
+- **Display**: pick the Dell explicitly rather than "auto". With the laptop lid
+  closed the Dell is the only display, but naming it means reopening the lid
+  later does not silently move the capture to the built-in panel.
+- **Frame rate**: 30–40 fps. The ESP32's Wi-Fi is the bottleneck, not the GPU,
+  and there is nothing visible above that.
+- **Decimation / size**: leave it. Hyperion downsamples hard before averaging
+  anyway.
+
+### If the LEDs flicker when you move the mouse
+
+Known DXGI DDA bug —
+[issue #2002](https://github.com/hyperion-project/hyperion.ng/issues/2002).
+Cursor movement triggers a capture path that makes the LEDs stutter. The **QT
+grabber** is unaffected; switch to it in the same screen. It costs a little more
+CPU and is otherwise equivalent.
+
+Don't spend an evening suspecting Wi-Fi or the level shifter if the flicker
+correlates with the mouse — it's this.
 
 ---
 
@@ -91,59 +59,72 @@ Web UI at **http://localhost:8090**.
 1. Configuration -> LED Hardware -> LED Controller
 2. Type **WLED**. The node should appear by mDNS as `wled-desk`; if discovery
    is flaky, type the reserved IP instead.
-3. Hyperion 2.0.13+ uses **DDP, port 4048**. You do not set this by hand —
-   selecting the WLED type does it. If you find yourself typing 21324
-   anywhere, you are following an old guide.
-4. **Brightness override:** leave it OFF. Hyperion respects WLED's own
-   brightness setting unless you override it, and WLED's auto-brightness
-   limiter is the only thing standing between a full-white frame and a
-   sagging 5 A adapter.
+3. Hyperion 2.0.13+ uses **DDP on port 4048**. You do not set this by hand —
+   choosing the WLED type does it. If you find yourself typing 21324 anywhere,
+   you are following an old guide.
+4. **Brightness override: leave it OFF.** Hyperion respects WLED's own
+   brightness unless overridden, and WLED's auto-brightness limiter is the only
+   thing between a full-white frame and a sagging 5 A adapter.
 
 ## Import the layout
 
-Configuration -> LED Hardware -> LED Layout -> switch to the text/JSON view
-and paste the `leds` array from `config/hyperion_leds.json`.
+Configuration -> LED Hardware -> LED Layout -> switch to the text/JSON view and
+paste the `leds` array from `config/hyperion_leds.json`.
 
-That file is generated by `tools/led_layout.py` from the measured strip path,
-so the LED order in it matches the physical strip order **assuming** the
-default orientation. Run `wled_push.py walk` first and confirm with your eyes.
-Mirrored ambilight is the single most common way this project goes wrong, and
-it is a two-minute check.
-
-## Capture source
-
-Configuration -> Capturing Hardware -> Platform Capture. Pick the X11 or
-framebuffer grabber, set it to the Dell's resolution, and drop the frame rate
-to around 30–40 fps — the ESP32's Wi-Fi is the constraint, not the laptop's
-CPU, and there is no visible gain above that.
+That file is generated by `tools/led_layout.py` from the measured strip path, so
+its LED order matches the physical strip **assuming** the default orientation.
+Run `wled_push.py walk` and confirm with your eyes first. Mirrored ambilight is
+the single most common way this project goes wrong, and it is a two-minute
+check.
 
 ## Smoothing
 
-Turn smoothing on, "Linear", around 150–200 ms. Without it, fast cuts in a
-film make the strip strobe, which is exactly the RGB-gaming-room look this
-room is supposed to avoid.
+On, "Linear", 150–200 ms. Without it, fast cuts in a film make the strip
+strobe — exactly the RGB-gaming-room look this room is meant to avoid.
 
 ---
 
 ## Handoff between Hyperion and WLED
 
 While Hyperion streams, it owns the LEDs. When it stops, WLED falls back to
-whatever preset was last active after its realtime timeout expires (default
-2500 ms, in Config -> Sync Interfaces).
+whatever preset was last active once its realtime timeout expires (default
+2500 ms, Config -> Sync Interfaces).
 
-Preset 3 "Movie" is the one to leave active underneath, so stopping a film
-drops the strip to a dim warm glow instead of snapping to full white.
+Leave preset 3 "Movie" active underneath, so stopping a film drops the strip to
+a dim warm glow rather than snapping to full white.
 
 Leave **"Realtime - Force max brightness" OFF** in WLED's sync settings. Turning
-it on bypasses your brightness *and* makes the ABL cap much more likely to
-clamp on bright scenes.
+it on bypasses your brightness *and* makes the ABL cap far more likely to clamp
+on bright scenes.
+
+---
+
+## Appendix: why Ubuntu was dropped, and why that is a relief
+
+Kept so this is not rediscovered later.
+
+Hyperion **cannot capture the screen under Wayland**. `X11Grabber`,
+`XcbGrabber` and `QtGrabber` all check for `WAYLAND_DISPLAY` and refuse to
+start; the X11 grabber errors with *"Grabber does not work under Wayland!"*.
+`DRMFrameGrabber` needs to be sole DRM master, which it cannot be while GNOME
+Shell is running.
+
+The PR adding PipeWire / `xdg-desktop-portal` grabbers
+([#2033](https://github.com/hyperion-project/hyperion.ng/pull/2033)) was still
+open and under review on 19 Sep 2026, never tested against GNOME's portal
+backend. And Ubuntu removed the "Ubuntu on Xorg" session entirely in 25.10, so
+on a current release there is no X11 session to fall back to without installing
+a second desktop environment.
+
+Windows has none of these problems.
 
 ---
 
 ## Sources
 
-- [Hyperion on Linux — install](https://docs.hyperion-project.org/user/gettingstarted/Linux.html)
+- [Hyperion releases (Windows x64 installer)](https://github.com/hyperion-project/hyperion.ng/releases)
+- [Hyperion supported platforms](https://github.com/hyperion-project/hyperion.ng/blob/master/doc/development/SupportedPlatforms.md)
 - [Hyperion WLED LED device (DDP)](https://docs.hyperion-project.org/user/leddevices/network/wled.html)
+- [DXGI DDA flicker on mouse movement — issue #2002](https://github.com/hyperion-project/hyperion.ng/issues/2002)
 - [X11 grabber refuses under Wayland — issue #1096](https://github.com/hyperion-project/hyperion.ng/issues/1096)
-- [Wayland grabbers — PR #2033, open as of 19 Sep 2026](https://github.com/hyperion-project/hyperion.ng/pull/2033)
 - [Ubuntu 25.10 drops GNOME on Xorg](https://discourse.ubuntu.com/t/ubuntu-25-10-drops-support-for-gnome-on-xorg/62538)
