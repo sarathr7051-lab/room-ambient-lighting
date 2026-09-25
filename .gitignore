@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.bin
+*.local.json
+config/*.backup.json
+.DS_Store

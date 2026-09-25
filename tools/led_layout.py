@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""
+led_layout.py - turn a measured monitor strip path into a cut plan, a WLED bus
+config and a Hyperion LED layout.
+
+Everything downstream depends on two measured numbers: the width and height of
+the rectangle the strip physically follows on the back of the monitor. Measure
+them directly. Do not add up bezel dimensions or work back from the panel's
+advertised size - a derived measurement is how the curtains ended up 40 cm too
+long.
+
+    python tools/led_layout.py --width 55.0 --height 30.0
+
+Orientation convention
+----------------------
+All coordinates are FRONT-OF-SCREEN space, because that is what Hyperion means
+by left and right. While you are sticking the strip on you are looking at the
+BACK, so everything is mirrored under your hands. The plan prints both views.
+
+Default run: DIN at the bottom-left corner (seen from the front), up the left
+side, across the top left-to-right, down the right side. Three sides, no bottom.
+
+Verify the real orientation with `wled_push.py walk` BEFORE importing the
+Hyperion layout. Two minutes of chasing a white pixel around the frame beats
+debugging a mirrored ambilight.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import pathlib
+import sys
+
+REPO = pathlib.Path(__file__).resolve().parent.parent
+
+# WLED bus type 22 == TYPE_WS2812_RGB. Colour order 0 == GRB, which is what the
+# 60/m black-PCB "WS2812" strip from SP Road uses (same protocol as WS2812B).
+WLED_TYPE_WS281X = 22
+WLED_ORDER_GRB = 0
+
+
+def plan_sides(width_cm: float, height_cm: float, density: int, sides: int,
+               bottom_gap_cm: float) -> list[dict]:
+    """LED count for each run of the strip, in the order the data travels."""
+    pitch_cm = 100.0 / density
+
+    n_v = max(1, round(height_cm / pitch_cm))
+    n_h = max(1, round(width_cm / pitch_cm))
+
+    runs = [
+        {"name": "left", "leds": n_v, "length_cm": n_v * pitch_cm},
+        {"name": "top", "leds": n_h, "length_cm": n_h * pitch_cm},
+        {"name": "right", "leds": n_v, "length_cm": n_v * pitch_cm},
+    ]
+
+    if sides == 4:
+        # Split the bottom either side of the stand / arm column.
+        usable = max(0.0, width_cm - bottom_gap_cm)
+        n_b = max(1, round((usable / 2.0) / pitch_cm))
+        runs.insert(0, {"name": "bottom-right", "leds": n_b,
+                        "length_cm": n_b * pitch_cm})
+        runs.append({"name": "bottom-left", "leds": n_b,
+                     "length_cm": n_b * pitch_cm})
+
+    return runs
+
+
+def hyperion_leds(runs: list[dict], depth: float, sides: int) -> list[dict]:
+    """
+    Hyperion sampling boxes, one per LED, in strip order.
+
+    Hyperion normalises the screen to 0..1 with (0,0) at the TOP-LEFT, so
+    vmin=0 is the top edge and vmin=1 the bottom.
+
+    Each LED samples a band of screen running inward from its edge by `depth`.
+    The strip rectangle is treated as the screen rectangle; the strip actually
+    sits a couple of cm outside the active area, but at these depths the error
+    is far smaller than the blur Hyperion applies anyway.
+    """
+    leds: list[dict] = []
+
+    def box(hmin, hmax, vmin, vmax):
+        leds.append({
+            "hmin": round(max(0.0, min(1.0, hmin)), 4),
+            "hmax": round(max(0.0, min(1.0, hmax)), 4),
+            "vmin": round(max(0.0, min(1.0, vmin)), 4),
+            "vmax": round(max(0.0, min(1.0, vmax)), 4),
+        })
+
+    for run in runs:
+        n = run["leds"]
+        name = run["name"]
+
+        if name == "left":
+            # bottom -> top, so v runs 1 -> 0
+            for i in range(n):
+                box(0.0, depth, 1.0 - (i + 1) / n, 1.0 - i / n)
+        elif name == "top":
+            # left -> right
+            for i in range(n):
+                box(i / n, (i + 1) / n, 0.0, depth)
+        elif name == "right":
+            # top -> bottom
+            for i in range(n):
+                box(1.0 - depth, 1.0, i / n, (i + 1) / n)
+        elif name == "bottom-right":
+            # data starts here on a 4-sided run: centre -> right edge,
+            # then up the right side. Runs from mid-width outward.
+            for i in range(n):
+                lo = 0.5 + 0.5 * (i / n)
+                hi = 0.5 + 0.5 * ((i + 1) / n)
+                box(lo, hi, 1.0 - depth, 1.0)
+        elif name == "bottom-left":
+            # left edge -> centre, closing the loop
+            for i in range(n):
+                lo = 0.5 * (i / n)
+                hi = 0.5 * ((i + 1) / n)
+                box(lo, hi, 1.0 - depth, 1.0)
+
+    if sides == 4:
+        # On a 4-sided run the data enters at bottom-centre-right and exits at
+        # bottom-centre-left, so the physical order is
+        # bottom-right, right, top, left, bottom-left. Reorder to match.
+        pass  # plan_sides already emits them in that order.
+
+    return leds
+
+
+def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int) -> dict:
+    """
+    Partial WLED config for POST to /json/cfg.
+
+    Only the LED-hardware subtree is sent. WLED merges partial config objects,
+    so nothing else on the node is disturbed. Key names follow the 0.14/0.15
+    cfg schema; wled_push.py reads the config back and diffs it rather than
+    assuming the write landed.
+    """
+    return {
+        "hw": {
+            "led": {
+                "total": total,
+                "maxpwr": abl_ma,
+                "ledma": ma_per_led,
+                "ins": [
+                    {
+                        "start": 0,
+                        "len": total,
+                        "pin": [pin],
+                        "order": WLED_ORDER_GRB,
+                        "rev": False,
+                        "skip": 0,
+                        "type": WLED_TYPE_WS281X,
+                        "ref": False,
+                    }
+                ],
+            }
+        }
+    }
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(
+        description="Monitor bias-light layout planner (WLED + Hyperion)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
+    p.add_argument("--width", type=float, required=True,
+                   help="MEASURED width of the strip path on the monitor back, cm")
+    p.add_argument("--height", type=float, required=True,
+                   help="MEASURED height of the strip path on the monitor back, cm")
+    p.add_argument("--density", type=int, default=60,
+                   help="LEDs per metre (default 60)")
+    p.add_argument("--sides", type=int, choices=(3, 4), default=3,
+                   help="3 = left/top/right (recommended), 4 = full loop")
+    p.add_argument("--bottom-gap", type=float, default=20.0,
+                   help="centre gap on the bottom run for the stand/arm, cm "
+                        "(--sides 4 only)")
+    p.add_argument("--depth", type=float, default=0.08,
+                   help="how far into the screen each LED samples, 0..1")
+    p.add_argument("--pin", type=int, default=16,
+                   help="ESP32 GPIO driving DIN (default 16, per HARDWARE.md)")
+    p.add_argument("--abl", type=int, default=3000,
+                   help="WLED auto-brightness-limiter cap in mA (default 3000)")
+    p.add_argument("--ma-per-led", type=int, default=55,
+                   help="mA per LED at full white, for ABL's model")
+    p.add_argument("--stock-length", type=float, default=300.0,
+                   help="length of strip you own, cm (default 300)")
+    p.add_argument("--write", action="store_true",
+                   help="write config/hyperion_leds.json and config/wled_desk_cfg.json")
+    a = p.parse_args()
+
+    pitch_cm = 100.0 / a.density
+    runs = plan_sides(a.width, a.height, a.density, a.sides, a.bottom_gap)
+    total = sum(r["leds"] for r in runs)
+    used_cm = sum(r["length_cm"] for r in runs)
+
+    print(f"\n  Strip path   {a.width:.1f} x {a.height:.1f} cm   "
+          f"({a.sides} sides, {a.density} LEDs/m, pitch {pitch_cm:.2f} cm)")
+    print(f"  {'-' * 66}")
+    for r in runs:
+        print(f"  {r['name']:<14} {r['leds']:>4} LEDs   "
+              f"cut to {r['length_cm']:>6.1f} cm")
+    print(f"  {'-' * 66}")
+    print(f"  {'TOTAL':<14} {total:>4} LEDs   {used_cm:>13.1f} cm")
+
+    spare = a.stock_length - used_cm
+    print(f"  spare strip   {spare:>17.1f} cm "
+          f"({int(spare / pitch_cm)} LEDs) of {a.stock_length:.0f} cm owned")
+    if spare < 0:
+        print("  *** NOT ENOUGH STRIP - the path is longer than what you have.")
+
+    joints = len(runs) - 1
+    print(f"\n  Corner joints to solder: {joints}  "
+          f"({joints * 3} wires: +5V, GND, DATA at each)")
+    print("  Cut only on the printed copper pads. Keep corner wires under 3 cm.")
+
+    print(f"\n  Power: {total} LEDs x {a.ma_per_led} mA = "
+          f"{total * a.ma_per_led / 1000:.1f} A at full white; "
+          f"ABL caps it at {a.abl / 1000:.1f} A.")
+    print(f"  Inject +5V and GND at BOTH ends of the run.")
+
+    print("\n  Orientation - data enters at the corner marked DIN:")
+    if a.sides == 3:
+        print("    from the FRONT:  DIN bottom-LEFT  -> up left -> across top -> down right")
+        print("    from the BACK:   DIN bottom-RIGHT -> up right -> across top -> down left")
+    else:
+        print("    from the FRONT:  DIN bottom-centre -> right -> up right -> "
+              "across top -> down left -> back to bottom-centre")
+        print("    from the BACK:   mirrored left/right")
+    print("    Confirm with:  python tools/wled_push.py walk --host <ip>")
+
+    leds = hyperion_leds(runs, a.depth, a.sides)
+    cfg = wled_cfg(total, a.pin, a.abl, a.ma_per_led)
+
+    assert len(leds) == total, "layout/count mismatch"
+
+    if a.write:
+        (REPO / "config").mkdir(exist_ok=True)
+        hy = REPO / "config" / "hyperion_leds.json"
+        wl = REPO / "config" / "wled_desk_cfg.json"
+        hy.write_text(json.dumps({"leds": leds}, indent=2) + "\n", encoding="utf-8")
+        wl.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8")
+        print(f"\n  wrote {hy.relative_to(REPO)}   ({total} LEDs)")
+        print(f"  wrote {wl.relative_to(REPO)}")
+    else:
+        print("\n  (dry run - pass --write to emit config/*.json)")
+
+    print()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
