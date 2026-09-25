@@ -27,6 +27,41 @@ INMP441 (music mode), LDR (auto-dim), LD2420 (presence, deferred).
 
 ---
 
+## Telling the two ESP32s apart
+
+Two ESP32 boards live on this desk and they must never be confused at flash
+time - one runs the room lighting, the other is the JiffyTrails navigator.
+They use different USB-serial chips, so Device Manager settles it:
+
+| Board | Project | USB chip | Enumerates as | Connector |
+|---|---|---|---|---|
+| NodeMCU DevKit V1, 30-pin | **this repo**, desk node | CP2102 | `Silicon Labs CP210x USB to UART Bridge`, `VID_10C4&PID_EA60` | micro-USB |
+| WEMOS LOLIN32 | JiffyTrails navigator | CH340 | a CH34x device | USB-C |
+
+Confirmed 25 Sep 2026: the desk node came up on **COM12** as
+`Silicon Labs CP210x USB to UART Bridge`, Status OK.
+
+Read the chip name, not the COM number - Windows reassigns COM numbers freely.
+If you see CH340, you are about to flash the motorcycle display. Stop.
+
+### Cable
+
+Micro-USB (Micro-B) to USB-A, and it must carry **data**, not just power. A
+spare Amazon Fire TV Stick power lead turned out to be a full data cable and
+enumerated first time, so check what you already own before buying anything.
+
+Verify without opening the port:
+
+```powershell
+Get-PnpDevice -PresentOnly | Where-Object { $_.Class -eq 'Ports' } |
+  Select-Object Status, FriendlyName
+```
+
+Enumerating devices is safe. **Opening the port from a script is not** - see
+DECISIONS.md on scripted serial.
+
+---
+
 ## Pinout
 
 The full desk-node pin map, including the parts that arrive later. Only GPIO16
