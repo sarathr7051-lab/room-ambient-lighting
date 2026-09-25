@@ -1,5 +1,8 @@
 # Hyperion on Windows
 
+> **Status: not installed yet.** Nothing in this file has been done. It is the
+> last stage of the screen sync build - see [PROJECT_STATE.md](PROJECT_STATE.md).
+
 Hyperion grabs the framebuffer, averages each edge region down to one colour
 per LED, and streams the result to WLED. It runs on the same Windows PC that
 drives the Dell.
@@ -57,8 +60,11 @@ correlates with the mouse — it's this.
 ## Configure the LED device
 
 1. Configuration -> LED Hardware -> LED Controller
-2. Type **WLED**. The node should appear by mDNS as `wled-desk`; if discovery
-   is flaky, type the reserved IP instead.
+2. Type **WLED**. The node should appear by mDNS as `wled-desk`. If discovery
+   is flaky, enter `wled-desk.local`, or as a last resort the current IP
+   (192.168.1.6 as of 25 Sep 2026). There is **no DHCP reservation** - the
+   router's admin page is not reachable - so the IP can move and mDNS is the
+   address to prefer.
 3. Hyperion 2.0.13+ uses **DDP on port 4048**. You do not set this by hand —
    choosing the WLED type does it. If you find yourself typing 21324 anywhere,
    you are following an old guide.

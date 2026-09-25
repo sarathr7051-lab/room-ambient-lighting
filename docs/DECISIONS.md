@@ -17,11 +17,11 @@ someone new looks at the project.
 | Home Assistant / Raspberry Pi as the brain | A whole extra always-on machine to do what WLED presets and Hyperion already do between them. Parked, not refused — if the room grows more nodes it may earn its place. |
 | Alexa for music-reactive lighting | It cannot. There is no audio stream out of an Echo to react to. Sound reactivity needs the INMP441 on the node doing its own FFT. |
 | 5 V COB for the warm layers | The original design was a single 5 V rail. Gesto's 12 V neon won because the 12 V adapter is included in the price and a low-side MOSFET does not care what voltage it is switching. The 12 V never touches the ESP32. |
-| Scripted serial / `arduino-cli` flashing | Separate hard-won lesson from the JiffyTrails build: scripted serial opens toggle DTR/RTS, which drives the ESP32's auto-reset circuit and can leave the board in reset or download mode while looking like it worked. Moot here anyway — WLED is flashed once from the browser and everything after that is HTTP. |
+| Scripted serial / `arduino-cli` flashing | Separate hard-won lesson from the JiffyTrails build (a different repo, not linked here): scripted serial opens toggle DTR/RTS, which drives the ESP32's auto-reset circuit and can leave the board in reset or download mode while looking like it worked. Moot here anyway — WLED is flashed once from the browser and everything after that is HTTP. |
 
 ---
 
-## Open decisions
+## Settled, and now baked into the committed config
 
 ### ABL cap: 3000 mA, revised up from 1500
 
@@ -33,7 +33,7 @@ that no longer exists.
 ### Three-sided strip, no bottom run
 
 The bottom edge lights the desk rather than the wall, it collides with the
-stand and the future monitor arm, and it doubles the corner joints. ~185 cm of
+stand and the future monitor arm, and it doubles the corner joints. 183 cm of
 strip stays spare, so this is reversible for the cost of solder.
 
 ### DDP, not WARLS

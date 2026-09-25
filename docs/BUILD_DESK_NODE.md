@@ -8,144 +8,188 @@ on the uncut strip, where a mistake costs nothing.
 
 ## Stage 1 - bench bring-up
 
-**Needs:** the ESP32 and a micro-USB data cable. **Time:** about an hour.
+### 1.1 Flash WLED - DONE 25 Sep 2026
 
-Flash the board **bare**, before anything is wired to it. A blank ESP32 on USB
-alone cannot be damaged by a wiring mistake that has not been made yet, and
-getting WLED onto the network first means the rest of the bring-up can be driven
-over HTTP instead of guessed at.
+WLED **16.0.1** is on the board, installed from install.wled.me in Chrome over
+USB (Basic mode, Plain variant, 5 V adapter unplugged).
 
-### 1.1 Flash WLED
+> **Do not flash it again.** Everything that remains happens over Wi-Fi.
 
-Only the ESP32 and the USB cable. **No strip, no 5 V adapter, no breadboard.**
-Two 5 V sources fighting each other across the ESP32's regulator is how boards
-die, so the adapter stays out of this entirely.
+Two notes worth keeping:
 
-1. Chrome or Edge (Web Serial does not exist in Firefox) -> `install.wled.me`.
-2. Plug the ESP32 in by micro-USB. It must be a **data** cable; charge-only
-   cables are the most common reason no port appears. Windows 11 has the CP2102
-   driver built in, so if still nothing shows up it is the cable.
-3. On the page: **Mode = Basic**, version = **16.0.1** (the default, current
-   stable), variant = **Plain**. Not Ethernet, not DEBUG, not HUB75.
-4. **Install** -> pick the COM port that just appeared (it identifies as Silicon
-   Labs CP210x) -> tick **Erase device** for a clean first flash -> let it run.
-5. When it offers Wi-Fi, give it your **2.4 GHz** SSID. The ESP32 has no 5 GHz
-   radio. If the router publishes one name for both bands the join can fail
-   without saying why - use a 2.4-only SSID or the guest network.
-6. Name the node `wled-desk`.
+- The board enumerates as `Silicon Labs CP210x USB to UART Bridge`; on this
+  machine it appeared on COM12. Always read the chip name, never the COM
+  number - see "Telling the two ESP32s apart" in HARDWARE.md.
+- The cable is a repurposed Amazon Fire TV Stick micro-USB lead that turned out
+  to carry data. No cable was bought.
 
-Then unplug USB.
+### 1.2 Node address - DONE
 
-> Version note: WLED jumped from 0.15.x straight to 16.x, so 16.0.1 being the
-> default is not a beta. If you ever need the older line for a community
-> audio-reactive build, 0.15.4 is in the same dropdown - but that is a later
-> stage and screen sync does not care.
+There is **no DHCP reservation and none is needed.** The Airtel AirFiber
+outdoor CPE's admin page is not reachable, so the node is addressed by mDNS:
 
-### 1.2 Pin the IP down
+```
+wled-desk.local   ->   192.168.1.6
+2.4 GHz, channel 4, 100% signal
+```
 
-Find the node in your router's client list and **reserve the address by MAC**.
-Hyperion streams to it for the life of the project; a DHCP lease moving
-underneath it is an annoying evening.
+Hyperion discovers WLED by mDNS, so a moving lease does not matter. Use
+`wled-desk.local` everywhere and treat the IP as a debugging aid only.
 
-### 1.3 First contact
+### 1.3 First contact - DONE
+
+`tools/wled_push.py` has been verified against this exact node, and `name` has
+already renamed it. `probe` is read-only and safe to re-run at any time:
 
 ```bash
-python tools/wled_push.py probe --host <ip>
+python tools/wled_push.py probe --host wled-desk.local
 ```
 
-Version, free heap, Wi-Fi signal and LED count should come back. Nothing is
-wired yet, so the LED count is whatever the default is - that is expected.
+The node currently reports the WLED default of **30 LEDs**. That is expected -
+nothing is wired yet, and the real 70 is pushed in Stage 3.
 
-### 1.4 Now wire it, with the power off
+---
 
-Breadboard, using the **full 3 m strip uncut**.
+### 1.4 Wire the breadboard - NEXT
 
-```
-  5 V 5 A adapter
-        |
-   DC pigtail
-        |
-   +-------------------------------- +5V rail
-   |                                      |
-   |  1000 uF (+ to +5V, watch polarity)  |
-   |                                      |
-   +-------------------------------- GND rail
+**Nothing electrical in this build has ever been powered up.** Do this before
+cutting the strip. If the first time the circuit is energised is also the first
+time your first-ever solder joints are energised, a dark strip has two possible
+causes and no way to tell them apart.
 
-  ESP32   VIN <- +5V rail
-          GND <- GND rail
-          GPIO16 ----> 74HCT125 pin 2 (1A)
+Build it with the **full 3 m strip uncut** and the **adapter unplugged**
+throughout. Plug in only at 1.5.
 
-  74HCT125  pin 14 <- +5V      pin 7  -> GND
-            pin 1  -> GND      0.1 uF between 14 and 7
-            pins 5, 9, 12 -> GND
-            pin 3 (1Y) -> 330 ohm -> strip DIN
+#### Gather first
 
-  strip   +5V -> +5V rail
-          GND -> GND rail
-```
+| | Part |
+|---|---|
+| 1 | ESP32 DevKit V1 (already flashed) |
+| 1 | 74HCT125, DIP-14 |
+| 1 | 1000 uF 25 V electrolytic |
+| 1 | 0.1 uF ceramic |
+| 1 | 330 ohm resistor |
+| 1 | 5 V 5 A adapter + DC barrel pigtail (female, with leads) |
+| 3 | lengths of 22 AWG silicone wire - red, black, green |
+| - | breadboard, jumper wires, multimeter |
+| - | the 3 m WS2812 strip, uncut |
 
-Check the 1000 uF polarity twice - backwards is the one mistake on this board
-that makes a mess. Then plug the 5 V adapter in. USB stays out from here on.
+#### Seat the two chips
 
-### 1.5 Light it up - carefully
+The ESP32 and the 74HCT125 both **straddle the centre channel** of the
+breadboard, so each leg lands in its own row. If a chip sits on one side only,
+every pin on that side is shorted to its neighbours through the row.
 
-In the WLED web UI, **before touching brightness**:
+The 74HCT125 has a **notch at one end and a dot next to pin 1**. Pin 1 is at the
+notch end. Numbers run **down one side and back up the other**: 1-7 down the
+left, then 8-14 up the right, so pin 14 sits opposite pin 1.
+
+#### Then wire, in this order
+
+| # | From | To | Wire |
+|---|---|---|---|
+| 1 | pigtail **+** (usually red, or the striped lead) | breadboard **+ rail** | - |
+| 2 | pigtail **-** | breadboard **- rail** | - |
+| 3 | 1000 uF **long leg (+)** | + rail | - |
+| 4 | 1000 uF **short leg, stripe side (-)** | - rail | - |
+| 5 | ESP32 **VIN** | + rail | red |
+| 6 | ESP32 **GND** | - rail | black |
+| 7 | 74HCT125 **pin 14** | + rail | red |
+| 8 | 74HCT125 **pin 7** | - rail | black |
+| 9 | 0.1 uF, either way round | between **pin 14 and pin 7**, close to the chip | - |
+| 10 | 74HCT125 **pins 1, 4, 5, 9, 10, 12, 13** | - rail | black |
+| 11 | ESP32 **GPIO16** (silkscreen may say D16) | 74HCT125 **pin 2** | green |
+| 12 | 74HCT125 **pin 3** | one end of the **330 ohm** | - |
+| 13 | other end of the 330 ohm | strip **DIN** | green |
+| 14 | strip **+5V** | + rail | red |
+| 15 | strip **GND** | - rail | black |
+
+Leave 74HCT125 pins **6, 8 and 11** empty - they are the unused buffer outputs.
+
+**Every other pin goes to ground.** Floating CMOS inputs sit at mid-rail and
+draw through-current; grounding the unused enables simply switches those
+buffers on with their inputs low, which drives nothing and is harmless.
+
+**Which end of the strip is DIN?** The arrows printed on the strip point
+*away* from DIN, in the direction data travels. Connect to the end the arrows
+point away from. Getting this backwards lights nothing at all.
+
+#### Check before you plug anything in
+
+1. **Capacitor polarity.** The stripe is the negative side, and the short leg.
+   Backwards is the one mistake on this board that makes a mess.
+2. **Chip orientation.** Notch and dot at the pin-1 end. Confirm pin 14 is the
+   one on the + rail, not pin 1.
+3. **Short test.** Multimeter on resistance across the + and - rails. It will
+   start low and **climb** as the 1000 uF charges from the meter - that is
+   normal and is not a fault. A real short sits near 0 ohm and stays there.
+4. Walk the table above once more, row by row.
+
+### 1.5 Light it up - NEXT
+
+Plug the adapter in. USB stays out from here on.
+
+The ESP32 boots, WLED rejoins Wi-Fi, and `wled-desk.local` comes back. Then, in
+the WLED web interface, **before touching brightness**:
 
 - Config -> LED Preferences
-- LED count **180**, GPIO **16**, type WS281x, colour order GRB
-- Auto-brightness limiter **on**, **1500 mA**, 55 mA/LED
+- LED count **180**, GPIO **16**, type WS281x, colour order **GRB**
+- Auto-brightness limiter **on**, **1000 mA**, 55 mA/LED
 
-Then set brightness to about 25% and pick a solid colour.
+Then set brightness to roughly 25% and pick a solid colour.
 
-> 180 LEDs at full white is 10.8 A. The bench wiring - breadboard rails, a
-> single-ended feed, jumper wire - is nowhere near that. The ABL cap and the low
-> brightness are what keep this test boring. Do not raise either until the strip
-> is cut down and properly injected.
+> 180 LEDs at full white is 9.9 A. Breadboard rails and jumper wires are good
+> for about 1 A, which is why the limiter goes to **1000 mA** for this test and
+> not the 3000 mA the finished build uses. The final build feeds the strip
+> straight from the rail, never through a breadboard.
 
-**What success looks like:** every LED lights, the colour you picked is the
-colour you get (red and green swapped means the order is RGB, not GRB), and
-nothing gets warm except mildly the strip.
+**Success looks like:** every LED lights, the colour you chose is the colour
+you get, and nothing warms up except mildly the strip.
 
-**If only the first LED lights:** data is not reaching the rest. Check the
-330 ohm is in series and not to ground, and that pin 1 of the 74HCT125 is
-actually at GND.
-
-**If nothing lights:** check DIN vs DOUT - the strip has an arrow, and data only
-flows one way.
-
-**If the ESP32 resets when the strip brightens:** the adapter is sagging or the
-1000 uF is not actually across the rail.
+| Symptom | Cause |
+|---|---|
+| Nothing lights at all | DIN and DOUT swapped - check the arrows |
+| Only the first LED lights | Data is not getting past it. Check the 330 ohm is in series and not to ground, and that pin 1 is actually at GND |
+| Red and green swapped | Colour order is RGB, not GRB |
+| ESP32 resets as it brightens | Adapter sagging, or the 1000 uF is not truly across the rail |
+| Random flicker | A loose breadboard leg, or the 74HCT125 is not straddling the channel |
 
 Stage 1 is done. **Do not cut anything yet.**
 
 ---
 
-## Stage 2 — measure and plan
+## Stage 2 - measure and plan - DONE
 
-Monitor face-down on a towel. Measure the rectangle the strip will actually
-follow on the flat back panel: roughly 2–3 cm in from the outer edge, clear of
-the raised VESA boss and any vent slots. Two numbers, measured directly.
+Measured directly off the back of the monitor: the strip path is
+**57 x 30.5 cm**. Generated with:
 
 ```bash
-python tools/led_layout.py --width <W> --height <H>
+python tools/led_layout.py --width 57 --height 30.5 --write
 ```
 
-That prints the LED count for each run, the cut lengths, how much strip is left
-over, and the real current figures. Add `--write` when the numbers look right
-and it emits `config/hyperion_leds.json` and `config/wled_desk_cfg.json`.
+| Run | LEDs | Cut to |
+|---|---|---|
+| left | 18 | **30.0 cm** |
+| top | 34 | **56.7 cm** |
+| right | 18 | **30.0 cm** |
+| **total** | **70** | 116.7 cm of 300 cm, **183 cm spare** |
+
+`config/hyperion_leds.json` and `config/wled_desk_cfg.json` are committed and
+populated. The count is insensitive to the exact width - anything from 56 to
+57.5 cm gives the same 34/18/18 split.
+
+The back of this monitor is **smoothly curved, with no flat rectangular
+region**. That is workable; see "Mounting" in HARDWARE.md.
 
 ### Three sides, not four
 
-The default is left, top and right, with no bottom run. On a monitor sitting at
-desk height:
+Left, top and right, with no bottom run. On a monitor at desk height the bottom
+strip lights the desk rather than the wall, it is where the stand column and
+later the Dyazo arm sit, and it costs two extra corner joints. Hyperion handles
+a missing bottom edge natively, and 183 cm of spare strip means adding it later
+costs nothing but solder.
 
-- the bottom strip lights the desk surface, not the wall behind
-- it is where the stand column and later the Dyazo arm sit
-- it costs two extra corner joints — four instead of two
-
-Hyperion handles a missing bottom edge natively. You will have ~185 cm of strip
-spare, so adding the bottom later costs nothing but solder if you decide the
-glow is missing something.
+---
 
 ### Corners - cutting and soldering
 
@@ -242,7 +286,7 @@ appear to. Read the silkscreen every time.
 
 #### Test after every connection, not at the end
 
-The same rule already written into the JiffyTrails build plan, and it matters
+The same rule written into the JiffyTrails build plan (a separate repo), and it matters
 more here because a fault found after twelve joints could be any of them.
 
 - Continuity across each join with the multimeter as you make it.
@@ -259,26 +303,28 @@ paper comes off. This is the last easily reversible moment in the build.
 
 ---
 
-## Stage 3 — cut, solder, mount
+## Stage 3 - cut, solder, mount - NOW
 
-1. Cut the runs to the lengths `led_layout.py` printed.
+1. Cut the runs: **56.7 cm** (top, 34 LEDs) and **30.0 cm** x2 (sides, 18 LEDs
+   each). Practise joints on the 183 cm offcut first.
 2. Solder the corner jumpers. Test the assembled run flat on the bench, still
    on the breadboard, before any adhesive touches the monitor.
 3. IPA the back panel, let it dry.
 4. Stick it down, starting at the DIN corner. Velcro tie or a dab at each
    corner turn — that is where adhesive fails first.
 5. Run the injection pair from the far end of the strip back to the rail.
-6. Raise the ABL to 3000 mA and set the real LED count:
+6. Raise the ABL from the bench-test 1000 mA to **3000 mA** and set the real
+   count of 70:
 
 ```bash
-python tools/wled_push.py apply --host <ip>
+python tools/wled_push.py apply --host wled-desk.local
 ```
 
 7. Confirm the orientation with your eyes before Hyperion is configured
    against an assumption:
 
 ```bash
-python tools/wled_push.py walk --host <ip>
+python tools/wled_push.py walk --host wled-desk.local
 ```
 
 Note which corner LED 0 sits in **viewed from the front of the screen**, and
@@ -289,12 +335,12 @@ wrong way, set `rev: true` on the bus rather than re-soldering anything.
 8. Save the presets:
 
 ```bash
-python tools/wled_push.py presets --host <ip>
+python tools/wled_push.py presets --host wled-desk.local
 ```
 
 ---
 
-## Stage 4 — final assembly
+## Stage 4 - final assembly - LATER
 
 Move off the breadboard onto the 6 x 4 inch dot board: ESP32 on female headers
 (so it can come off), 74HCT125 on a socket, the 1000 uF and the 330 ohm on
@@ -309,6 +355,6 @@ annoying.
 
 ---
 
-## Stage 5
+## Stage 5 - Hyperion - LATER
 
 [HYPERION.md](HYPERION.md).

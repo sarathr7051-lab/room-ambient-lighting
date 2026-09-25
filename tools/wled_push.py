@@ -6,19 +6,24 @@ every change to this project happens over HTTP, which is what this tool does.
 
 Standard library only. No pip install.
 
-    python tools/wled_push.py probe   --host 192.168.1.42
-    python tools/wled_push.py walk    --host 192.168.1.42
-    python tools/wled_push.py apply   --host 192.168.1.42
-    python tools/wled_push.py presets --host 192.168.1.42
+    python tools/wled_push.py probe   --host wled-desk.local
+    python tools/wled_push.py walk    --host wled-desk.local
+    python tools/wled_push.py apply   --host wled-desk.local
+    python tools/wled_push.py presets --host wled-desk.local
 
-`--host` takes an IP or an mDNS name (wled-desk.local).
+`--host` takes an IP, an mDNS name (wled-desk.local), or `auto` to sweep
+the subnet. A name that fails to resolve falls back to the sweep by itself,
+so a moved DHCP lease never blocks you.
 """
 
 from __future__ import annotations
 
 import argparse
+import concurrent.futures as cf
+import ipaddress
 import json
 import pathlib
+import socket
 import sys
 import time
 import urllib.error
@@ -57,7 +62,72 @@ def post(host: str, path: str, payload: dict, timeout: float = 8.0):
         return {"raw": raw}
 
 
+def _local_subnet() -> ipaddress.IPv4Network:
+    """The /24 this machine sits on. Opens no connection; UDP connect() on a
+    datagram socket only picks a route."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+    return ipaddress.ip_network(ip + "/24", strict=False)
+
+
+def discover(timeout: float = 1.2) -> list[tuple[str, dict]]:
+    """Every WLED node answering /json/info on the local /24."""
+    def one(ip: str):
+        try:
+            with urllib.request.urlopen(f"http://{ip}/json/info", timeout=timeout) as r:
+                d = json.loads(r.read().decode("utf-8"))
+                if "leds" in d:
+                    return ip, d
+        except Exception:
+            return None
+        return None
+
+    hosts = [str(h) for h in _local_subnet().hosts()]
+    out = []
+    with cf.ThreadPoolExecutor(max_workers=120) as ex:
+        for res in ex.map(one, hosts):
+            if res:
+                out.append(res)
+    return out
+
+
+def resolve(host: str) -> str:
+    """
+    Turn whatever the user typed into something urllib can reach.
+
+    There is no DHCP reservation on this network - the router's admin page is
+    not reachable - so the node is named rather than pinned. Hyperion finds it
+    by mDNS using its own zeroconf stack, but Python leans on the OS resolver,
+    and Windows does not always answer .local queries through getaddrinfo even
+    when ping resolves the same name. So when the name does not resolve, fall
+    back to sweeping the subnet rather than failing on a technicality.
+    """
+    if host.lower() != "auto":
+        try:
+            socket.getaddrinfo(host, 80, socket.AF_INET)
+            return host
+        except socket.gaierror:
+            print(f"\n  {host} did not resolve - sweeping the local network ...")
+
+    found = discover()
+    if not found:
+        die("no WLED node answered on this subnet. Is it powered and on Wi-Fi?")
+    if len(found) > 1:
+        print("  more than one WLED node found:")
+        for ip, info in found:
+            print(f"    {ip}  {info.get('name')}")
+        print("  using the first. Pass --host <ip> to choose.")
+    ip, info = found[0]
+    print(f"  found {info.get('name')} at {ip}")
+    return ip
+
+
 def die(msg: str) -> None:
+    sys.stdout.flush()   # keep progress lines ahead of the error
     print(f"  ERROR: {msg}", file=sys.stderr)
     sys.exit(1)
 
@@ -68,7 +138,7 @@ def reachable(host: str) -> dict:
     except urllib.error.URLError as e:
         die(f"cannot reach {host} - {e.reason}\n"
             f"         Is the node powered and on the 2.4 GHz network? "
-            f"Try the IP shown in your router's client list.")
+            f"mDNS can lag after a reboot - retry, or use the last known IP.")
     except TimeoutError:
         die(f"timed out talking to {host}")
     return {}
@@ -277,6 +347,20 @@ def cmd_presets(a) -> None:
     print("  That is a later stage and does NOT block screen sync.\n")
 
 
+def cmd_discover(a) -> None:
+    """List every WLED node on the subnet. Useful when the IP has moved."""
+    found = discover()
+    if not found:
+        die("nothing answered /json/info on this subnet")
+    print()
+    for ip, info in found:
+        w = info.get("wifi", {})
+        print(f"  {ip:<16} {info.get('name'):<14} WLED {info.get('ver')}  "
+              f"{w.get('signal')}% ch{w.get('channel')}  "
+              f"{info.get('leds', {}).get('count')} LEDs")
+    print()
+
+
 def cmd_name(a) -> None:
     """
     Set the node name and its mDNS hostname.
@@ -315,6 +399,8 @@ def main() -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--host", required=True, help="node IP or mDNS name")
 
+    sub.add_parser("discover", parents=[common],
+                   help="sweep the subnet for WLED nodes").set_defaults(fn=cmd_discover)
     sub.add_parser("probe", parents=[common],
                    help="version, LED count, power, wifi").set_defaults(fn=cmd_probe)
     sub.add_parser("apply", parents=[common],
@@ -337,6 +423,7 @@ def main() -> int:
     w.set_defaults(fn=cmd_walk)
 
     a = p.parse_args()
+    a.host = resolve(a.host)
     a.fn(a)
     return 0
 

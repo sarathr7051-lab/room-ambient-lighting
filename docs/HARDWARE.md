@@ -44,13 +44,13 @@ Confirmed 25 Sep 2026: the desk node came up on **COM12** as
 Read the chip name, not the COM number - Windows reassigns COM numbers freely.
 If you see CH340, you are about to flash the motorcycle display. Stop.
 
-### Cable
+### Cable - resolved, nothing bought
 
-Micro-USB (Micro-B) to USB-A, and it must carry **data**, not just power. A
-spare Amazon Fire TV Stick power lead turned out to be a full data cable and
-enumerated first time, so check what you already own before buying anything.
+Micro-USB (Micro-B) to USB-A, carrying **data**, not just power. A spare Amazon
+Fire TV Stick lead turned out to be a full data cable and enumerated first time.
 
-Verify without opening the port:
+Kept for the next board (the Wemos D1 mini is micro-USB too). To re-verify
+without opening the port:
 
 ```powershell
 Get-PnpDevice -PresentOnly | Where-Object { $_.Class -eq 'Ports' } |
@@ -81,18 +81,23 @@ matters for screen sync.
 ### 74HCT125 (DIP-14)
 
 ```
-   1  1OE  -> GND            14  VCC -> +5V
-   2  1A   <- ESP32 GPIO16   13  4OE
+   1  1OE  -> GND            14  VCC -> +5V rail
+   2  1A   <- ESP32 GPIO16   13  4OE -> GND
    3  1Y   -> 330R -> DIN    12  4A  -> GND
-   4  2OE                    11  4Y
-   5  2A   -> GND            10  3OE
-   6  2Y                      9  3A  -> GND
-   7  GND  -> GND             8  3Y
+   4  2OE  -> GND            11  4Y   (leave empty)
+   5  2A   -> GND            10  3OE -> GND
+   6  2Y   (leave empty)      9  3A  -> GND
+   7  GND  -> GND rail        8  3Y   (leave empty)
 ```
 
-Tie the unused **inputs** (pins 5, 9, 12) to GND. Floating CMOS inputs oscillate
-and waste current. 0.1 uF between pin 14 and pin 7, as close to the chip as the
-board allows.
+Simple rule: **pin 14 to +5 V, pins 2 and 3 carry the signal, pins 6, 8 and 11
+stay empty, everything else goes to GND.**
+
+Every unused *input* must be tied, not left floating - a floating CMOS input
+sits at mid-rail and draws through-current. Grounding the unused enable pins
+(4, 10, 13) simply switches those buffers on with their inputs low, which
+drives nothing and is harmless. 0.1 uF between pin 14 and pin 7, as close to the
+chip as the board allows.
 
 The T in 74HC**T**125 is the whole point: it has TTL-level input thresholds, so
 a 3.3 V logic high from the ESP32 is read as a solid high while the output
@@ -149,6 +154,26 @@ one-wire protocol, same GRB colour order, same 800 kHz timing — WLED bus type
 ---
 
 ## Mounting
+
+**This monitor's back is smoothly curved - there is no flat rectangular area.**
+That is workable. The strip is flexible along its length and will follow a
+gentle curve happily; what defeats strip adhesive is curvature *across* the
+10 mm width, which makes the edges lift. There is even an upside: on a curved
+back the side runs angle their light slightly outward instead of straight back,
+which spreads it better on the wall.
+
+So do not hunt for a flat region. Pick the line that clears the rear joystick
+with finger room, follow the curve, and:
+
+- **Never stretch the strip round the curve.** Tension stored in the strip is a
+  slow-motion peel. Let it lie where it wants.
+- **Reinforce both corners mechanically** - a velcro tie, an adhesive cable
+  clip, or a dab of hot glue. Peel always starts at a corner and then unzips.
+- **Press hard along the whole length.** 3M adhesive needs pressure to wet out
+  and does not reach full strength for a day or two, so do not judge it on day
+  one.
+- If one run sits on a noticeably steeper part of the curve, nudge it inboard
+  to where it flattens. The LED count has 3 mm of slack either way.
 
 Clean the monitor's back panel with IPA and let it flash off before the 3M
 backing goes anywhere near it. Textured ABS plus Bengaluru ambient plus the
