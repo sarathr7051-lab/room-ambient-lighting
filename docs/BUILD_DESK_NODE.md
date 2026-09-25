@@ -147,12 +147,115 @@ Hyperion handles a missing bottom edge natively. You will have ~185 cm of strip
 spare, so adding the bottom later costs nothing but solder if you decide the
 glow is missing something.
 
-### Corners
+### Corners - cutting and soldering
 
-WS2812 will not bend around a 90° corner without cracking the copper. At each
-corner: cut on the pads, then bridge with three short lengths of 22 AWG —
-+5 V, GND, DATA — kept under 3 cm so the data edge stays clean. Mind the arrow;
-DOUT of one run goes to DIN of the next.
+WS2812 will not bend around a 90 degree corner; the copper cracks. Each corner
+is a cut and three short wires. Two corners, six wires, twelve solder joints.
+
+#### If this is your first soldering job, practise on the offcut
+
+The run uses 117 cm of a 300 cm strip. **183 cm of spare strip exists purely so
+the first joints you ever make are not the ones on the monitor.**
+
+Cut three short practice pieces, join them, power them, and only move to the
+real lengths when you can do three joints in a row that look right and pass
+continuity. That hour is the cheapest insurance in this build - a lifted pad on
+a real length means re-cutting and losing LEDs.
+
+Three things decide whether soldering feels easy or impossible, and beginners
+usually get all three wrong at once:
+
+1. **A clean, tinned tip.** Wipe it on a damp sponge or brass wool and melt a
+   little fresh solder onto it before every few joints. A dull, blackened tip
+   transfers almost no heat, so the joint will not take, so you hold the iron
+   there longer, so you cook the LED. Nearly every "my iron is too weak"
+   problem is a dirty tip.
+2. **Leaded 60/40 solder, not lead-free.** It melts lower and flows far more
+   willingly. Lead-free is a miserable place to learn. Wash your hands after.
+3. **Do not crank the temperature up.** About 330 C. Hotter does not mean
+   faster, it means you burn flux off before it can do its job and you lift
+   pads off the flexible PCB.
+
+Work in a ventilated spot and do not lean over the smoke - that is flux, and it
+is unpleasant to breathe.
+
+**What a good joint looks like:** shiny, smooth, slightly concave where it
+meets the pad, like a tiny ski slope. **Bad:** dull and grainy (moved while
+cooling), or a ball sitting on top of the pad without wetting it (not enough
+heat, or no flux). A ball that will not flatten is a cold joint - reflux it and
+reheat briefly rather than piling on more solder.
+
+#### Before any cut: check the arrows
+
+Every piece of strip has arrows showing which way data flows. Data only travels
+one way. Lay all three pieces out in the U shape on the bench first and confirm
+**every arrow points the same way around the U**: up the left side, across the
+top, down the right. A piece fitted backwards lights nothing downstream of it,
+and you will not notice until the whole thing is stuck to the monitor.
+
+Decide at the same time which end is the overall DIN, the corner where the
+controller cable enters. Default here is the bottom of the left run viewed from
+the front.
+
+#### Cutting
+
+Cut **down the middle of the copper pads**, on the line marked between LEDs, so
+both halves keep half a pad each. Sharp scissors. If the strip is silicone
+sleeved, trim 8-10 mm of silicone back off each end to expose the pads.
+
+#### Soldering
+
+The WS2812 chip sits a couple of millimetres from its pads, and heat is what
+kills it, not solder. Short bursts, never a long dwell.
+
+1. Flux the pads.
+2. **Tin each pad**: touch iron and a little solder, 1-2 seconds, off. A small
+   dome, not a blob.
+3. **Tin the wires**: cut to about 3 cm, strip 3-4 mm, twist the strands, tin.
+4. **Join**: hold the tinned wire against the tinned pad, touch the iron for
+   1-2 seconds until the two pools flow together, remove the iron, then **hold
+   the wire still until it sets** - a joint moved while cooling goes dull and
+   brittle.
+5. If it will not take, add flux and try again briefly. Do not hold the iron on
+   longer.
+
+Tinning both sides first is the whole trick. A beginner trying to hold iron,
+solder, wire and strip all at once on a 2 mm pad will fail; tinning turns it
+into one easy step.
+
+Clamp the two pieces at the actual 90 degrees in the helping hands while you
+solder, so the wires end up the right length. Solder them straight, then bend
+them, and the wires fight you forever.
+
+Use the full 3 cm of wire even though the gap is smaller. Slack is easy to
+tuck away; a too-short wire under tension will eventually pull a pad off.
+
+| Upstream piece | Wire | Downstream piece |
+|---|---|---|
+| +5V | red | +5V |
+| DO / DOUT | green | DI / DIN |
+| GND | black | GND |
+
+**Match pad names, not positions.** At a corner one strip is rotated 90 degrees
+relative to the other, so the pads do not line up left-to-right the way they
+appear to. Read the silkscreen every time.
+
+#### Test after every connection, not at the end
+
+The same rule already written into the JiffyTrails build plan, and it matters
+more here because a fault found after twelve joints could be any of them.
+
+- Continuity across each join with the multimeter as you make it.
+- Check for bridges **between adjacent pads** - especially +5V to DATA, and
+  +5V to GND. A +5V-to-GND bridge is a dead short across the supply.
+- Heat-shrink or a dab of hot glue over each finished joint. The joint is the
+  weakest mechanical point on the run and it is about to live on a curved
+  surface.
+
+#### Then test it flat
+
+Assembled U flat on the bench, still on the breadboard, before any backing
+paper comes off. This is the last easily reversible moment in the build.
 
 ---
 
