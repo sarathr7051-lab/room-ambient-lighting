@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="500" viewBox="0 0 680 500" role="img">
+  <title>How a breadboard is connected inside</title>
+  <desc>Power rails run the length of the board as one strip. Each column of five holes is a group, and the group below the centre channel is separate.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 14px; font-weight: 400; fill: #3d3d3a; }
+    .ts { font-size: 12px; font-weight: 400; fill: #6b6b66; }
+    .body { fill: #f2f1ed; stroke: #8a8a82; stroke-width: 0.8; }
+    .ink   { stroke: #3d3d3a; fill: none; }
+    .faint { stroke: #9a9891; fill: none; }
+    .gnd   { stroke: #3d3d3a; }
+    .gndf  { fill: #3d3d3a; }
+    @media (prefers-color-scheme: dark) {
+      .th { fill: #f5f3ee; }
+      .t  { fill: #d6d3cc; }
+      .ts { fill: #9a9891; }
+      .body { fill: #2a2a2e; stroke: #77756e; }
+      .ink   { stroke: #d6d3cc; }
+      .faint { stroke: #77756e; }
+      .gnd   { stroke: #d6d3cc; }
+      .gndf  { fill: #d6d3cc; }
+    }
+  </style>
+  <text class="th" x="40" y="52">What is connected to what, under the plastic</text>
+
+  <rect x="118" y="90" width="244" height="19" rx="9" fill="#EF9F27" opacity="0.32"/>
+  <rect x="201" y="142" width="18" height="92" rx="9" fill="#2E9E5B" opacity="0.3"/>
+  <rect x="201" y="256" width="18" height="92" rx="9" fill="#3B82F6" opacity="0.3"/>
+  <rect x="118" y="234" width="244" height="22" rx="4" class="faint" stroke-dasharray="4 4"/>
+
+  <g class="faint" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.5 19.5">
+    <line x1="130" y1="100" x2="350" y2="100"/>
+    <line x1="130" y1="118" x2="350" y2="118"/>
+    <line x1="130" y1="152" x2="350" y2="152"/>
+    <line x1="130" y1="170" x2="350" y2="170"/>
+    <line x1="130" y1="188" x2="350" y2="188"/>
+    <line x1="130" y1="206" x2="350" y2="206"/>
+    <line x1="130" y1="224" x2="350" y2="224"/>
+    <line x1="130" y1="266" x2="350" y2="266"/>
+    <line x1="130" y1="284" x2="350" y2="284"/>
+    <line x1="130" y1="302" x2="350" y2="302"/>
+    <line x1="130" y1="320" x2="350" y2="320"/>
+    <line x1="130" y1="338" x2="350" y2="338"/>
+    <line x1="130" y1="372" x2="350" y2="372"/>
+    <line x1="130" y1="390" x2="350" y2="390"/>
+  </g>
+    <text class="ts" x="112" y="100" text-anchor="end" dominant-baseline="central">+</text>
+    <text class="ts" x="112" y="118" text-anchor="end" dominant-baseline="central">-</text>
+    <text class="ts" x="112" y="152" text-anchor="end" dominant-baseline="central">a</text>
+    <text class="ts" x="112" y="170" text-anchor="end" dominant-baseline="central">b</text>
+    <text class="ts" x="112" y="188" text-anchor="end" dominant-baseline="central">c</text>
+    <text class="ts" x="112" y="206" text-anchor="end" dominant-baseline="central">d</text>
+    <text class="ts" x="112" y="224" text-anchor="end" dominant-baseline="central">e</text>
+    <text class="ts" x="112" y="266" text-anchor="end" dominant-baseline="central">f</text>
+    <text class="ts" x="112" y="284" text-anchor="end" dominant-baseline="central">g</text>
+    <text class="ts" x="112" y="302" text-anchor="end" dominant-baseline="central">h</text>
+    <text class="ts" x="112" y="320" text-anchor="end" dominant-baseline="central">i</text>
+    <text class="ts" x="112" y="338" text-anchor="end" dominant-baseline="central">j</text>
+    <text class="ts" x="112" y="372" text-anchor="end" dominant-baseline="central">+</text>
+    <text class="ts" x="112" y="390" text-anchor="end" dominant-baseline="central">-</text>
+
+  <circle cx="386" cy="100" r="11" fill="#EF9F27" opacity="0.32"/>
+  <text class="th" x="386" y="100" text-anchor="middle" dominant-baseline="central">A</text>
+  <circle cx="386" cy="188" r="11" fill="#2E9E5B" opacity="0.3"/>
+  <text class="th" x="386" y="188" text-anchor="middle" dominant-baseline="central">B</text>
+  <circle cx="386" cy="302" r="11" fill="#3B82F6" opacity="0.3"/>
+  <text class="th" x="386" y="302" text-anchor="middle" dominant-baseline="central">C</text>
+  <text class="ts" x="372" y="245" dominant-baseline="central">centre channel</text>
+
+  <g class="faint" stroke-dasharray="3 3">
+    <line x1="219" y1="188" x2="375" y2="188"/>
+    <line x1="219" y1="302" x2="375" y2="302"/>
+  </g>
+
+  <text class="t" x="40" y="432">A - a power rail is ONE strip; every hole along it is joined.</text>
+  <text class="t" x="40" y="454">B - five holes in a column are joined to each other.</text>
+  <text class="t" x="40" y="476">C - the five below the channel are a SEPARATE group.</text>
+  <text class="th" x="40" y="498">Nothing crosses the channel. That is why a chip must straddle it.</text>
+</svg>

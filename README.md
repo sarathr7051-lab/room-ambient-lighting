@@ -78,6 +78,7 @@ Measured and committed — these are facts, not estimates.
 ```
 docs/
   PROJECT_STATE.md     >> where the build is right now. read this first.
+  img/                 wiring and breadboard diagrams (SVG, theme-aware)
   HARDWARE.md          parts in hand, pinout, power budget, mounting
   BUILD_DESK_NODE.md   staged build procedure, marked DONE / NEXT
   HYPERION.md          Windows install, DXGI grabber, DDP config

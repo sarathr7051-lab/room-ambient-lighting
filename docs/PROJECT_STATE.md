@@ -53,7 +53,7 @@ Practise on the 183 cm offcut first — this is a first soldering job.
 ### 1. Build the bench circuit — not yet started
 
 ESP32 + 74HCT125 + 1000 µF + 330 Ω on the breadboard, 5 V 5 A adapter, with the
-**uncut** strip. [BUILD_DESK_NODE.md § 1.4](BUILD_DESK_NODE.md#14-wire-the-breadboard---next).
+**uncut** strip. Diagrams in [docs/img/](img/). [BUILD_DESK_NODE.md § 1.4](BUILD_DESK_NODE.md#14-wire-the-breadboard---next).
 
 > **Do this before cutting.** Nothing electrical has ever been powered up. If
 > the first time you energise the circuit is also the first time you energise

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="430" viewBox="0 0 680 430" role="img">
+  <title>74HCT125 pinout and where every pin goes</title>
+  <desc>A 14-pin DIP with the notch at the top. Pin 14 to plus 5 volts, pins 2 and 3 carry the signal, pins 6, 8 and 11 stay empty, everything else to ground.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 14px; font-weight: 400; fill: #3d3d3a; }
+    .ts { font-size: 12px; font-weight: 400; fill: #6b6b66; }
+    .body { fill: #f2f1ed; stroke: #8a8a82; stroke-width: 0.8; }
+    .ink   { stroke: #3d3d3a; fill: none; }
+    .faint { stroke: #9a9891; fill: none; }
+    .gnd   { stroke: #3d3d3a; }
+    .gndf  { fill: #3d3d3a; }
+    @media (prefers-color-scheme: dark) {
+      .th { fill: #f5f3ee; }
+      .t  { fill: #d6d3cc; }
+      .ts { fill: #9a9891; }
+      .body { fill: #2a2a2e; stroke: #77756e; }
+      .ink   { stroke: #d6d3cc; }
+      .faint { stroke: #77756e; }
+      .gnd   { stroke: #d6d3cc; }
+      .gndf  { fill: #d6d3cc; }
+    }
+  </style>
+  <text class="th" x="40" y="56">74HCT125 - where every pin goes</text>
+
+  <rect x="280" y="130" width="120" height="195" rx="6" class="body"/>
+  <path d="M328 130 A 12 12 0 0 0 352 130" class="faint"/>
+  <circle cx="294" cy="146" r="3.5" class="gndf"/>
+
+  <g class="faint">
+    <line x1="280" y1="150" x2="262" y2="150"/><line x1="400" y1="150" x2="418" y2="150"/>
+    <line x1="280" y1="175" x2="262" y2="175"/><line x1="400" y1="175" x2="418" y2="175"/>
+    <line x1="280" y1="200" x2="262" y2="200"/><line x1="400" y1="200" x2="418" y2="200"/>
+    <line x1="280" y1="225" x2="262" y2="225"/><line x1="400" y1="225" x2="418" y2="225"/>
+    <line x1="280" y1="250" x2="262" y2="250"/><line x1="400" y1="250" x2="418" y2="250"/>
+    <line x1="280" y1="275" x2="262" y2="275"/><line x1="400" y1="275" x2="418" y2="275"/>
+    <line x1="280" y1="300" x2="262" y2="300"/><line x1="400" y1="300" x2="418" y2="300"/>
+  </g>
+
+  <circle cx="256" cy="150" r="4" class="gndf"/>
+  <circle cx="256" cy="175" r="4" fill="#2E9E5B"/>
+  <circle cx="256" cy="200" r="4" fill="#2E9E5B"/>
+  <circle cx="256" cy="225" r="4" class="gndf"/>
+  <circle cx="256" cy="250" r="4" class="gndf"/>
+  <circle cx="256" cy="275" r="4" fill="#9a9891"/>
+  <circle cx="256" cy="300" r="4" class="gndf"/>
+  <circle cx="424" cy="150" r="4" fill="#DC3545"/>
+  <circle cx="424" cy="175" r="4" class="gndf"/>
+  <circle cx="424" cy="200" r="4" class="gndf"/>
+  <circle cx="424" cy="225" r="4" fill="#9a9891"/>
+  <circle cx="424" cy="250" r="4" class="gndf"/>
+  <circle cx="424" cy="275" r="4" class="gndf"/>
+  <circle cx="424" cy="300" r="4" fill="#9a9891"/>
+
+  <text class="ts" x="292" y="150" dominant-baseline="central">1</text>
+  <text class="ts" x="292" y="175" dominant-baseline="central">2</text>
+  <text class="ts" x="292" y="200" dominant-baseline="central">3</text>
+  <text class="ts" x="292" y="225" dominant-baseline="central">4</text>
+  <text class="ts" x="292" y="250" dominant-baseline="central">5</text>
+  <text class="ts" x="292" y="275" dominant-baseline="central">6</text>
+  <text class="ts" x="292" y="300" dominant-baseline="central">7</text>
+  <text class="ts" x="388" y="150" text-anchor="end" dominant-baseline="central">14</text>
+  <text class="ts" x="388" y="175" text-anchor="end" dominant-baseline="central">13</text>
+  <text class="ts" x="388" y="200" text-anchor="end" dominant-baseline="central">12</text>
+  <text class="ts" x="388" y="225" text-anchor="end" dominant-baseline="central">11</text>
+  <text class="ts" x="388" y="250" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="ts" x="388" y="275" text-anchor="end" dominant-baseline="central">9</text>
+  <text class="ts" x="388" y="300" text-anchor="end" dominant-baseline="central">8</text>
+
+  <text class="t" x="244" y="150" text-anchor="end" dominant-baseline="central">1OE -&gt; GND</text>
+  <text class="t" x="244" y="175" text-anchor="end" dominant-baseline="central">1A &lt;- ESP32 GPIO16</text>
+  <text class="t" x="244" y="200" text-anchor="end" dominant-baseline="central">1Y -&gt; 330R -&gt; DIN</text>
+  <text class="t" x="244" y="225" text-anchor="end" dominant-baseline="central">2OE -&gt; GND</text>
+  <text class="t" x="244" y="250" text-anchor="end" dominant-baseline="central">2A -&gt; GND</text>
+  <text class="t" x="244" y="275" text-anchor="end" dominant-baseline="central">2Y  leave empty</text>
+  <text class="t" x="244" y="300" text-anchor="end" dominant-baseline="central">GND -&gt; GND rail</text>
+  <text class="t" x="436" y="150" dominant-baseline="central">VCC -&gt; +5 V rail</text>
+  <text class="t" x="436" y="175" dominant-baseline="central">4OE -&gt; GND</text>
+  <text class="t" x="436" y="200" dominant-baseline="central">4A -&gt; GND</text>
+  <text class="t" x="436" y="225" dominant-baseline="central">4Y  leave empty</text>
+  <text class="t" x="436" y="250" dominant-baseline="central">3OE -&gt; GND</text>
+  <text class="t" x="436" y="275" dominant-baseline="central">3A -&gt; GND</text>
+  <text class="t" x="436" y="300" dominant-baseline="central">3Y  leave empty</text>
+
+  <text class="t" x="40" y="362">Notch and dot mark the pin-1 end. Numbers run DOWN the left, then UP the right.</text>
+  <text class="t" x="40" y="386">Rule: pin 14 to +5 V; pins 2 and 3 are the signal; 6, 8, 11 stay empty;</text>
+  <text class="th" x="40" y="408">everything else goes to GND. Plus 0.1 uF between pin 14 and pin 7.</text>
+</svg>

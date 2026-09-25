@@ -74,6 +74,14 @@ throughout. Plug in only at 1.5.
 | - | breadboard, jumper wires, multimeter |
 | - | the 3 m WS2812 strip, uncut |
 
+#### First, how a breadboard is joined up inside
+
+![What is connected to what inside a breadboard](img/breadboard-internals.svg)
+
+Everything else on this page depends on that picture. The rails run the length
+of the board; the columns are groups of five; and nothing conducts across the
+centre channel.
+
 #### Seat the two chips
 
 The ESP32 and the 74HCT125 both **straddle the centre channel** of the
@@ -83,6 +91,14 @@ every pin on that side is shorted to its neighbours through the row.
 The 74HCT125 has a **notch at one end and a dot next to pin 1**. Pin 1 is at the
 notch end. Numbers run **down one side and back up the other**: 1-7 down the
 left, then 8-14 up the right, so pin 14 sits opposite pin 1.
+
+#### The finished layout
+
+![Breadboard layout for the desk node](img/breadboard-layout.svg)
+
+Red wires go up to the + rail, black wires down to the GND rail, green carries
+the data left to right. The table below is the same thing as a checklist -
+work down it and tick each row off.
 
 #### Then wire, in this order
 
@@ -248,6 +264,9 @@ both halves keep half a pad each. Sharp scissors. If the strip is silicone
 sleeved, trim 8-10 mm of silicone back off each end to expose the pads.
 
 #### Soldering
+
+![How a WS2812 corner joint is wired](img/corner-joint.svg)
+
 
 The WS2812 chip sits a couple of millimetres from its pads, and heat is what
 kills it, not solder. Short bursts, never a long dwell.

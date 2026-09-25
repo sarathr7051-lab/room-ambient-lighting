@@ -80,6 +80,9 @@ matters for screen sync.
 
 ### 74HCT125 (DIP-14)
 
+![74HCT125 pinout and where every pin goes](img/74hct125-pinout.svg)
+
+
 ```
    1  1OE  -> GND            14  VCC -> +5V rail
    2  1A   <- ESP32 GPIO16   13  4OE -> GND
