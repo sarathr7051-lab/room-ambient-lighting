@@ -2,59 +2,70 @@
 
 The bench circuit, moved off the breadboard onto one of the 6 x 4 inch
 isolated-pad dot boards. Same circuit, same seven parts, nothing new to buy.
-Breadboard contacts are good for about 1 A; the dot board with two bus wires is
-what lets ABL go to 2000 mA. This is the first dot board the owner has built,
-so it is written for that.
+The breadboard carried the strip's 600 mA on the bench and that is about its
+limit - the clips loosen and the rail sagged 0.3 V. Soldered bus wires carry
+2 A without complaint, and they do not fall out when the monitor moves. This
+is the owner's first dot board, so it is written for that; it was reviewed
+independently before being built.
 
 ![Dot board layout - top and underside](img/perfboard-layout.svg)
 
 Hole positions are **(column, row)**, counted from the **corner mark**: a
-notch or marker dot you put on one corner of the board before anything else.
-Column 1 is the corner-mark column, row 1 the corner-mark row. The ESP32's USB
-socket faces the top edge.
+marker dot you put on one corner of the board, on both faces, before anything
+else. Column 1 is the corner-mark column, row 1 the corner-mark row. The
+ESP32's USB socket faces the top edge. The drawing shows 26 x 18 holes, which
+is the used area plus margin; the full board is bigger and needs no cutting.
 
-## Three things a dot board does differently from a breadboard
+## Four things a dot board does differently from a breadboard
 
 1. **Nothing is connected until you connect it.** Every hole is its own copper
    ring. On the breadboard, five holes in a row were joined for you. Here you
-   join them yourself, two ways:
-   - **A bus:** a bare tinned wire laid along a row of holes on the underside,
+   join them yourself, two ways, and this layout uses both:
+   - **A bus:** a bare wire laid along a row of holes on the underside,
      soldered at every pad. Anything pushed through one of those holes gets
-     soldered into the same blob and is on the bus. This layout has two: +5V
-     and GND.
-   - **A bent leg:** push a component leg through, and on the underside bend it
-     flat across to the next pad, then solder. The diode's plain-side leg is
-     bent along four pads to make the junction.
-2. **It is mirrored when you flip it.** You place parts from the top and solder
-   from the underside, and when the board is upside down, column 25 is on the
-   left. That is how beginners solder the right thing into the wrong hole.
-   **Mark one corner** with a marker on both faces before you start, and find
-   it every time you turn the board over. The diagram shows both views.
-3. **Solder is permanent, but not that permanent.** A part in the wrong hole
+     soldered into the same blob and is on the bus. Two here: +5V and GND.
+   - **A bent leg:** push a part or wire through, and on the underside bend
+     the bare end flat across to the next pad, then solder. Every link wire
+     reaches its ESP32 pin this way, and the diode's plain leg is bent along
+     four pads to make the junction.
+2. **It is mirrored when you flip it.** Turn the board over **left-to-right,
+   like a page**, so the USB end stays at the top - then column 1 is on the
+   right and the rows are unchanged. Turn it end-over-end and everything is
+   wrong. Find the corner mark every time you turn it. The drawing shows both
+   faces.
+3. **A soldered bus lies across the holes it passes.** Lay it slightly to one
+   side of the hole centres, along the edge of the pad rings, so the holes stay
+   open. If a later leg meets wire across its hole: heat that joint, push the
+   leg through while the solder is molten, add a touch of solder.
+4. **Solder is permanent, but not that permanent.** A part in the wrong hole
    comes out: heat the joint, pull the leg with pliers while it is molten. A
-   pad lifts only if you keep the iron on for many seconds. Two or three
-   seconds per joint, always.
+   pad lifts only if the iron stays on for many seconds. Two or three seconds
+   per joint, always.
 
 ## The joint itself
 
-Every joint is the same motion:
+Iron at 330-350 C for 60/40 solder. Tin the tip first. **Rosin flux only** -
+the paste sold for plumbing is acid and corrodes boards.
 
 1. Leg or wire through the hole from the top. Bend it slightly on the
    underside so it cannot fall out.
 2. Iron tip touching **both the pad and the leg** at once, for 1 second.
 3. Feed solder into the joint, not onto the iron, until it flows round the
-   leg and makes a small cone. About the size of a grain of rice.
+   leg and makes a small cone the size of a grain of rice.
 4. Iron off. Do not move the leg for 2 seconds.
-5. Cut the leg 1-2 mm above the cone with side cutters.
 
-Good: a shiny cone that wets the pad and the leg. Bad: a ball sitting on the
-leg without touching the pad (not enough heat on the pad), or a dull grainy
-blob (moved while cooling). Pads are 2.54 mm apart; if solder joins two
-neighbouring pads that are not meant to be joined, drag a clean hot tip through
-the gap, or add flux and touch again - the solder pulls back to the pads.
+Good: a shiny cone wetting both pad and leg. Bad: a ball on the leg not
+touching the pad (pad not heated), or a dull grainy blob (moved while
+cooling). Pads are 2.54 mm apart; if solder joins two neighbours that should
+not be joined, drag a clean hot tip through the gap, or add flux and touch
+again - the solder pulls back onto the pads. Clean the tip on the sponge every
+few joints; a black tip transfers no heat, and the answer is never "hold it
+longer".
 
-Clean the tip on the sponge every few joints. A black tip transfers no heat,
-and the answer is never "hold it longer".
+**Trimming:** never cut a leg you intend to bend across pads. Everything else
+is trimmed 1-2 mm above its cone **after step 6**, in one go, with safety
+glasses on, and then the board is brushed clean - a clipping lying across two
+pads is the classic phantom short.
 
 ## The parts and where they go
 
@@ -62,107 +73,142 @@ and the answer is never "hold it longer".
 |---|---|---|
 | Female header, 15 pins | column 5, rows 3-17 | left row of the ESP32 |
 | Female header, 15 pins | column 15, rows 3-17 | right row |
-| +5V bus, bare tinned wire | column 19, rows 2-12 | underside |
-| GND bus, bare tinned wire | column 23, rows 2-12 | underside |
-| Link, red, insulated | VIN pin (15,3) to (19,3) | underside |
-| Link, black, insulated | GND pin (15,4) to (23,4) | underside |
-| Link, green, insulated | RX2 pin (5,8) to (17,8) | underside, passes under the ESP32 |
-| 1N4007 | band end (18,8), plain end (21,8) | **band toward the ESP32**. Underside: band-side leg bent across to (17,8) and soldered with the green link; plain-side leg bent down column 21 and soldered at rows 8, 9, 10, 11 = the **junction** |
-| 470 ohm | (19,10) to (21,10) | one leg on the +5V bus, one on the junction. Stand it upright if it will not lie flat in two holes |
-| 1000 uF | LONG leg (19,12), striped SHORT leg (23,12) | bend the legs apart to reach 4 holes |
-| 0.1 uF | (19,2) and (23,2) | no polarity |
+| +5V bus, bare wire | column 19, rows 2-13 | underside |
+| GND bus, bare wire | column 23, rows 2-13 | underside |
+| Link, red, insulated, ~10 cm | (16,3) to (19,3) | **top side**. Underside: the (16,3) end is bent across onto the VIN pin's cone at (15,3) and soldered to it |
+| Link, black, insulated, ~20 cm | (16,4) to (23,4) | top side. Underside: (16,4) end bent onto the GND pin at (15,4) |
+| Link, green, insulated, ~28 cm | (6,8) to (16,8) | top side, runs under the ESP32 body (the headers lift it 8 mm). Underside: (6,8) end bent onto the RX2 pin at (5,8); (16,8) end bent onto the diode's band leg at (17,8). **Bend toward 17, away from the D25 pin at (15,8)** |
+| 1N4007 | band end (17,8), plain end (21,8) | **band toward the ESP32**. Underside: plain leg bent down column 21 through rows 9, 10, 11 = the **junction**. Soldered at rows 8 and 9 only at first - see step 4 |
+| 470 ohm | (19,10) and (21,10) | **standing upright**: body on end over (19,10), that leg straight down; the other leg bent 180 degrees back over the body, down alongside it, into (21,10). It goes in beside the junction leg and is soldered to it |
+| 1000 uF | LONG leg (19,13), striped SHORT leg (21,13) | 2-hole spacing, no bending of the legs. Underside: the short leg is bent across (22,13) to the GND bus at (23,13) |
+| 0.1 uF | (19,2) and (23,2) | no polarity; legs bend to 4 holes easily |
 | Pigtail red | (19,5) | |
 | Pigtail black | (23,5) | |
 | LED 1 +5V wire | (19,6) | |
 | LED 1 GND wire | (23,6) | |
-| LED 1 green DIN wire | (21,11) | onto the junction |
+| LED 1 green DIN wire | (21,11) | in beside the junction leg, soldered to it |
 | LED 70 red tail | (19,7) | |
 | LED 70 black tail | (23,7) | |
+| Strain-relief lash | (26,3) and (26,9) | a twist of bare wire over the wire bundle |
 
-The 3V3 pin and the second GND pin are not used. Nothing else touches the
-ESP32.
+Only three ESP32 pins are used: **VIN (15,3), the GND below it (15,4), RX2
+(5,8)**. Nothing goes to 3V3 or the other GND. The pin names are for the
+30-pin DOIT DevKit V1 with the USB at the top: read them off the board's own
+silkscreen before soldering anything to a pin - some clones shuffle labels.
 
-The ESP32's two pin rows are drawn 10 holes apart. **Do not trust the drawing
-for that number** - push the headers onto the ESP32 first and let the board
-tell you where they land. If they land at columns 5 and 14, every other
-position stays the same; only the link lengths change by a hole.
+The ESP32's two pin rows are drawn 10 holes apart. **Let the board tell you
+the real number**: push the headers onto the ESP32 first, then place the
+assembly. That is also what guarantees the headers are the right distance
+apart to ever seat again. If they land at columns 5 and 14, everything else
+stays where it is; the links just get one hole shorter.
+
+**Bus wire:** best is solid-core copper - one core out of an Ethernet cable,
+or bell wire. The stranded silicone wire works if that is all there is: strip
+4 cm, pull the strands straight, tin in short passes with flux until it is a
+stiff rod. Not a paperclip (steel, solders badly). 4 cm per bus.
 
 ## Assembly order
 
 Adapter unplugged from the wall throughout. Pull the seven parts from the
-breadboard only when you reach their step - the breadboard circuit is the
-fallback until the dot board lights the strip. Low parts first, tall parts
-last, so the board lies flat on the bench while you solder.
+breadboard only when you reach their step. Honest fallback: once the diode,
+resistor and capacitors have left the breadboard (steps 4-6) the fallback is
+"put them back"; the ESP32 and its WLED config move last, so nothing on the
+network changes until the board works.
 
-**0. Corner mark and board size.** Marker dot on one corner, both faces. The
-full board is 15 x 10 cm and does not need cutting. If you want it smaller,
-do it now, not later: score along a row of holes on both faces with a knife
-against a ruler, 5-6 passes each side, then snap over a table edge. Anything
-from 27 x 20 holes up works for this layout.
+**0. Corner mark.** Marker dot on one corner, both faces. No cutting needed.
+If you ever do cut a board: brown paper-phenolic scores with a knife (5-6
+passes each face along a row of holes) and snaps over a table edge; green or
+yellow glass-fibre does not snap - hacksaw, and a mask for the dust.
 
-**1. Headers.** Cut two 15-pin lengths from a female header strip: cut
-through the *16th* pin position with side cutters; that pin is lost, which is
-normal. Push both headers onto the ESP32's pins. Place the whole thing on the
-board, USB at the top, so the headers drop into columns 5 and 15 (or wherever
-they land - see above), rows 3-17. Turn the board over with the ESP32 still
-plugged in; it holds the headers square. Solder **one pin at each end of each
-header** (4 joints). Turn it back, check both headers sit flat and the ESP32 is
-parallel to the board. If not, reheat that one joint and press. Then solder
-the other 26. Unplug the ESP32 and put it aside - it goes back on last.
+**1. Headers - first, because they become the legs the flipped board stands
+on.** Pull the 16th pin out of a female header strip with pliers, then cut
+through the empty plastic; twice, for two 15-pin lengths. Push both onto the
+ESP32's pins. Place the assembly on the board, USB at the top, headers into
+columns 5 and 15 (or where they land), rows 3-17. Flip the board left-to-right;
+put an eraser under the antenna end so the stack does not rock on the USB
+socket. Solder **one pin at each end of each header** (4 joints). Flip back,
+check both headers sit flat and the ESP32 is parallel to the board; if not,
+reheat that one joint and press. Solder the other 26, two or three seconds
+each - the ESP32 is a fine heat sink, no risk to it.
 
-**2. Buses.** Two lengths of wire, 8 cm each, insulation stripped off
-completely, strands twisted tight, tinned along the whole length. Underside:
-lay one along column 19 from row 2 to row 12. Solder it at row 2 and row 12
-first so it stays put, then at every pad between. Same for column 23. Trim
-the ends. **They must not touch each other or anything else** - there are
-three empty columns between them; keep them empty.
+To remove the ESP32: prise a little at each end alternately, never rock it
+sideways. Unplug it now and put it aside; it goes back on at step 10.
 
-**3. Links.** Three insulated wires, 22 AWG is fine:
-- Red, about 12 cm: strip 5 mm at both ends. One end wraps once round the
-  **VIN** header pin at (15,3) on the underside - solder it to that pin. Other
-  end goes through hole (19,3) from the top and is soldered to the +5V bus
-  underneath.
-- Black, same, GND pin (15,4) to (23,4).
-- Green, about 32 cm: RX2 pin (5,8), running under the ESP32 to hole (17,8).
-Links are on the underside, so they run flat against the board under the
-ESP32. Tape them down with a bit of tape if they will not stay.
+**1a. Meter, headers only.** Ohms 2000: (5,3) to (5,4) must read `1`, and
+(15,3) to (15,4) must read `1`. Those are 3V3-GND and VIN-GND - the two
+bridges that matter most and that no later check catches. Then eyeball every
+gap in the two rows of 15 cones.
 
-**4. Diode.** Band end at (18,8), plain end at (21,8), body flat on the top
-side. Underside: bend the band-side leg across to pad (17,8), where the green
-link comes through, and solder leg and link together in one joint. Bend the
-plain-side leg down column 21 and solder it at rows 8, 9, 10, 11. Cut nothing
-yet.
+**2. Buses.** Underside. Lay one bus wire down column 19 from row 2 to row
+13, slightly off the hole centres. Solder it at row 2 and row 13 first so it
+stays put, then at every pad between (12 joints). Same for column 23. Trim
+the ends. **Three empty columns between them stay empty.**
 
-**5. 470 ohm.** Legs into (19,10) and (21,10). Solder both. The (21,10) joint
-goes onto the diode leg already lying there.
+**3. Links, on the top side.** Red through (16,3) and (19,3); black through
+(16,4) and (23,4); green through (6,8) and (16,8), lying flat where the ESP32
+body will be. Underside: bend each pin-side bare end (5 mm stripped) across
+onto its header pin's cone - VIN, GND, RX2 - and reflow that cone with the
+wire in it. Solder the bus-side ends onto the buses. Leave the green (16,8)
+end unsoldered until step 4.
 
-**6. Capacitors.** 0.1 uF into (19,2) and (23,2). 1000 uF last: LONG leg into
-(19,12), striped SHORT leg into (23,12), body standing on the top side.
+**4. Diode.** Band end (17,8), plain end (21,8), body flat on top. Underside:
+bend the green link's bare end from (16,8) onto the band leg at (17,8) and
+solder the two together. Bend the plain leg down column 21 through rows 9,
+10, 11; solder it at **rows 8 and 9 only**, and leave rows 10 and 11 open for
+the resistor and the DIN wire. Cut nothing.
 
-**7. Meter, before any outside wire goes on.** Ohms 2000, probes on the
-underside:
-- +5V bus to GND bus: `1`. With the 1000 uF the display may show a number
-  that climbs and then goes to `1` - that is the capacitor charging, fine. A
-  small **steady** number is a short. Stop and find it.
-- +5V bus to the junction (column 21, rows 8-11): about **470**.
-- Junction to GND bus: `1`.
-- The RX2 pin to the junction: a number one way round the probes, `1` the
-  other way round. That is the diode, and it proves the band is the right
-  way.
+**5. 470 ohm, upright.** Leg into (19,10), the hairpin leg into (21,10)
+beside the junction leg. Solder (19,10) onto the bus; solder (21,10) with the
+resistor leg and the diode leg in one joint.
 
-**8. Outside wires.** Pull them from the breadboard one at a time, trim the
-tinned end to 3 mm, push through the hole from the top, solder underneath.
-Order: pigtail red (19,5), pigtail black (23,5), LED 1 +5V (19,6), LED 1 GND
-(23,6), LED 1 green DIN (21,11), LED 70 red (19,7), LED 70 black (23,7). Read
-the strip end and the pigtail measurement (red is +) rather than trusting
-wire colour if any wire is not red/black/green.
+**6. Capacitors.** 0.1 uF into (19,2) and (23,2). 1000 uF: LONG leg (19,13),
+striped SHORT leg (21,13); underside, bend the short leg across (22,13) to
+the GND bus at (23,13) and solder it there and at (21,13). Now trim every leg
+that is not bent, brush the board clean.
 
-**9. Meter again.** +5V bus to GND bus: `1`.
+**7. Meter, before any outside wire goes on.** Adapter out, ESP32 out.
+- Ohms 2000, +5V bus to GND bus: the number climbs and then shows `1` - that
+  is the 1000 uF charging, fine. A small **steady** number is a short. Stop.
+- Ohms 2000, +5V bus to the junction (column 21, rows 8-11): about **470**
+  (447 to 494 is in tolerance).
+- Ohms 2000, junction to GND bus: climbs, then `1` (through the 470 and the
+  capacitor - fine).
+- Ohms 2000, RX2 pin stub (5,8) to the +5V bus: `1`. Never a small number.
+- **Diode:** dial to the diode symbol. Red probe on the junction, black on the
+  RX2 pin stub: a number around 500-700. Swap the probes: `1`. That proves the
+  band is the right way **and** that the green link reaches the pin.
 
-**10. Strain relief.** Hot glue over the seven wire entries on the top side.
-Without it the first tug on a lead rips the pad off. Then plug the ESP32 in,
-USB at the top, all 30 pins seated. Adapter in. Expect the four colour bands
-on the U, same as on the breadboard.
+**8. Outside wires.** First the pigtail, and check it before it goes on:
+adapter in, DCV 20, red probe on the red lead, black on the black: **+5**,
+not -5. Adapter out. Trim both tinned ends to 3 mm, red through (19,5), black
+through (23,5), solder to the buses.
+
+**8a. Powered check of the clamp, nothing else connected.** ESP32 out, strip
+wires not yet on. Adapter in. DCV 20, black probe on the GND bus:
+- +5V bus: about **5.0 V**.
+- Junction: about **5.0 V** (pulled up through the 470).
+- Touch a scrap wire from the RX2 pin stub (5,8) to the GND bus while
+  watching the junction: it drops to about **0.7 V**. That is the diode doing
+  its job; 9 mA through the 470, harmless. Stays at 5 V = diode backwards or
+  green link not reaching the pin.
+Adapter out.
+
+**8b. The strip wires**, one at a time out of the breadboard, tinned end
+trimmed to 3 mm, through from the top, soldered underneath: LED 1 +5V (19,6),
+LED 1 GND (23,6), LED 1 green DIN (21,11) beside the junction leg, LED 70 red
+tail (19,7), LED 70 black tail (23,7). Read the strip end, not the wire colour,
+for the two LED 1 leads that are not red/black.
+
+**9. Strain relief.** Gather the seven wires into a bundle 2 cm from the
+board with a piece of heat-shrink or tape; lash the bundle to the board with a
+twist of bare wire through (26,3) and (26,9). Hot glue on top if there is a
+gun - on its own hot glue barely holds silicone insulation.
+
+**10. First power-up.** Plug the ESP32 in, USB at the top, all 30 pins
+seated. It still carries the bench config (120 LEDs, ABL 600 mA), which is
+safe for a first switch-on. Adapter in. Expect the four colour bands on the U,
+exactly as on the breadboard. A meter check across the buses is meaningless
+now - the strip and the ESP32 are across them.
 
 ## After it lights
 
@@ -171,18 +217,17 @@ python tools/led_layout.py --width 57 --height 30.5 --abl 2000 --write
 python tools/wled_push.py apply --host wled-desk.local
 ```
 
-Then at full white, meter DCV 20 with probes on the two 1000 uF legs (19,12)
-and (23,12): above 4.5 V is fine. Below it, regenerate with `--abl 1500` and
-apply again. The 3 A adapter sagged to 4.71 V at 600 mA on the breadboard;
-the dot board should do better, and the injection at LED 70 halves the drop
-along the strip.
+Then at full white, DCV 20 across the 1000 uF legs, (19,13) and (23,13):
+above 4.5 V is fine. Below it, regenerate with `--abl 1500` and apply again.
 
 ## What can go wrong, and the fix
 
 | Symptom | Likely | Fix |
 |---|---|---|
-| Nothing lights, ESP32 LED off | VIN link not on the bus, or pigtail reversed | meter DCV on the +5V bus vs GND bus with the adapter in: 5 V expected |
-| ESP32 boots, strip dark | green link not reaching the diode leg, or diode backwards | ohms RX2 pin to junction: one way only |
-| First LED flickers, rest dark | junction not pulled up: 470 ohm joint | ohms +5V bus to junction = 470 |
-| Adapter clicks / goes hot | short between buses | ohms between buses, adapter out |
-| One header pin not soldered | that pin's function missing - VIN, GND or RX2 | look at the row of 30 cones; every one should have solder |
+| Nothing lights, ESP32 LED off, regulator hot | 3V3-GND or VIN-GND header bridge (step 1a), or VIN link not on the bus | ESP32 out, ohms (15,3)-(15,4) and (5,3)-(5,4) = `1`; DCV on the buses with the adapter in = 5 V |
+| Adapter clicks, or goes hot | short between the buses; 1000 uF reversed (warm, bulging) | adapter out, strip and ESP32 off, ohms between buses; look at the capacitor stripe |
+| ESP32 boots, strip dark | diode backwards; green link not on RX2 or not on the band leg; DIN wire in the wrong hole; WLED GPIO not 16 | step 8a test with the ESP32 out |
+| Buses read 470 ohms to each other, junction to +5V reads `1` | 470 soldered (19,10) to (23,10) instead of to the junction | move the (23,10) leg to (21,10) |
+| First LED flickers, rest dark | junction not pulled up: 470 joint | ohms +5V bus to junction = 470 |
+| LEDs past 70... i.e. the far end of the U dim or pink at white | injection tail not on the bus | DCV at LED 70's tails at white: within 0.3 V of the buses |
+| Works, then dies when a lead moves | cracked joint or lifted pad after a tug | reflow; fit the strain relief |
