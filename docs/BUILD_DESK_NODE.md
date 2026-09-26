@@ -367,7 +367,8 @@ second end is soldered.**
 ## Stage 5 - the dot board - NEXT
 
 [PERFBOARD.md](PERFBOARD.md), hole by hole, with both faces drawn. The
-breadboard stays wired until the board lights the U.
+breadboard is dismantled part by part as the board is built; the ESP32 and
+its WLED config move last.
 
 ---
 
