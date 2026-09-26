@@ -126,7 +126,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
         label(14, 10, "junction: the diode's plain leg bent down (21,8) to (21,11), cut 1 mm past (21,11)", "s", "start", AMB, 0, 4, bg=True)
         label(14, 17, f"1000 uF short leg bent from (21,{CAP}) to the GND bus at (23,{CAP}), cut 1 mm past it", "s", "start", None, 0, 4, bg=True)
         label(21, 17.6, "coloured bus dots: soldered at step 2.  Black dots: soldered when the leg arrives", "s", "middle", None, 10, bg=True)
-        label(3, 9.6, "green link end from (4,8), bent onto the RX2 pin", "s", "end", None, 0, 8, bg=True)
+        label(3, 7.1, "green link end from (4,8), bent onto the RX2 pin", "s", "end", None, 0, 8, bg=True)
         return
 
     # ---- top side: links (solid, they live up here), parts, external wires
@@ -139,12 +139,12 @@ def panel(Y0, mirror, title, sub, xoff=0):
     bw = 5.2 * MM; bx0 = (dx1 + dx2) / 2 - bw / 2
     add(f'<rect x="{bx0}" y="{dy-1.35*MM}" width="{bw}" height="{2.7*MM}" rx="3" fill="#26262a"/>')
     add(f'<rect x="{bx0+2}" y="{dy-1.35*MM}" width="6" height="{2.7*MM}" fill="#d8d8d8"/>')
-    label(19, 8.7, "1N4007, band toward the ESP32", "s", "middle", dy=4)
+    label(17.2, 8.9, "1N4007, band toward the ESP32", "s", "start", dy=2)
     # 470 upright at (19,10), hairpin into (21,10)
     rx, ry = P(19, 10)
     add(f'<circle cx="{rx}" cy="{ry}" r="{1.25*MM}" fill="#d8c9a8" stroke="#8a7c5e"/>')
     wire([(19.5, 10), (21, 10)], LEG, wd=2)
-    label(24, 10, "470 ohm standing on (19,10); its top leg comes down at an angle into (21,10)", "s", "start", None, 0, 6)
+    label(24.2, 9.6, "470 ohm standing on (19,10); its top leg comes down at an angle into (21,10)", "s", "start", None, 0, 0)
     # 1000 uF, 10 mm can drawn to scale, translucent so the pads show
     cx, cy = P(20, CAP)
     add(f'<circle cx="{cx}" cy="{cy}" r="{5*MM}" fill="#2f3a52" fill-opacity="0.75" stroke="#1b2233"/>')
@@ -163,7 +163,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
             wire([(x, y), (24.6, y), (26.4, y2), (27.8, y2)], col, wd=3)
         px, py = P(27.8, y2); add(f'<text class="t" x="{px+6}" y="{py}" dominant-baseline="central">{lbl}</text>')
     blob(26, 4, "#1a1a18", 3); blob(26, 12, "#1a1a18", 3)
-    label(26, 12.8, "lash: bare wire through (26,4) and (26,12), over the bundle", "s", "middle", None, 8)
+    label(24.2, 13.4, "lash: bare wire through (26,4) and (26,12), over the bundle", "s", "start", None, 0, 0)
     for (x, y), _, _ in EXT: blob(x, y, "#1a1a18", 3.5)
     for (x, y) in [(19, 3), (23, 4), (16, 3), (16, 4), (4, 8), (16, 8), (17, 8), (21, 8), (19, 10), (21, 10), (19, CAP), (21, CAP), (19, 2), (23, 2)]:
         blob(x, y, "#1a1a18", 3.5)
