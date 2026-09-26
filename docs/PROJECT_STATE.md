@@ -73,41 +73,38 @@ and the LED 1 leads are all in the breadboard rails for now - fine at ABL
 
 ## Next - the plan to 7 pm, 27 Sep
 
-Screen sync first, because it is the most proven and the highest value; then
-the posters, which need no electronics; then the shelf light. NFC is phone work
-for the evening once the tags arrive. **The desk node stays on the breadboard
-for now** - it works, and moving it to a dot board is a later evening's job.
+Screen sync first, then the posters (no electronics), then the shelf light.
+NFC is phone work for the evening once the tags arrive.
 
-### Tonight, 26 Sep
+### Tomorrow morning, 27 Sep - in this order
 
-The monitor strip, per the **Now** section above. Nothing else.
-
-### Tomorrow morning
-
-5. Heat-shrink or hot glue over the two corner joints and the three end joints
-   before anything goes near the monitor; they are held by half a pad each.
-5a. **Move the node onto the dot board** - [PERFBOARD.md](PERFBOARD.md). About
-   60 joints; the breadboard stays wired as the fallback until the board
-   lights the U. Then ABL 2000.
-6. Tack-It test patch on hidden paint first thing. Flash the **Wemos D1 mini**
-   (ESP8266 build, CH340) while the IPA dries - no soldering.
-7. IPA the monitor back; mount the U starting at the `Din` corner; corner ties.
-8. Wire to the node. Strip power **straight from the pigtail**, not the rails,
-   ABL 2000 on the dot board (800 if it is still on the breadboard). `apply` / `walk` / `presets`.
-9. Hyperion: Windows installer, DXGI DDA grabber, WLED device by mDNS, paste
+1. **Protect the joints** (BUILD_DESK_NODE.md Stage 4). Pull the LED 1 wires,
+   the LED 70 tails and the spare's lead out of the breadboard; slide one
+   wide heat-shrink tube over each bundle from the free end, down onto the
+   strip's pads, shrink. Hot glue on the two corner joints. **Nothing else
+   until this is done.**
+2. **Dot board** - [PERFBOARD.md](PERFBOARD.md), hole by hole, both faces
+   drawn. About 60 joints. The breadboard stays wired until the board lights
+   the U. Then `--abl 2000`.
+3. Tack-It test patch on hidden paint. Flash the **Wemos D1 mini** (ESP8266
+   build, CH340) while the IPA dries - no soldering.
+4. IPA the monitor back; mount the U from the LED 1 corner (bottom-left from
+   the front); side pieces tuck under the top piece's ends; ties at corners.
+5. `apply` / `walk` / `presets`.
+6. Hyperion: Windows installer, DXGI DDA grabber, WLED device by mDNS, paste
    `config/hyperion_leds.json`. **Screen sync done.**
 
 ### Tomorrow afternoon
 
-10. Posters: the 6 x 2 hero grid (bottom edge ~132 cm off the floor, centred over
+7. Posters: the 6 x 2 hero grid (bottom edge ~132 cm off the floor, centred over
    the desk), bike A3 in the niche, waveform A3 on the bathroom wall. Tack-It, 4
    bits per A4. Stick them now; the NFC tags go on the **backs** of five cards
    later by lifting each card - Tack-It is removable.
-11. **Shelf light (L4)** on the D1 mini - see below.
+8. **Shelf light (L4)** on the D1 mini - see below.
 
 ### Evening
 
-12. NFC tags arrive: write with NFC Tools; HTTP Shortcuts for the WLED presets;
+9. NFC tags arrive: write with NFC Tools; HTTP Shortcuts for the WLED presets;
     `spotify:artist:<id>:play` behind Rahman, MJ, Pradeep Kumar, Coldplay,
     Freddie. Phone work, no wall work.
 
