@@ -11,6 +11,35 @@ the uncut strip, where a mistake costs nothing.
 
 ## Safety, once, for the whole build
 
+> ### THE 12 V ADAPTER WILL DESTROY THIS NODE
+>
+> Since the Gesto neon strip arrived there are **two adapters on the bench with
+> identical 5.5 x 2.1 mm barrel plugs and different voltages**:
+>
+> | Adapter | For | Barrel |
+> |---|---|---|
+> | **5 V 3 A** | the ESP32 and the WS2812 strip | 5.5 x 2.1 |
+> | **12 V 2 A** (came with the Gesto neon) | the 12 V neon strip ONLY | 5.5 x 2.1 |
+>
+> They are physically interchangeable and nothing in the circuit stops you.
+> **12 V into the 5 V rail instantly kills the ESP32 and every WS2812 on the
+> strip** - the ESP32's absolute maximum on VIN is well under 12 V, and the
+> LEDs' is 6-7 V. There is no fuse, no reverse protection and no second chance;
+> it is one wrong plug and roughly 3,500 rupees of parts.
+>
+> **Do this before wiring anything:**
+>
+> 1. **Measure both adapters** with the multimeter. Do not trust the label, and
+>    do not trust memory.
+> 2. **Write the measured voltage on each brick in marker, on tape**, big
+>    enough to read without picking it up.
+> 3. **Put the 12 V adapter in a different room, or at least a closed box**,
+>    until the desk node is finished. Out of reach beats a label.
+>
+> The 12 V strip is layer L3/L4 and is not built until the desk node works.
+> There is no reason for its adapter to be on the bench at all today.
+
+
 - **Eye protection at every first power-up.** A 1000 µF electrolytic fitted
   backwards across 5 V heats, vents and can burst. It is the only thing here
   that can actually injure you.
