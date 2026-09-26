@@ -22,7 +22,37 @@ someone new looks at the project.
 
 ---
 
-## Level shifting: RETRACTED, buy the buffer
+## Level shifting: MEASURED 26 Sep 2026 - the diode clamp it is
+
+The CD74HCT112EX was tested on the bench as a two-stage buffer. **It works
+electrically and fails on thresholds.** Four measurements, ESP32 on USB:
+
+| Pin 15 driven to | Pin 6 | |
+|---|---|---|
+| 0 V | 4.82 V | high |
+| **3.17 V (the ESP32's 3V3)** | **4.83 V** | **still high - should be 0** |
+| 4.83 V (the 5 V rail) | 0.00 V | correct |
+
+Pin 4 read 0.00 V and pin 15 read 3.17 V, so the wiring was sound and the
+result is the chip's own behaviour. It responds correctly at 5 V and not at
+all at 3.17 V, so its input threshold lies between them.
+
+An **HCT** input switches at a flat 2.0 V. An **HC** input switches at
+0.7 x VCC = 0.7 x 4.83 = **3.38 V**, just above the 3.17 V available. The part
+is marked HCT and behaves as HC - consistent with a shop that already supplied
+a flip-flop in place of a buffer.
+
+**Decision: build the diode clamp.** 1N4007 with its cathode at GPIO16, 470 ohm
+pull-up to +5 V (330 ohm is acceptable), node to the strip's DIN. The measured
+5.03 V adapter is comfortably inside where that circuit works.
+
+Note the margin is thinner than first estimated, because the 3V3 rail measures
+3.17 V rather than 3.3 V. Re-measure it on the 3 A adapter - a 5.03 V input
+should lift it slightly over the 4.83 V USB gives.
+
+---
+
+## Superseded: the sacrificial pixel
 
 **26 Sep 2026.** This section previously concluded that a sacrificial WS2812
 was "the permanent answer rather than a stopgap". **That was wrong.** Four

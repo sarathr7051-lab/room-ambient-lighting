@@ -1,147 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="680" height="854" viewBox="0 0 680 854" role="img">
-  <title>Chip test wiring, with the one moving jumper</title>
-  <desc>Breadboard with the CD74HCT112EX above and the ESP32 below, both astride the centre channel. Fixed wires go to the plus and minus rails. One jumper in pin 15 moves between the minus rail for test A and the 3V3 row for test B. 3V3 must never be joined to the plus rail.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="670" viewBox="0 0 680 670" role="img">
+  <title>Chip test wiring</title>
+  <desc>The 5 V rail runs across the top and the GND rail across the bottom. The chip sits on the left and the ESP32 on the right. Red wires go up to 5 V, dark wires down to GND, one amber jumper on pin 15 moves between the GND rail and the 3V3 row, and pin 6 is where the meter probes.</desc>
   <style>
     text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .h  { font-size: 15px; font-weight: 600; fill: #1a1a18; }
     .t  { font-size: 13px; font-weight: 400; fill: #3d3d3a; }
-    .ts { font-size: 11px; font-weight: 400; fill: #6b6b66; }
-    .pin{ font-size: 9px;  font-weight: 400; fill: #3d3d3a; }
-    .board { fill: #fbfaf7; stroke: #b8b5ad; stroke-width: 1; }
-    .body  { fill: #e7e5e0; stroke: #8a8a82; stroke-width: 0.8; }
-    .hole  { stroke: #c2bfb7; }
-    .gnd { stroke: #3d3d3a; } .gndf { fill: #3d3d3a; }
-    .warn { fill: none; stroke: #DC3545; stroke-width: 1.4; }
+    .n  { font-size: 12px; font-weight: 600; fill: #1a1a18; }
+    .body { fill: #eeece7; stroke: #6f6d66; stroke-width: 1.2; }
+    .gnd { stroke: #4a4844; } .gndf { fill: #4a4844; }
     @media (prefers-color-scheme: dark) {
-      .th{fill:#f5f3ee;} .t{fill:#d6d3cc;} .ts{fill:#9a9891;} .pin{fill:#d6d3cc;}
-      .board{fill:#232327;stroke:#5a5852;} .body{fill:#33333a;stroke:#77756e;}
-      .hole{stroke:#55534e;} .gnd{stroke:#d6d3cc;} .gndf{fill:#d6d3cc;}
+      .h{fill:#f5f3ee;} .t{fill:#d6d3cc;} .n{fill:#f5f3ee;}
+      .body{fill:#35353c;stroke:#9a9891;}
+      .gnd{stroke:#b9b6ae;} .gndf{fill:#b9b6ae;}
     }
   </style>
-  <rect x="185" y="95" width="305" height="465" rx="6" class="board"/>
-  <line x1="205" y1="115" x2="205" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="222" y1="115" x2="222" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="262" y1="115" x2="262" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="276" y1="115" x2="276" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="290" y1="115" x2="290" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="304" y1="115" x2="304" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="318" y1="115" x2="318" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="356" y1="115" x2="356" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="370" y1="115" x2="370" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="384" y1="115" x2="384" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="398" y1="115" x2="398" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="412" y1="115" x2="412" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="453" y1="115" x2="453" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="470" y1="115" x2="470" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
-  <line x1="196" y1="109" x2="196" y2="552" stroke="#4a7fd4" stroke-width="1.5"/>
-  <line x1="231" y1="109" x2="231" y2="552" stroke="#DC3545" stroke-width="1.5"/>
-  <line x1="444" y1="109" x2="444" y2="552" stroke="#DC3545" stroke-width="1.5"/>
-  <line x1="479" y1="109" x2="479" y2="552" stroke="#4a7fd4" stroke-width="1.5"/>
-  <text class="ts" x="205" y="574" text-anchor="middle">-</text>
-  <text class="ts" x="222" y="574" text-anchor="middle">+</text>
-  <text class="ts" x="453" y="574" text-anchor="middle">+</text>
-  <text class="ts" x="470" y="574" text-anchor="middle">-</text>
-  <text class="ts" x="213" y="588" text-anchor="middle">5 V rails</text>
-  <text class="ts" x="461" y="588" text-anchor="middle">5 V rails</text>
-  <rect x="322" y="101" width="30" height="453" rx="3" fill="none" class="hole" stroke-dasharray="4 4"/>
-  <path d="M222 95 L222 78 L453 78 L453 95" fill="none" stroke="#DC3545" stroke-width="2.2"/>
-  <path d="M205 95 L205 62 L470 62 L470 95" fill="none" class="gnd" stroke-width="2.2"/>
-  <text class="ts" x="337" y="74" text-anchor="middle">bridge the + rails</text>
-  <text class="ts" x="337" y="58" text-anchor="middle">bridge the - rails</text>
-  <rect x="248" y="293" width="40" height="14" rx="6" fill="#EF9F27" opacity="0.35"/>
-  <rect x="312" y="121" width="50" height="114" rx="4" class="body"/>
-  <path d="M329 121 A 8 8 0 0 0 345 121" fill="none" class="hole"/>
-  <circle cx="320" cy="128" r="2.2" class="gndf"/>
-  <text class="pin" x="323" y="129" dominant-baseline="central">1</text>
-  <text class="pin" x="352" y="129" text-anchor="end" dominant-baseline="central">16</text>
-  <text class="pin" x="323" y="143" dominant-baseline="central">2</text>
-  <text class="pin" x="352" y="143" text-anchor="end" dominant-baseline="central">15</text>
-  <text class="pin" x="323" y="157" dominant-baseline="central">3</text>
-  <text class="pin" x="352" y="157" text-anchor="end" dominant-baseline="central">14</text>
-  <text class="pin" x="323" y="171" dominant-baseline="central">4</text>
-  <text class="pin" x="352" y="171" text-anchor="end" dominant-baseline="central">13</text>
-  <text class="pin" x="323" y="185" dominant-baseline="central">5</text>
-  <text class="pin" x="352" y="185" text-anchor="end" dominant-baseline="central">12</text>
-  <text class="pin" x="323" y="199" dominant-baseline="central">6</text>
-  <text class="pin" x="352" y="199" text-anchor="end" dominant-baseline="central">11</text>
-  <text class="pin" x="323" y="213" dominant-baseline="central">7</text>
-  <text class="pin" x="352" y="213" text-anchor="end" dominant-baseline="central">10</text>
-  <text class="pin" x="323" y="227" dominant-baseline="central">8</text>
-  <text class="pin" x="352" y="227" text-anchor="end" dominant-baseline="central">9</text>
-  <text class="ts" x="337" y="251" text-anchor="middle">CD74HCT112EX</text>
-  <path d="M318 129 L205 129" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M318 143 L205 143" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M318 157 L205 157" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M318 171 L205 171" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M318 227 L205 227" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 129 L453 129" fill="none" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 157 L470 157" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 171 L470 171" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 185 L470 185" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 199 L470 199" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <path d="M356 213 L470 213" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <polygon points="246,192 246,206 259,199" fill="#2E9E5B"/>
-  <text class="t" x="240" y="199" text-anchor="end" dominant-baseline="central">pin 6 row: PROBE HERE</text>
-  <path d="M356 143 L412 143" fill="none" stroke="#EF9F27" stroke-width="2.4" stroke-linecap="round"/>
-  <circle cx="412" cy="143" r="4.5" fill="#EF9F27"/>
-  <text class="t" x="422" y="129" dominant-baseline="central">pin 15 jumper</text>
-  <path d="M412 143 C 440 143 470 173 470 185" fill="none" stroke="#EF9F27" stroke-width="2" stroke-dasharray="5 4"/>
-  <text class="th" x="480" y="187" dominant-baseline="central">A</text>
-  <text class="ts" x="492" y="187" dominant-baseline="central">to - rail</text>
-  <path d="M412 143 C 430 250 300 250 262 300" fill="none" stroke="#EF9F27" stroke-width="2" stroke-dasharray="5 4"/>
-  <text class="th" x="246" y="282" text-anchor="end" dominant-baseline="central">B</text>
-  <text class="ts" x="234" y="282" text-anchor="end" dominant-baseline="central">to the 3V3 row</text>
-  <path d="M453 171 L470 171" fill="none" class="gnd" stroke-width="2"/>
-  <rect x="457" y="164" width="8" height="14" rx="2" fill="none" class="hole"/>
-  <text class="ts" x="484" y="171" dominant-baseline="central">0.1 uF</text>
-  <rect x="270" y="286" width="134" height="224" rx="5" class="body"/>
-  <rect x="320" y="272" width="34" height="16" rx="3" class="body"/>
-  <text class="ts" x="337" y="280" text-anchor="middle" dominant-baseline="central">USB</text>
-  <text class="ts" x="337" y="398" text-anchor="middle" dominant-baseline="central">ESP32</text>
-  <text class="pin" x="281" y="300" dominant-baseline="central">3V3</text>
-  <text class="pin" x="393" y="300" text-anchor="end" dominant-baseline="central">VIN</text>
-  <text class="pin" x="281" y="314" dominant-baseline="central">GND</text>
-  <text class="pin" x="393" y="314" text-anchor="end" dominant-baseline="central">GND</text>
-  <text class="pin" x="281" y="328" dominant-baseline="central">D15</text>
-  <text class="pin" x="393" y="328" text-anchor="end" dominant-baseline="central">D13</text>
-  <text class="pin" x="281" y="342" dominant-baseline="central">D2</text>
-  <text class="pin" x="393" y="342" text-anchor="end" dominant-baseline="central">D12</text>
-  <text class="pin" x="281" y="356" dominant-baseline="central">D4</text>
-  <text class="pin" x="393" y="356" text-anchor="end" dominant-baseline="central">D14</text>
-  <text class="pin" x="281" y="370" dominant-baseline="central">RX2</text>
-  <text class="pin" x="393" y="370" text-anchor="end" dominant-baseline="central">D27</text>
-  <text class="pin" x="281" y="384" dominant-baseline="central">TX2</text>
-  <text class="pin" x="393" y="384" text-anchor="end" dominant-baseline="central">D26</text>
-  <text class="pin" x="281" y="398" dominant-baseline="central">D5</text>
-  <text class="pin" x="393" y="398" text-anchor="end" dominant-baseline="central">D25</text>
-  <text class="pin" x="281" y="412" dominant-baseline="central">D18</text>
-  <text class="pin" x="393" y="412" text-anchor="end" dominant-baseline="central">D33</text>
-  <text class="pin" x="281" y="426" dominant-baseline="central">D19</text>
-  <text class="pin" x="393" y="426" text-anchor="end" dominant-baseline="central">D32</text>
-  <text class="pin" x="281" y="440" dominant-baseline="central">D21</text>
-  <text class="pin" x="393" y="440" text-anchor="end" dominant-baseline="central">D35</text>
-  <text class="pin" x="281" y="454" dominant-baseline="central">RX0</text>
-  <text class="pin" x="393" y="454" text-anchor="end" dominant-baseline="central">D34</text>
-  <text class="pin" x="281" y="468" dominant-baseline="central">TX0</text>
-  <text class="pin" x="393" y="468" text-anchor="end" dominant-baseline="central">VN</text>
-  <text class="pin" x="281" y="482" dominant-baseline="central">D22</text>
-  <text class="pin" x="393" y="482" text-anchor="end" dominant-baseline="central">VP</text>
-  <text class="pin" x="281" y="496" dominant-baseline="central">D23</text>
-  <text class="pin" x="393" y="496" text-anchor="end" dominant-baseline="central">EN</text>
-  <path d="M398 300 L453 300" fill="none" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
-  <path d="M398 314 L470 314" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
-  <rect x="40" y="612" width="600" height="52" rx="6" class="warn"/>
-  <text class="th" x="56" y="633" fill="#DC3545">NEVER run a wire from 3V3 to the + rail.</text>
-  <text class="t" x="56" y="652">The + rail is 5 V. 3V3 is a separate 3.3 V. Joining them forces 5 V into the</text>
-  <text class="t" x="56" y="652" opacity="0">x</text>
-  <text class="t" x="56" y="690">3.3 V rail and kills the ESP32. 3V3 is only ever touched to pin 15, for test B.</text>
-  <text class="th" x="40" y="720">The wires you actually fit</text>
-  <rect x="40" y="733" width="12" height="12" rx="3" fill="#DC3545"/>
-  <text class="t" x="60" y="742" dominant-baseline="central">ESP32 VIN to + rail  ·  chip pin 16 to + rail  ·  bridge the two + rails</text>
-  <rect x="40" y="755" width="12" height="12" rx="3" class="gndf"/>
-  <text class="t" x="60" y="764" dominant-baseline="central">chip pins 1,2,3,4,8 to - rail  ·  chip pins 10-14 to - rail  ·  ESP32 GND to - rail  ·  bridge the two - rails</text>
-  <rect x="40" y="777" width="12" height="12" rx="3" fill="#EF9F27"/>
-  <text class="t" x="60" y="786" dominant-baseline="central">ONE jumper in pin 15's row. Its far end moves: A = - rail, B = the 3V3 row</text>
-  <rect x="40" y="799" width="12" height="12" rx="3" fill="#2E9E5B"/>
-  <text class="t" x="60" y="808" dominant-baseline="central">nothing at pin 6 - just touch the meter probe to a free hole in its row</text>
+  <text class="t" x="624" y="58" text-anchor="end">USB powers the ESP32. No adapter, no pigtail, no LED strip in this test.</text>
+  <rect x="56" y="75" width="568" height="18" rx="9" fill="#DC3545" opacity="0.9"/>
+  <text class="h" x="70" y="84" dominant-baseline="central" style="fill:#ffffff">5 V rail</text>
+  <rect x="56" y="461" width="568" height="18" rx="9" class="gndf"/>
+  <text class="h" x="70" y="470" dominant-baseline="central" style="fill:#ffffff">GND rail</text>
+  <path d="M160 180 L70 180 L70 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="180" r="4" class="gndf"/>
+  <path d="M160 208 L84 208 L84 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="208" r="4" class="gndf"/>
+  <path d="M160 236 L98 236 L98 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="236" r="4" class="gndf"/>
+  <path d="M160 264 L112 264 L112 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="264" r="4" class="gndf"/>
+  <path d="M160 376 L126 376 L126 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="376" r="4" class="gndf"/>
+  <path d="M300 236 L360 236 L360 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="236" r="4" class="gndf"/>
+  <path d="M300 264 L374 264 L374 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="264" r="4" class="gndf"/>
+  <path d="M300 292 L388 292 L388 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="292" r="4" class="gndf"/>
+  <path d="M300 320 L402 320 L402 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="320" r="4" class="gndf"/>
+  <path d="M300 348 L416 348 L416 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="348" r="4" class="gndf"/>
+  <path d="M300 180 L332 180 L332 84" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="180" r="4" fill="#DC3545"/>
+  <rect x="160" y="158" width="140" height="240" rx="6" class="body"/>
+  <path d="M218 158 A 12 12 0 0 0 242 158" fill="none" class="gnd" stroke-width="1"/>
+  <text class="n" x="171" y="180" dominant-baseline="central">1</text>
+  <text class="n" x="289" y="180" text-anchor="end" dominant-baseline="central">16</text>
+  <text class="n" x="171" y="208" dominant-baseline="central">2</text>
+  <text class="n" x="289" y="208" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="n" x="171" y="236" dominant-baseline="central">3</text>
+  <text class="n" x="289" y="236" text-anchor="end" dominant-baseline="central">14</text>
+  <text class="n" x="171" y="264" dominant-baseline="central">4</text>
+  <text class="n" x="289" y="264" text-anchor="end" dominant-baseline="central">13</text>
+  <text class="n" x="171" y="292" dominant-baseline="central">5</text>
+  <text class="n" x="289" y="292" text-anchor="end" dominant-baseline="central">12</text>
+  <text class="n" x="171" y="320" dominant-baseline="central">6</text>
+  <text class="n" x="289" y="320" text-anchor="end" dominant-baseline="central">11</text>
+  <text class="n" x="171" y="348" dominant-baseline="central">7</text>
+  <text class="n" x="289" y="348" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="n" x="171" y="376" dominant-baseline="central">8</text>
+  <text class="n" x="289" y="376" text-anchor="end" dominant-baseline="central">9</text>
+  <text class="t" x="230" y="410" text-anchor="middle">the chip</text>
+  <polygon points="144,312 144,328 156,320" fill="#2E9E5B"/>
+  <circle cx="171" cy="320" r="10" fill="none" stroke="#2E9E5B" stroke-width="2.5"/>
+  <path d="M300 208 L348 208" fill="none" stroke="#E08A0C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="208" r="4" fill="#E08A0C"/>
+  <circle cx="348" cy="208" r="4" fill="#E08A0C"/>
+  <path d="M348 208 L348 470" fill="none" stroke="#E08A0C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+  <text class="h" x="340" y="446" text-anchor="end" style="fill:#E08A0C">A - do this first</text>
+  <path d="M348 208 L440 208 L440 214 L462 214" fill="none" stroke="#E08A0C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+  <text class="h" x="400" y="194" text-anchor="middle" style="fill:#E08A0C">B - then move it here</text>
+  <text class="t" x="352" y="228" style="fill:#E08A0C">ONE wire only. Never both at once.</text>
+  <path d="M600 84 L600 470" fill="none" class="gnd" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="592" y="264" width="16" height="26" rx="3" class="body"/>
+  <text class="t" x="584" y="277" text-anchor="end" dominant-baseline="central">0.1 uF</text>
+  <rect x="452" y="214" width="114" height="136" rx="6" class="body"/>
+  <text class="t" x="509" y="282" text-anchor="middle" dominant-baseline="central">ESP32</text>
+  <path d="M492 214 L492 84" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="492" cy="214" r="4" fill="#DC3545"/>
+  <text class="n" x="498" y="200">VIN</text>
+  <path d="M536 350 L536 470" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="536" cy="350" r="4" class="gndf"/>
+  <text class="n" x="542" y="366">GND</text>
+  <circle cx="462" cy="214" r="4" fill="#E08A0C"/>
+  <text class="n" x="456" y="232" style="fill:#E08A0C">3V3 row</text>
+  <text class="h" x="56" y="518">The wires</text>
+  <rect x="56" y="535" width="12" height="12" rx="3" fill="#DC3545"/>
+  <text class="t" x="76" y="544" dominant-baseline="central">to the 5 V rail:  chip pin 16,  ESP32 VIN</text>
+  <rect x="56" y="558" width="12" height="12" rx="3" class="gndf"/>
+  <text class="t" x="76" y="567" dominant-baseline="central">to the GND rail:  chip pins 1 2 3 4 8 10 11 12 13 14,  ESP32 GND</text>
+  <rect x="56" y="581" width="12" height="12" rx="3" fill="#E08A0C"/>
+  <text class="t" x="76" y="590" dominant-baseline="central">ONE jumper. One end stays in pin 15. UNPLUG the other end and move it: A, then B</text>
+  <rect x="56" y="604" width="12" height="12" rx="3" fill="#2E9E5B"/>
+  <text class="t" x="76" y="613" dominant-baseline="central">pin 6: no wire. Red meter lead into a free hole in pin 6's row</text>
+  <text class="t" x="56" y="644">Black meter lead stays in the GND rail throughout. Bridge the two GND rails, and the two 5 V rails.</text>
 </svg>
