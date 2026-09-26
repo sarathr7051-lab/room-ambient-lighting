@@ -130,7 +130,8 @@ def hyperion_leds(runs: list[dict], depth: float, sides: int) -> list[dict]:
     return leds
 
 
-def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int) -> dict:
+def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int,
+              skip: int = 0) -> dict:
     """
     Partial WLED config for POST to /json/cfg.
 
@@ -145,7 +146,14 @@ def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int) -> dict:
         "pin": [pin],
         "order": WLED_ORDER_GRB,
         "rev": False,
-        "skip": 0,
+        # Sacrificial pixel: one WS2812 powered through a 1N4007 sits ahead
+        # of the run and does the 3.3 V -> 5 V level shifting. WLED drives it
+        # dark and addresses the real LEDs from 0, so nothing downstream
+        # changes. Whether "len" should also count the skipped pixel is not
+        # clearly documented - wled_push.py apply reads the config back and
+        # diffs it, so a wrong guess shows up immediately rather than as a
+        # strip that is one LED out.
+        "skip": skip,
         "type": WLED_TYPE_WS281X,
         "ref": False,
         "rgbwm": 0,
@@ -197,6 +205,9 @@ def main() -> int:
                    help="mA per LED at full white, for ABL's model")
     p.add_argument("--stock-length", type=float, default=300.0,
                    help="length of strip you own, cm (default 300)")
+    p.add_argument("--no-sacrificial", action="store_true",
+                   help="omit the sacrificial level-shifter pixel "
+                        "(only if a real 74HCT125 buffer is fitted)")
     p.add_argument("--write", action="store_true",
                    help="write config/hyperion_leds.json and config/wled_desk_cfg.json")
     a = p.parse_args()
@@ -222,6 +233,11 @@ def main() -> int:
         print("  *** NOT ENOUGH STRIP - the path is longer than what you have.")
 
     joints = len(runs) - 1
+    if not a.no_sacrificial:
+        print()
+        print("  Plus ONE sacrificial WS2812 ahead of the run, powered through a")
+        print("  1N4007, doing the 3.3 V -> 5 V level shift. WLED skip = 1.")
+
     print(f"\n  Corner joints to solder: {joints}  "
           f"({joints * 3} wires: +5V, GND, DATA at each)")
     print("  Cut only on the printed copper pads. Keep corner wires under 3 cm.")
@@ -242,7 +258,8 @@ def main() -> int:
     print("    Confirm with:  python tools/wled_push.py walk --host <ip>")
 
     leds = hyperion_leds(runs, a.depth, a.sides)
-    cfg = wled_cfg(total, a.pin, a.abl, a.ma_per_led)
+    cfg = wled_cfg(total, a.pin, a.abl, a.ma_per_led,
+                   skip=0 if a.no_sacrificial else 1)
 
     assert len(leds) == total, "layout/count mismatch"
 

@@ -74,25 +74,58 @@ throughout. Plug in only at 1.5.
 | - | breadboard, jumper wires, multimeter |
 | - | the 3 m WS2812 strip, uncut |
 
-> ### The 74HCT125 is missing - build without it
+> ### No 74HCT125 - use a sacrificial pixel instead
 >
-> The SP Road shop substituted a **CD74HCT112E** (dual JK flip-flop, DIP-16)
-> for the 74HCT125 (quad buffer, DIP-14). It cannot do this job - see
-> DECISIONS.md. Until a real buffer arrives:
+> The SP Road shops do not have one (five or six asked) and mail order would
+> cost days. **You do not need one.** A single WS2812 cut from the offcut does
+> the same job, and it is a recognised technique rather than a bodge - WLED
+> even has a setting for it.
 >
-> **Skip table rows 7-12 entirely and wire ESP32 GPIO16 -> 330 ohm -> strip
-> DIN.** Leave the chip out of the board. Keep the data wire under 30 cm.
+> **How it works.** A WS2812 needs a logic high of 0.7 x its own VDD. Power one
+> LED through a 1N4007 so it sits at about 4.2 V instead of 5 V, and its
+> threshold drops to roughly 2.9 V - which the ESP32's 3.3 V clears easily.
+> That LED then retransmits the data from its own push-pull output at about
+> 4.2 V, and 4.2 V comfortably exceeds the 3.5 V the 5 V main strip needs.
+> One cheap LED bridges the gap from both directions at once.
 >
-> This is out of spec - WS2812 wants 0.7 x VDD = 3.5 V for a logic high and the
-> ESP32 gives 3.3 V - but it usually works, and the failure mode is specific:
-> the **first LED** misbehaves while the rest are fine, because that first LED
-> retransmits a clean 5 V signal downstream.
+> Only that single LED draws current through the diode - 60 mA at worst against
+> the 1N4007's 1 A rating - so there is no thermal problem, and the main strip
+> still runs at a full 5 V with no brightness or colour penalty.
 >
-> If the first LED does misbehave, put a **1N4007 in series with the strip's
-> +5 V**, band (cathode) toward the strip. That drops the strip to about
-> 4.0-4.3 V, which pulls its logic-high threshold down to roughly 2.9 V and
-> gives the 3.3 V signal real margin. Keep ABL at 1000 mA or below - the
-> 1N4007 is only rated 1 A, so this is a bench fix, not the finished build.
+> Add `0.1 uF` across the sacrificial LED's own +5V and GND while you are there.
+
+#### Wiring the sacrificial pixel
+
+![Sacrificial pixel used as a level shifter](img/sacrificial-pixel.svg)
+
+Cut **one LED** off the 183 cm offcut - a single ~1.67 cm segment with half a
+pad at each end.
+
+| From | To | Note |
+|---|---|---|
+| + rail | 1N4007 anode (plain end) | |
+| 1N4007 cathode (**banded** end) | sacrificial LED **+5V** | band points at the LED |
+| sacrificial LED **GND** | - rail | |
+| ESP32 **GPIO16** | 330 ohm -> sacrificial LED **DIN** | |
+| sacrificial LED **DOUT** | main strip **DIN** | no resistor needed |
+| main strip **+5V** | + rail | full 5 V, not through the diode |
+| main strip **GND** | - rail | |
+
+Mind the arrows on both pieces - data still only flows one way.
+
+In WLED, set **Skip first LED(s) = 1** in LED Preferences. The sacrificial pixel
+then stays dark and your 70 real LEDs address as 0-69, so nothing downstream
+changes and the committed Hyperion layout still fits.
+
+> **Do not tick "Reversed" at the same time as "Skip first LED".** WLED ignores
+> the skip when reverse is on ([issue #3346](https://github.com/wled/WLED/issues/3346)),
+> and your sacrificial pixel starts animating. If `walk` later shows the strip
+> running the wrong way round, fix it by regenerating the Hyperion layout, not
+> with the reverse checkbox.
+
+Physically, tuck the sacrificial LED inside the node box or tape it face-down
+behind the monitor. It is dark in normal use, but it is one more thing not to
+leave dangling.
 
 #### First, how a breadboard is joined up inside
 
@@ -139,6 +172,11 @@ work down it and tick each row off.
 | 13 | other end of the 330 ohm | strip **DIN** | green |
 | 14 | strip **+5V** | + rail | red |
 | 15 | strip **GND** | - rail | black |
+
+> **There is no 74HCT125 right now**, so skip rows 7-12 of this table
+> entirely and wire the sacrificial pixel described above instead. Rows 1-6,
+> 14 and 15 are unchanged. A real buffer slots in later without disturbing
+> anything else.
 
 Leave 74HCT125 pins **6, 8 and 11** empty - they are the unused buffer outputs.
 

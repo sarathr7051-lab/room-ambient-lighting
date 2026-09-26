@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="510" viewBox="0 0 680 510" role="img">
+  <title>Sacrificial pixel used as a level shifter</title>
+  <desc>One WS2812 powered through a 1N4007 sits at about 4.2 V, so its logic
+  threshold falls to 2.9 V and it accepts the ESP32's 3.3 V data. Its output
+  leaves at 4.2 V, clearing the 3.5 V the main 5 V strip needs.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 14px; font-weight: 400; fill: #3d3d3a; }
+    .ts { font-size: 12px; font-weight: 400; fill: #6b6b66; }
+    .body { fill: #f2f1ed; stroke: #8a8a82; stroke-width: 0.8; }
+    .hot  { fill: #fdf1dd; stroke: #c98a1e; stroke-width: 0.8; }
+    .faint { stroke: #9a9891; fill: none; }
+    .gnd  { stroke: #3d3d3a; }
+    @media (prefers-color-scheme: dark) {
+      .th { fill: #f5f3ee; } .t { fill: #d6d3cc; } .ts { fill: #9a9891; }
+      .body { fill: #2a2a2e; stroke: #77756e; }
+      .hot  { fill: #3a301c; stroke: #c98a1e; }
+      .faint { stroke: #77756e; }
+      .gnd  { stroke: #d6d3cc; }
+    }
+  </style>
+  <text class="th" x="40" y="52">One spare LED replaces the level shifter</text>
+
+  <line x1="55" y1="100" x2="645" y2="100" stroke="#DC3545" stroke-width="3" stroke-linecap="round"/>
+  <text class="ts" x="55" y="86">+5 V rail</text>
+  <line x1="55" y1="400" x2="645" y2="400" class="gnd" stroke-width="3" stroke-linecap="round"/>
+  <text class="ts" x="55" y="421">GND rail</text>
+
+  <line x1="295" y1="100" x2="295" y2="210" stroke="#DC3545" stroke-width="2.5"/>
+  <polygon points="288,142 302,142 295,158" fill="#DC3545"/>
+  <line x1="286" y1="158" x2="304" y2="158" stroke="#DC3545" stroke-width="3" stroke-linecap="round"/>
+  <text class="t" x="312" y="146" dominant-baseline="central">1N4007</text>
+  <text class="ts" x="312" y="164" dominant-baseline="central">band toward the LED</text>
+
+  <line x1="140" y1="255" x2="168" y2="255" stroke="#2E9E5B" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="168" y="248" width="34" height="14" rx="3" class="faint"/>
+  <line x1="202" y1="255" x2="240" y2="255" stroke="#2E9E5B" stroke-width="2.5" stroke-linecap="round"/>
+  <text class="t" x="146" y="232" dominant-baseline="central">3.3 V</text>
+  <text class="ts" x="185" y="285" text-anchor="middle">330 ohm</text>
+
+  <line x1="350" y1="255" x2="470" y2="255" stroke="#2E9E5B" stroke-width="2.5" stroke-linecap="round"/>
+  <text class="t" x="410" y="232" text-anchor="middle">4.2 V</text>
+
+  <line x1="330" y1="300" x2="330" y2="400" class="gnd" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="500" y1="210" x2="500" y2="100" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="600" y1="300" x2="600" y2="400" class="gnd" stroke-width="2.5" stroke-linecap="round"/>
+
+  <rect x="50" y="210" width="90" height="90" rx="6" class="body"/>
+  <text class="th" x="95" y="246" text-anchor="middle" dominant-baseline="central">ESP32</text>
+  <text class="ts" x="95" y="266" text-anchor="middle" dominant-baseline="central">GPIO16</text>
+
+  <rect x="240" y="210" width="110" height="90" rx="6" class="hot"/>
+  <text class="th" x="295" y="234" text-anchor="middle" dominant-baseline="central">sacrificial</text>
+  <text class="ts" x="295" y="252" text-anchor="middle" dominant-baseline="central">WS2812 x 1</text>
+  <text class="t" x="295" y="274" text-anchor="middle" dominant-baseline="central">VDD ~ 4.2 V</text>
+  <text class="ts" x="295" y="291" text-anchor="middle" dominant-baseline="central">needs 2.9 V - ok</text>
+
+  <rect x="470" y="210" width="160" height="90" rx="6" class="body"/>
+  <text class="th" x="550" y="234" text-anchor="middle" dominant-baseline="central">main strip</text>
+  <text class="ts" x="550" y="252" text-anchor="middle" dominant-baseline="central">70 LEDs</text>
+  <text class="t" x="550" y="274" text-anchor="middle" dominant-baseline="central">VDD 5.0 V</text>
+  <text class="ts" x="550" y="291" text-anchor="middle" dominant-baseline="central">needs 3.5 V - ok</text>
+
+  <text class="t" x="40" y="452">The diode drops only this one LED, so its threshold falls to 2.9 V and the</text>
+  <text class="t" x="40" y="474">3.3 V gets in. It retransmits at 4.2 V, which clears the strip's 3.5 V.</text>
+  <text class="th" x="40" y="500">In WLED set Skip first LED(s) = 1. ESP32 power pins not shown here.</text>
+</svg>

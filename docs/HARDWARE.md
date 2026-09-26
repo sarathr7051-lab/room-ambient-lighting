@@ -11,10 +11,12 @@ Bought at SP Road (Om Technology Centre, F4 SRNG Complex) on 25 Sep 2026.
 |---|---|---|
 | ESP32 NodeMCU DevKit V1, 30-pin, CP2102 | 1 | the desk node |
 | WS2812 strip, 5 V, 60/m, black PCB | ~1.2 m of 3 m | "2812" without the B; same protocol, GRB |
-| 74HCT125 quad buffer, DIP-14 | **0 - NOT IN HAND** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16) instead, which cannot do this. See DECISIONS.md |
+| 74HCT125 quad buffer, DIP-14 | **0 - NOT IN HAND, and not needed** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16) instead, which cannot do this. See DECISIONS.md |
 | 1000 uF 25 V electrolytic | 1 | bulk across the 5 V rail |
 | 0.1 uF ceramic | 1 | decoupling across the 74HCT125 |
 | 330 ohm, 1/4 W | 1 | series resistor on DIN |
+| 1N4007 diode | 1 | drops the sacrificial pixel to ~4.2 V |
+| one extra WS2812 off the offcut | 1 | the sacrificial pixel - this IS the level shifter |
 | 5 V 5 A adapter, 5.5 x 2.1 | 1 | |
 | DC barrel pigtail, female with leads | 1 | |
 | Silicone wire 22 AWG red/black/green | ~2 m | corner jumpers and injection run |

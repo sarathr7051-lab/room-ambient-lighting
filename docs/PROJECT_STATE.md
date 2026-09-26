@@ -4,21 +4,22 @@
 beginning; this one says where the build actually is. Update it whenever a step
 completes.
 
-Last updated: **25 Sep 2026**
+Last updated: **26 Sep 2026**
 
 ---
 
 ## Now
 
-**Cut the strip and solder the two corner joints.**
+**Build the bench circuit** - [BUILD_DESK_NODE.md § 1.4](BUILD_DESK_NODE.md#14-wire-the-breadboard---next).
+Nothing electrical has been powered up yet, and this must happen before the
+strip is cut. Diagrams in [docs/img/](img/).
 
-But do [Build the bench circuit](#next) first if at all possible — see the
-warning under it. Cutting before the electronics has ever been proven means a
-dead strip could be a wiring fault *or* a solder fault, with no way to tell
-which.
+The missing 74HCT125 does **not** block it. A sacrificial WS2812 powered through
+a 1N4007 does the level shifting instead, from parts already in the bin - see
+[DECISIONS.md](DECISIONS.md#level-shifting-sacrificial-pixel-not-a-chip).
 
-Procedure: [BUILD_DESK_NODE.md § Corners](BUILD_DESK_NODE.md#corners---cutting-and-soldering).
-Practise on the 183 cm offcut first — this is a first soldering job.
+Then, and only once the breadboard lights the uncut strip: cut the three
+lengths and solder the two corner joints. Practise on the offcut first.
 
 ---
 
@@ -91,7 +92,6 @@ Windows x64 installer, DXGI DDA grabber, WLED device over DDP, paste
 
 | Item | Waiting on |
 |---|---|
-| **Level shifter for L2** | a real 74HCT125, or any 74HCT gate - the shop substituted a CD74HCT112E, which cannot work. Not blocking: the bench test runs without it |
 | **L3** under-desk warm strip | 12 V 1 A adapter (Robu SKU 24715) |
 | **L4** shelf node, Wemos D1 mini | Gesto 12 V neon strip to arrive |
 | Music reactive, auto-dim, presence | custom WLED build with `USERMOD_AUDIOREACTIVE`, `USERMOD_LDR`, `USERMOD_PIR_SENSOR_SWITCH` — goes on by **OTA**, not USB |

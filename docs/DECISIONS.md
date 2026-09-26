@@ -22,7 +22,40 @@ someone new looks at the project.
 
 ---
 
-## What to actually buy for the level shifter
+## Level shifting: sacrificial pixel, not a chip
+
+**Decided 26 Sep 2026.** No 74HCT125, and no other 74HCT gate, could be found
+at five or six SP Road shops, and Robu would cost days. The build uses a
+**sacrificial WS2812** instead, and that is the permanent answer rather than a
+stopgap.
+
+One LED cut from the offcut is powered through a 1N4007 at about 4.2 V. Its own
+logic threshold falls to roughly 2.9 V, so it accepts the ESP32's 3.3 V; its
+output then swings to its own 4.2 V, which clears the 3.5 V that the 5 V main
+strip requires. One LED already in the parts bin bridges the gap from both ends.
+
+Why this is not a compromise:
+
+- It is the technique WLED itself expects - "Skip first LED(s)" exists for
+  exactly this case - and it is documented by Adafruit and widely used.
+- Only the sacrificial LED draws through the diode, 60 mA against a 1 A part,
+  so there is no heat, no current sharing and no derating.
+- The main strip keeps a full 5 V, so no brightness or colour shift.
+
+Rejected along the way:
+
+| Idea | Why not |
+|---|---|
+| IRL540N or IRFZ44N as an RC level shifter | Power MOSFETs with large gate capacitance. WS2812 needs roughly 300 ns pulse fidelity at 800 kHz, and a pull-up driving that much capacitance is orders of magnitude too slow. |
+| A diode dropping the whole strip's supply | Works electrically, but needs a 3 A diode, costs brightness across all 70 LEDs, and parallel 1N4007s share current badly - forward voltage falls as they heat, so the hottest one takes more. |
+| Coercing the CD74HCT112E into service | See the rejected table above. It is sequential; there is no combinational path from any input to Q. |
+
+The buying table below still applies if a proper buffer ever turns up. It would
+be a marginal improvement, not a fix for anything broken.
+
+---
+
+## What to buy IF a level shifter ever turns up
 
 **It is the HCT that matters, not the 125.** Any 74**HCT** logic gate works as
 a 3.3 V -> 5 V level shifter, because the HCT family pairs TTL input thresholds
