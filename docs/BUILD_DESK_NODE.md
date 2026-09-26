@@ -325,6 +325,17 @@ hard-wired low and never goes high.
 
 ![CD74HCT112E wired as a level-shifting buffer](img/hct112-buffer.svg)
 
+![Breadboard wiring for the chip test, with real ESP32 pin names](img/chip-test-breadboard.svg)
+
+Board oriented as it sits on the bench: **USB at the top**. With the USB end
+away from you, `3V3` is the top-LEFT pin and `VIN` is the top-RIGHT pin, each
+with a `GND` immediately below it. `RX2` (= GPIO16) is the 6th pin down the
+left side, counting from the USB end.
+
+**The two rail pairs are separate strips.** The `+` rail down the left is not
+connected to the `+` rail down the right, same for the `-` rails. One jumper
+across the top joins each pair, or half the circuit has no power.
+
 #### The catch, and the two-minute test that settles it
 
 **The both-asserted output state is not the same between manufacturers.**

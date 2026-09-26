@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="746" viewBox="0 0 680 746" role="img">
+  <title>Chip test wiring on the breadboard</title>
+  <desc>Breadboard with the CD74HCT112EX above and the ESP32 below, both astride the centre channel, showing every jumper to the plus and minus rails and the three signal taps.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 13px; font-weight: 400; fill: #3d3d3a; }
+    .ts { font-size: 11px; font-weight: 400; fill: #6b6b66; }
+    .pin{ font-size: 9px;  font-weight: 400; fill: #3d3d3a; }
+    .board { fill: #fbfaf7; stroke: #b8b5ad; stroke-width: 1; }
+    .body  { fill: #e7e5e0; stroke: #8a8a82; stroke-width: 0.8; }
+    .hole  { stroke: #c2bfb7; }
+    .gnd { stroke: #3d3d3a; } .gndf { fill: #3d3d3a; }
+    @media (prefers-color-scheme: dark) {
+      .th{fill:#f5f3ee;} .t{fill:#d6d3cc;} .ts{fill:#9a9891;} .pin{fill:#d6d3cc;}
+      .board{fill:#232327;stroke:#5a5852;} .body{fill:#33333a;stroke:#77756e;}
+      .hole{stroke:#55534e;} .gnd{stroke:#d6d3cc;} .gndf{fill:#d6d3cc;}
+    }
+  </style>
+  <rect x="185" y="95" width="305" height="465" rx="6" class="board"/>
+  <line x1="205" y1="115" x2="205" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="222" y1="115" x2="222" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="262" y1="115" x2="262" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="276" y1="115" x2="276" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="290" y1="115" x2="290" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="304" y1="115" x2="304" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="318" y1="115" x2="318" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="356" y1="115" x2="356" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="370" y1="115" x2="370" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="384" y1="115" x2="384" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="398" y1="115" x2="398" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="412" y1="115" x2="412" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="453" y1="115" x2="453" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="470" y1="115" x2="470" y2="546" class="hole" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="0.5 13.5"/>
+  <line x1="196" y1="109" x2="196" y2="552" stroke="#4a7fd4" stroke-width="1.5"/>
+  <line x1="231" y1="109" x2="231" y2="552" stroke="#DC3545" stroke-width="1.5"/>
+  <line x1="444" y1="109" x2="444" y2="552" stroke="#DC3545" stroke-width="1.5"/>
+  <line x1="479" y1="109" x2="479" y2="552" stroke="#4a7fd4" stroke-width="1.5"/>
+  <text class="ts" x="205" y="574" text-anchor="middle">-</text>
+  <text class="ts" x="222" y="574" text-anchor="middle">+</text>
+  <text class="ts" x="453" y="574" text-anchor="middle">+</text>
+  <text class="ts" x="470" y="574" text-anchor="middle">-</text>
+  <rect x="322" y="101" width="30" height="453" rx="3" fill="none" class="hole" stroke-dasharray="4 4"/>
+  <path d="M222 95 L222 78 L453 78 L453 95" fill="none" stroke="#DC3545" stroke-width="2.2"/>
+  <path d="M205 95 L205 62 L470 62 L470 95" fill="none" class="gnd" stroke-width="2.2"/>
+  <text class="ts" x="337" y="74" text-anchor="middle">bridge the two + rails</text>
+  <text class="ts" x="337" y="58" text-anchor="middle">bridge the two - rails</text>
+  <rect x="312" y="121" width="50" height="114" rx="4" class="body"/>
+  <path d="M329 121 A 8 8 0 0 0 345 121" fill="none" class="hole"/>
+  <circle cx="320" cy="128" r="2.2" class="gndf"/>
+  <text class="pin" x="323" y="129" dominant-baseline="central">1</text>
+  <text class="pin" x="352" y="129" text-anchor="end" dominant-baseline="central">16</text>
+  <text class="pin" x="323" y="143" dominant-baseline="central">2</text>
+  <text class="pin" x="352" y="143" text-anchor="end" dominant-baseline="central">15</text>
+  <text class="pin" x="323" y="157" dominant-baseline="central">3</text>
+  <text class="pin" x="352" y="157" text-anchor="end" dominant-baseline="central">14</text>
+  <text class="pin" x="323" y="171" dominant-baseline="central">4</text>
+  <text class="pin" x="352" y="171" text-anchor="end" dominant-baseline="central">13</text>
+  <text class="pin" x="323" y="185" dominant-baseline="central">5</text>
+  <text class="pin" x="352" y="185" text-anchor="end" dominant-baseline="central">12</text>
+  <text class="pin" x="323" y="199" dominant-baseline="central">6</text>
+  <text class="pin" x="352" y="199" text-anchor="end" dominant-baseline="central">11</text>
+  <text class="pin" x="323" y="213" dominant-baseline="central">7</text>
+  <text class="pin" x="352" y="213" text-anchor="end" dominant-baseline="central">10</text>
+  <text class="pin" x="323" y="227" dominant-baseline="central">8</text>
+  <text class="pin" x="352" y="227" text-anchor="end" dominant-baseline="central">9</text>
+  <text class="ts" x="337" y="249" text-anchor="middle">CD74HCT112EX</text>
+  <path d="M318 129 L205 129" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M318 143 L205 143" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M318 157 L205 157" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M318 171 L205 171" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M318 227 L205 227" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 129 L453 129" fill="none" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 157 L470 157" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 171 L470 171" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 185 L470 185" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 199 L470 199" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M356 213 L470 213" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M318 199 L262 199" fill="none" stroke="#2E9E5B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="262" cy="199" r="4.5" fill="#2E9E5B"/>
+  <text class="t" x="250" y="199" text-anchor="end" dominant-baseline="central">pin 6 = MEASURE</text>
+  <path d="M356 143 L412 143" fill="none" stroke="#2E9E5B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="412" cy="143" r="4.5" fill="#2E9E5B"/>
+  <text class="t" x="424" y="131" dominant-baseline="central">pin 15 = MOVE</text>
+  <path d="M453 171 L470 171" fill="none" class="gnd" stroke-width="2"/>
+  <rect x="457" y="164" width="8" height="14" rx="2" fill="none" class="hole"/>
+  <text class="ts" x="484" y="171" dominant-baseline="central">0.1 uF</text>
+  <rect x="270" y="286" width="134" height="224" rx="5" class="body"/>
+  <rect x="320" y="272" width="34" height="16" rx="3" class="body"/>
+  <text class="ts" x="337" y="280" text-anchor="middle" dominant-baseline="central">USB</text>
+  <text class="ts" x="337" y="398" text-anchor="middle" dominant-baseline="central">ESP32</text>
+  <text class="pin" x="281" y="300" dominant-baseline="central">3V3</text>
+  <text class="pin" x="393" y="300" text-anchor="end" dominant-baseline="central">VIN</text>
+  <text class="pin" x="281" y="314" dominant-baseline="central">GND</text>
+  <text class="pin" x="393" y="314" text-anchor="end" dominant-baseline="central">GND</text>
+  <text class="pin" x="281" y="328" dominant-baseline="central">D15</text>
+  <text class="pin" x="393" y="328" text-anchor="end" dominant-baseline="central">D13</text>
+  <text class="pin" x="281" y="342" dominant-baseline="central">D2</text>
+  <text class="pin" x="393" y="342" text-anchor="end" dominant-baseline="central">D12</text>
+  <text class="pin" x="281" y="356" dominant-baseline="central">D4</text>
+  <text class="pin" x="393" y="356" text-anchor="end" dominant-baseline="central">D14</text>
+  <text class="pin" x="281" y="370" dominant-baseline="central">RX2</text>
+  <text class="pin" x="393" y="370" text-anchor="end" dominant-baseline="central">D27</text>
+  <text class="pin" x="281" y="384" dominant-baseline="central">TX2</text>
+  <text class="pin" x="393" y="384" text-anchor="end" dominant-baseline="central">D26</text>
+  <text class="pin" x="281" y="398" dominant-baseline="central">D5</text>
+  <text class="pin" x="393" y="398" text-anchor="end" dominant-baseline="central">D25</text>
+  <text class="pin" x="281" y="412" dominant-baseline="central">D18</text>
+  <text class="pin" x="393" y="412" text-anchor="end" dominant-baseline="central">D33</text>
+  <text class="pin" x="281" y="426" dominant-baseline="central">D19</text>
+  <text class="pin" x="393" y="426" text-anchor="end" dominant-baseline="central">D32</text>
+  <text class="pin" x="281" y="440" dominant-baseline="central">D21</text>
+  <text class="pin" x="393" y="440" text-anchor="end" dominant-baseline="central">D35</text>
+  <text class="pin" x="281" y="454" dominant-baseline="central">RX0</text>
+  <text class="pin" x="393" y="454" text-anchor="end" dominant-baseline="central">D34</text>
+  <text class="pin" x="281" y="468" dominant-baseline="central">TX0</text>
+  <text class="pin" x="393" y="468" text-anchor="end" dominant-baseline="central">VN</text>
+  <text class="pin" x="281" y="482" dominant-baseline="central">D22</text>
+  <text class="pin" x="393" y="482" text-anchor="end" dominant-baseline="central">VP</text>
+  <text class="pin" x="281" y="496" dominant-baseline="central">D23</text>
+  <text class="pin" x="393" y="496" text-anchor="end" dominant-baseline="central">EN</text>
+  <path d="M398 300 L453 300" fill="none" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
+  <path d="M398 314 L470 314" fill="none" class="gnd" stroke-width="2" stroke-linecap="round"/>
+  <path d="M276 300 L262 300" fill="none" stroke="#2E9E5B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="262" cy="300" r="4.5" fill="#2E9E5B"/>
+  <text class="t" x="250" y="300" text-anchor="end" dominant-baseline="central">3V3 tap</text>
+  <text class="th" x="40" y="600">Seven jumpers to the minus rail, two to plus, three signal</text>
+  <rect x="40" y="615" width="12" height="12" rx="3" fill="#DC3545"/>
+  <text class="t" x="60" y="624" dominant-baseline="central">ESP32 VIN -> + rail  ·  chip pin 16 -> + rail</text>
+  <rect x="40" y="637" width="12" height="12" rx="3" class="gndf"/>
+  <text class="t" x="60" y="646" dominant-baseline="central">chip pins 1, 2, 3, 4 and 8 -> - rail  ·  chip pins 10-14 -> - rail  ·  ESP32 GND -> - rail</text>
+  <rect x="40" y="659" width="12" height="12" rx="3" fill="#2E9E5B"/>
+  <text class="t" x="60" y="668" dominant-baseline="central">chip pin 6 -> spare hole (measure here)  ·  chip pin 15 -> spare hole (move this)  ·  ESP32 3V3 -> spare hole</text>
+  <text class="t" x="40" y="702">The two + rails are separate strips, and so are the two - rails. Bridge each pair at the top.</text>
+  <text class="t" x="40" y="724">Both the chip and the ESP32 sit ASTRIDE the centre channel. Pin 1 is at the notch.</text>
+</svg>
