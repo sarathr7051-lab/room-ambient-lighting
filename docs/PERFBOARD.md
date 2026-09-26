@@ -92,7 +92,7 @@ short.
 | Link, green, insulated, ~10 cm | (4,8) to (16,8) | top side, **round the top end of the ESP32**: up column 4 to row 1, across along row 1 above the headers (under the USB socket's overhang, which is 8 mm up), down between columns 17 and 18, then across into (16,8). It cannot cross the header bodies. It crosses over the red and black links on the way down; all three are insulated, that is fine. Underside: (4,8) end bent onto the RX2 pin at (5,8); (16,8) end bent onto the diode's band leg at (17,8), **toward 17, away from the D27 pin at (15,8)** |
 | 1N4007 | band end (17,8), plain end (21,8) | **band toward the ESP32**. Underside: plain leg laid down column 21 beside the holes of rows 9, 10, 11 = the **junction**; soldered at rows 8 and 9 at step 4 and **cut 1 mm past (21,11) right then**; rows 10 and 11 are soldered when the resistor and DIN wire arrive |
 | 470 ohm | (19,10) and (21,10) | **standing upright**: body on end over (19,10), that leg straight down. The other leg comes off the top of the body in a **straight slant to (21,10)**, like a tent guy-rope - not folded down the side of the body, where it would sit 1 mm from the bare +5V lead. **Slide a 10 mm piece of insulation stripped off the 22 AWG wire over that leg first.** Goes in beside the junction leg and is soldered to it |
-| 1000 uF | LONG leg (19,16), striped SHORT leg (21,16) | its natural 5 mm spacing, no bending. Underside: short leg laid across (22,16) to the GND bus at (23,16), soldered there, **cut 1 mm past (23,16)**. The can sits over rows 14-18 (13-19 for a 13 mm can), clear of everything. **Fitted last, at step 8c**, so the flipped board does not stand on it |
+| 1000 uF | LONG leg (19,16), striped SHORT leg (21,16) | its natural 5 mm spacing, no bending. Underside: short leg laid across (22,16) to the GND bus at (23,16), soldered at (21,16) and (23,16), **cut 1 mm past (23,16)**. The can sits over rows 14-18 (13-19 for a 13 mm can), clear of everything. **Fitted last, at step 8c**, so the flipped board does not stand on it |
 | 0.1 uF | (19,2) and (23,2) | no polarity; legs bend to 4 holes easily |
 | Pigtail red | (19,5) | |
 | Pigtail black | (23,5) | |
@@ -170,7 +170,7 @@ rather find it now. Then eyeball every gap in the two rows of 15 cones.
 15 first so it stays put, then at rows 8, 9, 11, 12, 13, 14 (8 joints in
 all). Same for column 23 on the column-24 side: rows 3, 8, 9, 10, 11, 12,
 13, 14, 15 (9 joints). Trim the ends. Columns 20 and 22 stay empty apart
-from the cap leg that crosses (22,16) at step 6; column 21 is the junction.
+from the cap leg that crosses (22,16) at step 8c; column 21 is the junction.
 
 **3. Links, on the top side.** Red through (16,3) and (19,3); black through
 (16,4) and (23,4); green through (4,8) and (16,8), routed round the top end
@@ -183,17 +183,20 @@ loose until step 4.
 
 **4. Diode.** Band end (17,8), plain end (21,8), body flat on top. Underside:
 bend the green link's bare end from (16,8) onto the band leg at (17,8) and
-solder the two together; solder the green wire at (16,8) too. Solder the green wire at (16,8) too and cut it 1 mm past the (17,8) cone.
+solder the two together. Solder the green wire at (16,8) too and cut it
+1 mm past the (17,8) cone.
 Lay the plain leg down column 21 **beside** the holes of rows 9, 10, 11, on
 the column-20 side; solder it at **rows 8 and 9 only**; **cut it 1 mm past
 (21,11) now**. Rows 10 and 11 stay open.
 
-**5. 470 ohm, upright.** Leg into (19,10), the hairpin leg into (21,10)
-beside the junction leg. Solder (19,10) onto the bus; solder (21,10) with the
+**5. 470 ohm, upright.** One leg into (19,10), body standing on it. Slide
+the 10 mm sleeve of insulation over the other leg, then bring it down in a
+**straight slant** into (21,10) beside the junction leg - not folded down the
+side of the body. Solder (19,10) onto the bus; solder (21,10) with the
 resistor leg and the diode leg in one joint.
 
 **6. The 0.1 uF** into (19,2) and (23,2), soldered to the buses. The 1000 uF
-waits until step 8c - a 20 mm can under a flipped board is what every later
+waits until step 8c - a 20 mm tall can under a flipped board is what every later
 underside job would rock on. Now trim every straight-through leg, brush the
 board clean.
 
@@ -273,7 +276,7 @@ with `--abl 1500` and apply again.
 | Symptom | Likely | Fix |
 |---|---|---|
 | Nothing lights, ESP32 LED off, regulator hot | 3V3-GND header bridge (step 1a), or VIN link not on the bus | ESP32 out. Ohms (5,3)-(5,4): `1`. Adapter in, DCV, black on the GND bus, red on the VIN pin cone (15,3): 5 V proves the red link |
-| **Ohms across the buses after step 8b** | 70 WS2812s are across the buses and read as a small steady number on a good board | ohms between the buses is only valid before 8b. Afterwards unsolder LED 1's +5V wire at (19,6) and LED 70's red tail at (19,7) to lift the strip off, or diagnose by DCV. After any powered step wait a minute, or touch the 470's (19,10) leg to the GND bus for a few seconds, so the 1000 uF is discharged before ohms |
+| **Ohms across the buses after step 8b** | 70 WS2812s are across the buses and read as a small steady number on a good board | ohms between the buses is only valid before 8b. Afterwards unsolder LED 1's +5V wire at (19,6) and LED 70's red tail at (19,7) to lift the strip off, or diagnose by DCV. After any powered step wait a minute, or touch the 470's **(21,10)** leg - the junction side, never the (19,10) side, which is the +5V bus itself - to the GND bus for a few seconds, so the 1000 uF discharges through the resistor before ohms |
 | Adapter clicks, or goes hot | short between the buses, including a VIN-GND header bridge; 1000 uF reversed (warm, bulging) | adapter out, ESP32 out; look at the capacitor stripe; ohms between buses only with the strip lifted off (row above) |
 | ESP32 boots, strip dark | diode backwards; green link not on RX2 or not on the band leg; DIN wire in the wrong hole; WLED GPIO not 16 | step 8a test with the ESP32 out; confirm by eye that the green wire enters (21,11), not (21,10) or (22,11), and that its cone touches the amber leg; WLED Config > LED Preferences > GPIO = 16 |
 | Buses read 470 ohms to each other, junction to +5V reads `1` | 470 soldered (19,10) to (23,10) instead of to the junction | move the (23,10) leg to (21,10) |

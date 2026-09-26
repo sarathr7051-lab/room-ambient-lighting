@@ -84,8 +84,8 @@ NFC is phone work for the evening once the tags arrive.
    strip's pads, shrink. Hot glue on the two corner joints. **Nothing else
    until this is done.**
 2. **Dot board** - [PERFBOARD.md](PERFBOARD.md), hole by hole, both faces
-   drawn. About 60 joints. The breadboard stays wired until the board lights
-   the U. Then `--abl 2000`.
+   drawn, four independent reviews on 27 Sep. About 60 joints. The breadboard
+   is dismantled as the board is built; the ESP32 moves last. Then `--abl 2000`.
 3. Tack-It test patch on hidden paint. Flash the **Wemos D1 mini** (ESP8266
    build, CH340) while the IPA dries - no soldering.
 4. IPA the monitor back; mount the U from the LED 1 corner (bottom-left from

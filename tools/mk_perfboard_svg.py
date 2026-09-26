@@ -85,9 +85,9 @@ def panel(Y0, mirror, title, sub, xoff=0):
         ux, uy = P(10, 1.6)
         add(f'<rect x="{ux-16}" y="{uy-2}" width="32" height="14" rx="3" fill="#9a9891" fill-opacity="0.8"/>')
         add(f'<text class="s" x="{ux}" y="{uy+6}" text-anchor="middle" style="fill:#fff">USB</text>')
-        label(10, 9.6, "ESP32 on two female headers, USB at the top.", "s", "middle"); label(10, 10.2, "The antenna end reaches ~5 rows below this drawing.", "s", "middle")
+        label(10, 9.5, "ESP32 on two female headers, USB at the top.", "s", "middle"); label(10, 10.5, "The antenna end reaches ~5 rows below this drawing.", "s", "middle")
     else:
-        label(10, 18, "no ESP32 on this side: 30 header pins to solder", "t", "middle")
+        label(10, 18.6, "no ESP32 on this side: 30 header pins to solder", "t", "middle")
 
     for i in range(15):
         y = 3 + i
@@ -128,22 +128,22 @@ def panel(Y0, mirror, title, sub, xoff=0):
         label(27.5, 8, "(17,8): diode band leg + green link end from (16,8), one joint", "s", "end", None, 0, -6)
         label(27.5, 9.5, "junction: diode's plain leg down (21,8)-(21,11), cut past (21,11)", "s", "end", AMB, 0, -6)
         label(27.5, CAP, f"1000 uF short leg from (21,{CAP}) to the GND bus at (23,{CAP})", "s", "end", None, 0, -6)
-        label(27.5, 17.2, "solid bus dots: soldered at step 2. Open rings: joined at the step that brings that leg", "s", "end", None, 0, -6)
+        label(14, 19.3, "solid dots: soldered at step 2.  Rings: soldered when that leg arrives", "s", "middle", None, 0, 0)
         label(27.5, 8.8, "green link's other end from (4,8), bent onto the RX2 pin", "s", "end", None, 0, -6)
         return
 
     # ---- top side: links (solid, they live up here), parts, external wires
     wire([(16, 3), (19, 3)], RED); wire([(16, 4), (23, 4)], GND)
     wire([(4, 8), (4, 1), (17.5, 1), (17.5, 7.5), (16, 8)], GRN)   # around the top end of the header, over the red/black links
-    label(4.6, 1, "green link: round the top end of the ESP32, on this side, crossing over the red and black links", "s", "start", GRN, -11, 0)
+    label(6, 1, "green link: round the top end, over the red and black links", "s", "start", GRN, -30, 0)
     # diode (17,8)-(21,8), DO-41 body 5.2 mm
     dx1, dy = P(17, 8); dx2, _ = P(21, 8)
     wire([(17, 8), (21, 8)], LEG, wd=2)
     bw = 5.2 * MM; bx0 = (dx1 + dx2) / 2 - bw / 2
     add(f'<rect x="{bx0}" y="{dy-1.35*MM}" width="{bw}" height="{2.7*MM}" rx="3" fill="#26262a"/>')
     add(f'<rect x="{bx0+2}" y="{dy-1.35*MM}" width="6" height="{2.7*MM}" fill="#d8d8d8"/>')
-    label(17.2, 8.9, "1N4007, band toward the ESP32", "s", "start", dy=2)
-    # 470 upright at (19,10), hairpin into (21,10)
+    label(17.2, 7.3, "1N4007, band toward the ESP32", "s", "start", dy=0)
+    # 470 upright at (19,10), sleeved leg slanting into (21,10)
     rx, ry = P(19, 10)
     add(f'<circle cx="{rx}" cy="{ry}" r="{1.25*MM}" fill="#d8c9a8" stroke="#8a7c5e"/>')
     wire([(19.5, 10), (21, 10)], LEG, wd=2)
@@ -152,7 +152,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
     cx, cy = P(20, CAP)
     add(f'<circle cx="{cx}" cy="{cy}" r="{5*MM}" fill="#2f3a52" fill-opacity="0.75" stroke="#1b2233"/>')
     add(f'<rect x="{cx+2.6*MM}" y="{cy-2*MM}" width="{1.2*MM}" height="{4*MM}" fill="#cdd6e6"/>')
-    label(25.5, CAP, f"1000 uF, 10 mm can: LONG leg (19,{CAP}) on the +5V bus, striped SHORT leg (21,{CAP})", "s", "start", None, 0, 0)
+    label(25.5, CAP + 0.5, f"1000 uF, 10 mm can: LONG leg (19,{CAP}) on the +5V bus, striped SHORT leg (21,{CAP})", "s", "start", None, 0, 0)
     cx, cy = P(21, 2)
     add(f'<ellipse cx="{cx}" cy="{cy}" rx="{2.5*MM}" ry="{1.6*MM}" fill="#d9a441" stroke="#8a6a20"/>')
     wire([(19, 2), (23, 2)], LEG, wd=2)
