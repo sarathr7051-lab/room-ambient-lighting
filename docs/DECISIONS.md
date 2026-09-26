@@ -17,7 +17,7 @@ someone new looks at the project.
 | Home Assistant / Raspberry Pi as the brain | A whole extra always-on machine to do what WLED presets and Hyperion already do between them. Parked, not refused — if the room grows more nodes it may earn its place. |
 | Alexa for music-reactive lighting | It cannot. There is no audio stream out of an Echo to react to. Sound reactivity needs the INMP441 on the node doing its own FFT. |
 | 5 V COB for the warm layers | The original design was a single 5 V rail. Gesto's 12 V neon won because the 12 V adapter is included in the price and a low-side MOSFET does not care what voltage it is switching. The 12 V never touches the ESP32. |
-| **CD74HCT112E as a level shifter** | Sold as a substitute for the 74HCT125 and cannot work. It is a *sequential* part - a dual JK flip-flop whose outputs depend on clock edges and stored state, not on the present input level. Its asynchronous Set and Reset could force Q high or low, but making Q *follow* the input needs both the signal and its inverse, and generating that inverse is the exact problem the buffer exists to solve. There is no combinational path from any input to Q. Keep the chip - a JK flip-flop is useful elsewhere - but it is not this. |
+| **CD74HCT112E as a level shifter** | Sold as a substitute for the 74HCT125 and cannot work. It is a *sequential* part - a dual JK flip-flop whose outputs depend on clock edges and stored state, not on the present input level. Its asynchronous Set and Reset could force Q high or low, but making Q *follow* the input needs both the signal and its inverse, and generating that inverse is the exact problem the buffer exists to solve. Its asynchronous SET/RESET inputs do give a combinational path to Q, and that was tested; the part failed on input threshold, not topology. Keep the chip - a JK flip-flop is useful elsewhere - but it is not this. |
 | Scripted serial / `arduino-cli` flashing | Separate hard-won lesson from the JiffyTrails build (a different repo, not linked here): scripted serial opens toggle DTR/RTS, which drives the ESP32's auto-reset circuit and can leave the board in reset or download mode while looking like it worked. Moot here anyway — WLED is flashed once from the browser and everything after that is HTTP. |
 
 ---
@@ -74,6 +74,8 @@ independent reviews later:
   typical behaviour, and the failure mode is the worst kind for a fixture you
   mount and forget: fine on the bench, first pixel glitching in August.
 
+> **Superseded 26 Sep 2026** - the paragraph below is the pre-measurement
+> reasoning. The clamp was built and proven; nothing is bought.
 **The decision is to buy a 74AHCT125 or 74HCT245.** Over 1 V of input margin on
 pure worst case, and its margin grows rather than shrinks as the rail rises. A
 diode clamp is an acceptable interim **only** if the measured adapter reads

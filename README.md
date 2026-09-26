@@ -11,8 +11,8 @@ Hyperion running on the Windows PC that drives the screen.
 >
 > Every other document here describes the whole build from the beginning.
 > **Read the state file first**, or you will follow an instruction for a step
-> that is already finished. As of 25 Sep 2026 the node is flashed, on Wi-Fi and
-> named; the circuit is not yet wired and the strip is not yet cut.
+> that is already finished. As of the evening of 26 Sep 2026 the desk node is bench-proven and the
+70-LED U is cut, joined and tested; next is the dot board and mounting.
 
 ---
 
@@ -24,7 +24,7 @@ consumer bulb with its own app.
 | | Layer | Hardware | Node | Stage |
 |---|---|---|---|---|
 | L1 | Bulb above the window | Havells Glamax 9 W Wi-Fi | — | bought, done |
-| L2 | **Monitor bias light** | WS2812, 5 V, 60/m | desk | **node live, circuit not wired** |
+| L2 | **Monitor bias light** | WS2812, 5 V, 60/m | desk | **node live, U built and tested, dot board next** |
 | L3 | Under-desk warm strip | Gesto 12 V neon, 1.5 m | desk | waiting on a 12 V 1 A adapter |
 | L4 | Under-shelf warm strip | Gesto 12 V neon, 2 x 1.25 m | shelf | waiting on the strip to arrive |
 

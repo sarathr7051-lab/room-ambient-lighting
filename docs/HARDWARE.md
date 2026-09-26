@@ -11,18 +11,16 @@ Bought at SP Road (Om Technology Centre, F4 SRNG Complex) on 25 Sep 2026.
 |---|---|---|
 | ESP32 NodeMCU DevKit V1, 30-pin, CP2102 | 1 | the desk node |
 | WS2812 strip, 5 V, 60/m, black PCB | ~1.2 m of the 2 m | **two separate strips: 1 m (60 LEDs) and 2 m (120 LEDs)**, not one 3 m. "2812" without the B; GRB confirmed on the bench |
-| **74AHCT125 or 74HCT245** | **0 - TO BUY** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16), which cannot do this. Any 74HCT/74AHCT gate works - see BUILD_DESK_NODE.md |
-| 10 kohm, 1/4 W | 1 | pulldown on GPIO16, stops LEDs latching noise at reset |
-| 1 A resettable polyfuse | 1 | **bench test only**, in the strip's +5 V feed. Remove for the final build |
 | 1000 uF 25 V electrolytic | 1 | bulk across the 5 V rail |
 | 0.1 uF ceramic | 1 | decoupling across the 5 V rails, near the node |
-| 330 ohm, 1/4 W | 1 | series resistor on DIN |
 | 1N4007 diode | 1 | the diode clamp - banded end to RX2 |
 | 470 ohm, 1/4 W (330 acceptable) | 1 | clamp pull-up, junction to +5 V |
 | 5 V 3 A adapter, 5.5 x 2.1 | 1 | **use this one.** The 5 A brick has an IEC C8 inlet and no mains lead |
 | DC barrel pigtail, female with leads | 1 | |
-| Silicone wire 22 AWG red/black/green | ~2 m | corner jumpers and injection run |
-| Dot board, isolated pad, 6 x 4 inch | 1 | final assembly |
+| Silicone wire 22 AWG red/black/green | ~2 m | used up on 26 Sep except ~25 cm red/black and ~1 m green; LED 1's +5V/GND leads are JiffyTrails silicone in other colours |
+| Heat-shrink assortment | 1 pack | strip ends; slide on before the second end is soldered |
+| Dot board, isolated pad, 6 x 4 inch | 1 of 3 | the node - PERFBOARD.md |
+| Female header 40-way | 1 | cut into two 15-pin lengths for the ESP32 |
 | Velcro cable ties | 2–3 | |
 
 **Not needed for screen sync**, despite being in the same node design:
@@ -113,7 +111,7 @@ available. The pin choice stands.
 > Kept for reference only. The shop supplied a CD74HCT112EX in its place, which
 > bench-tested as an HC part (switches at 0.7 x VCC, not 2 V) and could not
 > shift 3.3 V. The **diode clamp replaced it and is proven** - see BUILD_DESK_NODE.md
-> Stage 3. No buffer IC is used anywhere in this project: the desk strip uses the
+> 1.5 and 1.6. No buffer IC is used anywhere in this project: the desk strip uses the
 > clamp, and the two IRL540N MOSFETs are logic-level and are driven straight from a
 > GPIO through 100 ohm.
 

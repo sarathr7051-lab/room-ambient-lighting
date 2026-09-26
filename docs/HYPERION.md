@@ -52,7 +52,7 @@ Cursor movement triggers a capture path that makes the LEDs stutter. The **QT
 grabber** is unaffected; switch to it in the same screen. It costs a little more
 CPU and is otherwise equivalent.
 
-Don't spend an evening suspecting Wi-Fi or the level shifter if the flicker
+Don't spend an evening suspecting Wi-Fi or the clamp if the flicker
 correlates with the mouse — it's this.
 
 ---
@@ -70,7 +70,7 @@ correlates with the mouse — it's this.
    you are following an old guide.
 4. **Brightness override: leave it OFF.** Hyperion respects WLED's own
    brightness unless overridden, and WLED's auto-brightness limiter is the only
-   thing between a full-white frame and a sagging 5 A adapter.
+   thing between a full-white frame and a sagging 3 A adapter.
 
 ## Import the layout
 

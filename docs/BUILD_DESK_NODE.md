@@ -3,9 +3,9 @@
 Read [PROJECT_STATE.md](PROJECT_STATE.md) first — it says which of these stages
 are already done. This file is the whole procedure from the beginning.
 
-Order matters. The strip gets cut and stuck down in Stage 3, which is
-irreversible; Stages 1 and 2 prove the electrical and network chain first, on
-the uncut strip, where a mistake costs nothing.
+Stages 1-3 are done (26 Sep 2026): the node is bench-proven and the 70-LED U
+is cut, joined and tested. What remains is protecting the joints, moving the
+node onto the dot board, mounting, and Hyperion.
 
 ---
 
@@ -75,7 +75,7 @@ The input end is marked `DI` or `DIN`; the output end `DO` or `DOUT`. The
 printed arrows also point *away* from DIN, in the direction data travels.
 Do not rely on connector gender - it is not a reliable convention.
 
-## Stage 1 - bench bring-up
+## Stage 1 - bench bring-up - DONE 26 Sep 2026
 
 ### 1.1 Flash WLED - DONE 25 Sep 2026
 
@@ -116,302 +116,86 @@ python tools/wled_push.py probe --host wled-desk.local
 
 ---
 
-### 1.4 Measure the adapter - NEXT
+### 1.4 Measure the adapter - DONE
 
 ![How to measure the adapter voltage with a multimeter](img/measure-adapter.svg)
 
-**Use the 5 V 3 A adapter.** The 5 A brick arrived with an IEC C8 figure-8
-inlet and no mains lead, so it is unusable until that lead turns up.
+**The 5 V 3 A adapter is the one in use.** The 5 A brick has an IEC C8 inlet
+and no mains lead.
 
-Every logic threshold in this build is **0.7 × whatever this adapter actually
-delivers**, so the nominal 5 V is not good enough.
+> **MEASURED 26 Sep 2026: 5.03 V open-circuit, red wire positive**; 4.71 V on
+> the breadboard rail at ~600 mA of strip load. Meter: black in `COM`, red in
+> `VΩmA`, dial DCV 20, never the `10A` socket.
 
-1. Adapter unplugged from the wall. Nothing else connected.
-2. Fit the **DC pigtail** — the barrel socket with two bare wires. Far easier
-   to probe than the plug itself.
-3. Multimeter: **black lead in `COM`**, **red lead in the socket marked `V` or
-   `VΩmA`**. **Never the `10A` socket** — that one is a near-short by design,
-   and putting it across a supply is the single meter mistake that bangs.
-4. Dial to **V with the straight line** (DC). If the dial has numbers, 20.
-5. Plug in at the wall, switch on. Black probe on one bare wire, red on the
-   other.
-6. **Record the number, and record which wire the red probe was on.**
-
-Then, three things:
-
-- **The wire the red probe was on when the reading was POSITIVE is `+`.** A
-  negative reading means the colours are reversed — cheap pigtails do get this
-  wrong. **Tape and label both wires now.** Do not trust insulation colour.
-- **Compute 0.7 × your reading.** That is what the strip needs to see as a
-  logic high. At 5.00 V it is 3.50 V; at 5.20 V it is 3.64 V. The ESP32 gives
-  about 3.3 V — so it is *expected* to be marginal.
-- **Turn the dial away from the current ranges** when you are done, so you
-  cannot probe a live rail in amps by accident.
-
-> **MEASURED 26 Sep 2026: 5.03 V open-circuit, red wire positive.** Comfortably
-> under the 5.15 V go/no-go line, and better regulated than most cheap bricks.
-> The strip's logic-high threshold is 0.7 x 5.03 = **3.52 V**, so a bare 3.3 V
-> drive is 0.22 V short - marginal, as expected. Every level-shifter option
-> remains available. Re-measure under load once the strip is running.
-
-### 1.5 Wire the bench circuit - NEXT
+### 1.5 The bench circuit - DONE, as built
 
 ![What is connected to what inside a breadboard](img/breadboard-internals.svg)
 
-Read that first. The rails run the length of the board, the columns are groups
-of five, and nothing conducts across the centre channel — which is why a chip
-must straddle it.
-
 ![The diode clamp: ESP32 through a 1N4007 into a junction pulled up by 470 ohm](img/diode-clamp.svg)
 
-Wiring is now the **diode clamp**, decided by measurement on 26 Sep: the
-CD74HCT112EX responds at 5 V and not at 3.17 V, so it is an HC part in HCT
-marking and is out of the build. See DECISIONS.md.
+The **diode clamp**, decided by measurement (the CD74HCT112EX responds at 5 V
+and not at 3.17 V, so it is an HC part and is out - see 1.6 and DECISIONS.md).
 
 | # | From | To |
 |---|---|---|
 | 1 | pigtail **+** | **+ rail** |
 | 2 | pigtail **-** | **- rail** |
-| 3 | 1000 uF **stripe leg** | - rail |
-| 4 | 1000 uF other leg | + rail |
+| 3 | 1000 uF **striped, SHORT leg** | - rail |
+| 4 | 1000 uF **LONG leg** | + rail |
 | 5 | ESP32 **VIN** | + rail |
 | 6 | ESP32 **GND** | - rail |
-| 7 | ESP32 **RX2** | the 1N4007's **banded end** |
+| 7 | ESP32 **RX2** (GPIO16, 6th pin down the left with USB at the top) | the 1N4007's **banded end** |
 | 8 | 1N4007's other end | a spare row - the **junction** |
 | 9 | **470 ohm** from the junction | + rail |
-| 10 | the junction | strip **DIN** |
-| 11 | strip **+5V** | pigtail **+**, not the breadboard |
-| 12 | strip **GND** | pigtail **-**, not the breadboard |
+| 10 | the junction | strip **DIN** (green) |
+| 11 | strip **+5V** | + rail |
+| 12 | strip **GND** | - rail |
 
-330 ohm works if there is no 470. No 10 kohm pulldown with this topology - the
-470 ohm already sets the line's resting state.
+330 ohm works if there is no 470. No 10 kohm pulldown - the 470 ohm sets the
+line's resting state. **Nothing goes to 3V3.**
 
-**Adapter unplugged throughout.** The strip stays **uncut**.
+Rows 11-12: on the bench the strip's power went through the breadboard rails,
+which is acceptable at ABL 600-800 mA and not above. On the dot board the
+strip's +5V, GND and the LED 70 injection pair go straight onto the bus wires
+([PERFBOARD.md](PERFBOARD.md)); that is what allows ABL 2000.
 
-**The strip's power does NOT go through the breadboard.** Breadboard contacts
-are good for about 1 A, and the failure mode is a permanently slackened clip
-rather than a clean trip. Join the strip's +5 V and GND **directly to the
-pigtail leads** — screw terminal, WAGO, or twisted and taped.
+**Power-up rule, every time:** adapter out of the wall before touching any
+wire; ohms across the rails must not read near zero; mate the barrel before
+switching on at the wall.
 
-| # | From | To |
-|---|---|---|
-| 1 | pigtail **+** | breadboard **+ rail** (feeds the ESP32 only) |
-| 2 | pigtail **−** | breadboard **− rail** |
-| 3 | 1000 µF **stripe side** | − rail |
-| 4 | 1000 µF other leg | + rail |
-| 5 | ESP32 **VIN** | + rail |
-| 6 | ESP32 **GND** | − rail |
-| 7 | ESP32 **GPIO16** - silkscreen says **`RX2`**, 6th pin up from the bottom-right corner | one end of the **330 Ω** |
-| 8 | **10 kΩ** from GPIO16 (`RX2`) | − rail |
-| 9 | other end of the 330 Ω | strip **DIN** |
-| 10 | strip **+5 V** | **1 A polyfuse** → pigtail **+**, not the breadboard |
-| 11 | strip **GND** | pigtail **−**, not the breadboard |
-
-**The capacitor:** the **stripe marks the negative side** — that is the primary
-check. Leg length is a secondary confirmation only, because a trimmed cap has
-equal legs.
-
-**The 10 kΩ** is the highest-value part in that table. At reset the ESP32
-leaves GPIO16 high-impedance, and a floating data line clocks in noise — LEDs
-latch random colours before the first valid frame, and a WS2812 *holds* its
-last value indefinitely. Put it on the **ESP32 side** of the 330 Ω; at the strip
-end it would form a divider and cost signal amplitude you cannot spare.
-
-**The polyfuse is bench-only.** It converts "everything latched full white"
-into a trip instead of hot contacts. **Remove it for the final build** — at
-1.9 A it would nuisance-trip.
-
-**DIN:** the arrows show which way data travels. Feed data in at the **tail of
-the arrows** — the end they point away from.
-
-**The DevKit V1 is about 25.4 mm wide**, so on a standard breadboard it leaves
-roughly one usable hole per pin. Plan the jumpers for that.
-
-No level-shifter chip is fitted — see
-[Level shifting](#level-shifting---unresolved).
-
-### 1.6 Staged power-up - NEXT
-
-Do **not** use a resistance check across the rails as a go/no-go. With the cap
-and the ESP32 in circuit the reading settles anywhere between a few kΩ and
-several MΩ, there is no pass threshold, and it cannot detect either fault that
-actually matters — a reversed capacitor or a reversed pigtail.
-
-Power up in stages with the voltmeter on the rails instead. **Eye protection
-on.**
-
-1. **Capacitor only** on the board, nothing else. Mate the barrel, switch on at
-   the wall. Expect **≈ your measured adapter voltage**. Feel the cap — it must
-   be cold. Switch off.
-2. **Insert the ESP32.** Power on. Expect the same on the rails, **3.3 V** on
-   the 3V3 pin, the board LED lit, regulator no more than warm. **Record the
-   3V3 reading** — below 3.25 V eats your signal margin directly. Switch off.
-3. **Connect the strip** — ground first, then power, then data. Power on.
-
-Unplug the **pigtail from the adapter**, not just the adapter from the wall — a
-switched-off brick holds charge in its output capacitor.
-
-### 1.7 First light - NEXT
-
-In the WLED web interface, **before touching brightness**:
-
-- Config → LED Preferences
-- **LED count 180**, GPIO **16**, type **WS281x**, colour order **GRB**
-- Auto-brightness limiter **on**, **600 mA**, **55 mA/LED**
-
-Then brightness ~30% and a solid colour.
-
-> **Why 180 and not 20.** A WS2812 holds its last latched value indefinitely —
-> absence of data does not blank it. Configure 20 and the other 160 keep
-> whatever they latched at power-up, forever, because they are never refreshed.
-> Address all 180 so every LED is actively driven black, and bound the current
-> with the limiter instead. If you want only a short lit run, use a segment.
-
-> **Never set the mA cap or the mA/LED to 0.** That *disables* the limiter. At
-> 180 LEDs that is the difference between about 1 A and a 10 A demand.
-
-WLED's limiter is an **estimate, not a measurement** — its own source says so —
-and the figure you type is a whole-system budget from which it reserves 120 mA
-for the ESP32. Keep your own margin on top.
-
-### 1.8 Reading the result
-
-| What you see | What it means |
-|---|---|
-| All 180 behave | The chain works. This does **not** prove the logic levels are safe long-term |
-| Flicker or colour corruption anywhere, especially intermittent or only while Wi-Fi transmits | Marginal logic level. Expected — see below |
-| Nothing lights at all | DIN and DOUT swapped, or a wiring fault |
-| Red and green swapped | Colour order is RGB, not GRB |
-| First LED lights, nothing after it | Data not propagating. Check the 330 Ω is in series, not to ground |
-| ESP32 resets as it brightens | Adapter sagging, or the 1000 µF is not truly across the rails |
-
-**A marginal result is the expected outcome, not a mistake you made.** 3.3 V
-into a 5 V WS2812 is below spec by 0.2–0.35 V. Do not go hunting for a wiring
-fault that is not there.
-
-Equally, **a pass today does not mean it is safe to build on.** It passes or
-fails on die batch, wire length and temperature, and it drifts. Treat it as
-"good enough to keep bench testing", not as a solved problem.
-
-**Stage 1 is done. Do not cut anything yet.**
-
----
-
-## Level shifting - UNRESOLVED
-
-The ESP32 drives 3.3 V; the strip wants 0.7 × VDD ≈ 3.5 V. Four independent
-reviews reached the same conclusion.
-
-**Buy a `74AHCT125` or `74HCT245`.** It is the only option that closes on
-datasheet worst-case numbers — over 1 V of input margin — and uniquely its
-margin *grows* as the rail rises instead of shrinking. Everything else relies
-on typical behaviour and fails the same way: fine on the bench, first pixel
-glitching on a hot afternoon.
-
-**It is the HCT that matters, not the 125.** Any 74HCT or 74AHCT gate works,
-because that family pairs TTL input thresholds with full 5 V CMOS outputs. Ask
-a shop for the *family*, not the part number — that is probably why five shops
-said no.
-
-| Part | How to use it |
-|---|---|
-| 74AHCT125 / 74HCT125 / 74HCT126 | buffer, direct, one gate |
-| 74HCT245 | octal transceiver, direct — commonly stocked |
-| 74HCT08 (AND) | tie one input high → non-inverting buffer |
-| 74HCT32 (OR) | tie one input low → non-inverting buffer |
-| 74HCT04 / 14 / 00 | inverters — two in series |
-
-**Never a 74HC without the T.** CMOS thresholds put 3.3 V right at the
-switching point — that is the problem, not the fix.
-
-### FIRST: the CD74HCT112E may be a real buffer after all
-
-The chip the shop wrongly supplied has **genuine HCT input thresholds** -
-TI's datasheet specifies **VIH = 2 V min, VIL = 0.8 V max** at VCC 4.5-5.5 V,
-identical to the SN74AHCT125. A 3.3 V drive clears that by **1.3 V**, versus
-0.2-0.4 V for any diode trick.
-
-It can be coerced into a combinational buffer. From TI's own truth table:
-
-| PRE (SD) | CLR (RD) | Q | Qbar |
-|---|---|---|---|
-| L | H | H | **L** |
-| L | L | H | **H** |
-
-**Hold SD low permanently and Qbar becomes NOT(RD)** - an inverter with no
-clock involved. Chain both flip-flops and you have a non-inverting 5 V buffer.
-Propagation delay CLR to Q is 37 ns max at 25 C, 46 ns over temperature, so two
-stages cost 74-92 ns against a 350 ns pulse. Comfortable.
-
-The footnote hazard ("output states unpredictable if both S and R go high
-simultaneously after both being low") **cannot occur here**, because SD is
-hard-wired low and never goes high.
+### 1.6 The chip test - DONE, chip eliminated
 
 ![CD74HCT112E wired as a level-shifting buffer](img/hct112-buffer.svg)
 
 ![Breadboard wiring for the chip test, with real ESP32 pin names](img/chip-test-breadboard.svg)
 
-Board oriented as it sits on the bench: **USB at the top**. With the USB end
-away from you, `3V3` is the top-LEFT pin and `VIN` is the top-RIGHT pin, each
-with a `GND` immediately below it. `RX2` (= GPIO16) is the 6th pin down the
-left side, counting from the USB end.
+The shop supplied a CD74HCT112EX instead of a 74HCT125. A JK flip-flop can be
+wired as a buffer through its asynchronous SET/RESET inputs, so it was tested:
+pin 15 driven from the ESP32's 3V3 (3.17 V) and then from the 5 V rail, output
+on pin 6.
 
-**The two rail pairs are separate strips.** The `+` rail down the left is not
-connected to the `+` rail down the right, same for the `-` rails. One jumper
-across the top joins each pair, or half the circuit has no power.
+> **RESULT 26 Sep 2026:** pin 6 follows a 5 V input and does **not** respond to
+> 3.17 V. A true HCT input switches at 2 V; this one switches near 0.7 x VCC.
+> It is an HC-threshold part in HCT marking. Eliminated.
 
-#### The catch, and the two-minute test that settles it
+### 1.7 First light - DONE
 
-**The both-asserted output state is not the same between manufacturers.**
+Node at 120 LEDs, ABL 600 mA, preset 9 = six 20-LED colour bands (RED, GREEN,
+BLUE, WHITE, YELLOW, PINK), boot preset.
 
-| Datasheet | SD=L, RD=L | Works? |
-|---|---|---|
-| **TI** CD74HCT112, SCHS141J | Q = H, **Qbar = H** | **yes** |
-| **Philips / Nexperia** 74HC/HCT112 | nQ = H, **nQbar = L** | **no** - set-dominant |
+> **RESULT 26 Sep 2026, 1 m strip:** LED 1 steady and the commanded colour,
+> junction 0.79 V low, rail 4.71 V loaded, **GRB confirmed** (red shows red),
+> live control over Wi-Fi. The clamp works with margin on this strip.
 
-Your part is marked CD74HCT112E, a TI number, so TI's table should apply. But
-this is the same shop that supplied a flip-flop for a buffer, and re-marked
-parts exist. **Test before building.**
+**Never set the ABL cap or the mA/LED to 0** - that disables the limiter.
+WLED's limiter is an estimate that reserves 120 mA for the ESP32.
 
-DC test, multimeter only, no scope, nothing at risk:
+---
 
-1. Pin 16 to +5 V, pin 8 to GND, 0.1 uF across them at the chip.
-2. Pin 4 (1SD) to GND. Pins 1, 2, 3 to GND - never leave CMOS inputs floating.
-3. Meter black on GND, red on **pin 6**.
-4. Touch **pin 15** to **GND** -> pin 6 should read about **5 V**.
-5. Touch **pin 15** to the ESP32's **3V3** pin -> pin 6 should read about **0 V**.
+## Level shifting - RESOLVED 26 Sep 2026
 
-Both correct: the trick works on your chip, and you have simultaneously proved
-3.3 V clears the input threshold. Build the buffer.
-
-Pin 6 stuck near 0 V in both cases: set-dominant die. Fall back to the clamp.
-
-Pinout verified against the Philips/Nexperia pin description table (TI is
-pin-compatible): 1 = 1CP, 2 = 1K, 3 = 1J, 4 = 1SD, 5 = 1Q, 6 = 1Qbar,
-7 = 2Qbar, 8 = GND, 9 = 2Q, 10 = 2SD, 11 = 2J, 12 = 2K, 13 = 2CP, 14 = 2RD,
-15 = 1RD, 16 = VCC.
-
-**Do not combine the buffer with a supply dropper.** The chip needs VCC >= 4.5 V,
-and driving DIN to 5 V while the strip sat at 4.2 V would exceed the WS2812's
-absolute-maximum input of VDD + 0.5 V.
-
-### The diode workarounds, if the test fails
-
-Both were analysed in detail and **neither closes on worst case**:
-
-- **Diode clamp** — 1N4007 with its cathode at the GPIO, 470 Ω pull-up to +5 V.
-  Fails above a **5.40 V** rail worst-case. The better of the two.
-- **Sacrificial pixel** — a spare WS2812 fed through diodes. Fails above a
-  **5.19 V** rail worst-case, a voltage cheap adapters genuinely produce. It is
-  also acutely sensitive to diode spread: Vishay and Diodes Inc curves disagree
-  by 80 mV at the relevant current, doubled across a two-diode stack.
-
-The earlier conclusion that the sacrificial pixel was "the permanent answer"
-was **wrong and is retracted**. Its rail-tracking advantage applies to the
-output hop, which was never the limiting one.
-
-**If the measured adapter is ≤ 5.10 V**, a clamp is defensible as an interim.
-**Above 5.15 V, build neither** — wait for the IC.
+The diode clamp, by measurement. Full reasoning and the rejected options in
+[DECISIONS.md](DECISIONS.md). No buffer IC exists anywhere in this project.
 
 ---
 
@@ -444,12 +228,34 @@ it costs two extra corner joints. Hyperion handles a missing bottom natively.
 
 ---
 
-## Stage 3 - corners, cut and solder
+## Stage 3 - cut and solder - DONE 26 Sep 2026
 
 ![How a WS2812 corner joint is wired](img/corner-joint.svg)
 
-WS2812 will not bend around a 90° corner; the copper cracks. Each corner is a
-cut and three short wires. Two corners, six wires, twelve joints.
+**As built, in this order**, each step tested before the next:
+
+1. Cut **70/71** first. Rehearsal joint: a 10 cm red/green/black lead onto the
+   spare piece's fresh `Din` pads. Powered from the node: all 50 lit.
+2. Injection tails, red +5V and black GND, **60 cm**, on LED 70's far-end
+   pads. Nothing on `DO`.
+3. Din leads on LED 1, **60 cm**: green on `DIN` first, then +5V, then GND.
+   (Only 30 cm of red and black silicone wire was left, so the +5V and GND
+   leads at LED 1 are JiffyTrails 22/24 AWG in other colours; colours to be
+   recorded.) All 70 lit: RED / GREEN / BLUE / WHITE.
+4. Tails measured while lit: **+4.43 V** at LED 70 against ~4.7 V at LED 1.
+   Polarity right. Tails then into the rails.
+5. Cut **18/19** -> corner 1 (three 4 cm wires, pieces soldered in a straight
+   line, they bend to 90 degrees on the monitor) -> all 70 lit.
+6. Cut **52/53** -> corner 2 -> all 70 lit.
+
+Pieces: **P1 = 18 LEDs with the leads = LEFT run viewed from the front; P2 =
+34 = top; P3 = 18 with the tails = RIGHT run.** Working from behind, P1 is
+under your right hand.
+
+**What was missed:** heat-shrink was not slid onto the wires before the
+second ends were soldered. Recoverable - see Stage 4.
+
+The technique, kept for the L4 build and any repair:
 
 ### Practise on the offcut first
 
@@ -537,41 +343,57 @@ off. That is the last reversible moment.
 
 ---
 
-## Stage 4 - mount
+---
 
-1. IPA the back panel and let it dry.
-2. Stick down starting at the DIN corner. Velcro tie or hot glue at each corner
-   turn — peel always starts at a corner.
-3. Run the injection pair from the far end back to the supply.
-4. **Remove the bench polyfuse.**
-5. Push the real config and verify orientation:
+## Stage 4 - protect the joints - NEXT, before anything else
+
+Every joint on the strip is held by half a copper pad. Do this before the
+board and before the monitor.
+
+1. **Strip ends (LED 1, LED 70, the spare's lead):** the far ends of these
+   wires are still free, so heat-shrink still goes on. Pull the wires out of
+   the breadboard, slide **one wide tube over the whole bundle** from the free
+   end, push it down until it covers the strip's three pads, shrink it with a
+   moving lighter flame or the iron's barrel held near. If no tube in the
+   assortment fits over the 10 mm strip, **hot glue over the pads** instead.
+2. **The two corner joints:** both ends are soldered, so no tube - a blob of
+   **hot glue** over each joint, or a wrap of insulation tape.
+
+**Rule for every future joint: slide the heat-shrink onto the wire before the
+second end is soldered.**
+
+---
+
+## Stage 5 - the dot board - NEXT
+
+[PERFBOARD.md](PERFBOARD.md), hole by hole, with both faces drawn. The
+breadboard stays wired until the board lights the U.
+
+---
+
+## Stage 6 - mount
+
+1. Tack-It test patch on hidden paint while the IPA dries.
+2. IPA the back panel and let it flash off.
+3. Stick down starting at the **LED 1 corner** (bottom-left from the front),
+   P1 up, P2 across, P3 down. Side pieces tuck under the ends of the top piece.
+   Velcro tie or hot glue at each corner turn - peel starts at a corner.
+4. Push the real config and verify orientation:
 
 ```bash
+python tools/led_layout.py --width 57 --height 30.5 --abl 2000 --write
 python tools/wled_push.py apply   --host wled-desk.local
 python tools/wled_push.py walk    --host wled-desk.local
 python tools/wled_push.py presets --host wled-desk.local
 ```
 
-`walk` must happen before Hyperion is configured. Note which corner LED 0 sits
-in **viewed from the front**, and which way the pixel travels — you mount from
-behind, so left and right are mirrored under your hands. If it runs backwards,
-regenerate the Hyperion layout; **do not tick "Reversed"**, which makes WLED
-ignore the skipped pixel.
+`walk` must happen before Hyperion is configured. Note which corner LED 1 sits
+in **viewed from the front** and which way the pixel travels. If it runs the
+wrong way, regenerate the Hyperion layout; with skip 0 the WLED "Reversed"
+flag is also harmless on this symmetric U, but pick one fix, not both.
 
 ---
 
-## Stage 5 - final assembly - LATER
-
-Dot board: ESP32 on female headers, the buffer IC on a socket, the 1000 µF and
-the 330 Ω / 10 kΩ on board, screw terminals or JST for the strip and the
-pigtail. Strip power still comes straight off the supply, never through the
-board.
-
-It lives in the MICKE under-desk strip, velcroed, on the switched power strip.
-Leave room for the IRL540N and its gate network — L3 lands on the same board.
-
----
-
-## Stage 6 - Hyperion - LATER
+## Stage 7 - Hyperion
 
 [HYPERION.md](HYPERION.md).
