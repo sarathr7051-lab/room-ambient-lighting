@@ -15,7 +15,7 @@ Bought at SP Road (Om Technology Centre, F4 SRNG Complex) on 25 Sep 2026.
 | 10 kohm, 1/4 W | 1 | pulldown on GPIO16, stops LEDs latching noise at reset |
 | 1 A resettable polyfuse | 1 | **bench test only**, in the strip's +5 V feed. Remove for the final build |
 | 1000 uF 25 V electrolytic | 1 | bulk across the 5 V rail |
-| 0.1 uF ceramic | 1 | decoupling across the 74HCT125 |
+| 0.1 uF ceramic | 1 | decoupling across the 5 V rails, near the node |
 | 330 ohm, 1/4 W | 1 | series resistor on DIN |
 | 1N4007 diode | 1 | the diode clamp - banded end to RX2 |
 | 470 ohm, 1/4 W (330 acceptable) | 1 | clamp pull-up, junction to +5 V |
@@ -73,8 +73,8 @@ matters for screen sync.
 
 | Pin | Goes to | Via | Stage |
 |---|---|---|---|
-| GPIO16 | WS2812 DIN | 74HCT125 gate 1 -> 330 ohm | **L2, now** |
-| GPIO25 | IRL540N gate | 74HCT125 gate 2 -> 100 ohm; 10k gate->GND | L3 |
+| GPIO16 (`RX2`) | WS2812 DIN | **diode clamp**: 1N4007 banded end at GPIO16, junction pulled up by 470 ohm to +5 V, junction -> DIN | **L2, proven** |
+| GPIO25 | IRL540N gate | **direct**, 100 ohm series; 10k gate->GND. Logic-level FET, no buffer needed | L3 |
 | GPIO32 / 14 / 15 | INMP441 SD / SCK / WS | direct; VDD 3V3, L/R -> GND | music |
 | GPIO34 | LDR divider | 3V3 -> LDR -> node -> 10k -> GND | auto-dim |
 | GPIO27 | LD2420 presence OUT | direct; sensor on 3V3 | deferred |
@@ -108,7 +108,14 @@ Full silkscreen, bottom to top:
 a WROVER** - on WROVER those two pins are the PSRAM interface and are not
 available. The pin choice stands.
 
-### 74HCT125 (DIP-14)
+### 74HCT125 (DIP-14) - historical, NOT fitted
+
+> Kept for reference only. The shop supplied a CD74HCT112EX in its place, which
+> bench-tested as an HC part (switches at 0.7 x VCC, not 2 V) and could not
+> shift 3.3 V. The **diode clamp replaced it and is proven** - see BUILD_DESK_NODE.md
+> Stage 3. No buffer IC is used anywhere in this project: the desk strip uses the
+> clamp, and the two IRL540N MOSFETs are logic-level and are driven straight from a
+> GPIO through 100 ohm.
 
 ![74HCT125 pinout and where every pin goes](img/74hct125-pinout.svg)
 
@@ -135,8 +142,8 @@ chip as the board allows.
 The T in 74HC**T**125 is the whole point: it has TTL-level input thresholds, so
 a 3.3 V logic high from the ESP32 is read as a solid high while the output
 swings to a clean 5 V. A plain 74HC125 has CMOS thresholds and 3.3 V sits
-marginally close to them. Two 74HCT125 were bought; the second is for the
-shelf node.
+marginally close to them. Neither of the two chips bought turned out to be an
+HCT125, and neither node needs one.
 
 ---
 

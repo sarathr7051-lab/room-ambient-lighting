@@ -46,7 +46,7 @@ Screen sync is **L2 only**. It is not blocked by anything on order.
         v
   ESP32 DevKit V1  running WLED 16.0.1   [wled-desk.local]
         |
-        |  GPIO16 -> 74HCT125 level shifter -> 330 ohm -> DIN
+        |  GPIO16 -> 1N4007 clamp + 470 ohm pull-up -> DIN
         v
   WS2812 strip around the monitor back   [70 LEDs, 18 / 34 / 18]
 ```
