@@ -204,8 +204,9 @@ def main() -> int:
                         "sized for the 5 V 3 A adapter)")
     p.add_argument("--ma-per-led", type=int, default=55,
                    help="mA per LED at full white, for ABL's model")
-    p.add_argument("--stock-length", type=float, default=300.0,
-                   help="length of strip you own, cm (default 300)")
+    p.add_argument("--stock-length", type=float, default=200.0,
+                   help="length of the strip being cut, cm (default 200: the "
+                        "build pieces come from the 2 m strip; the 1 m stays whole)")
     p.add_argument("--no-sacrificial", action="store_true",
                    help="omit the sacrificial level-shifter pixel "
                         "(only if a real 74HCT125 buffer is fitted)")

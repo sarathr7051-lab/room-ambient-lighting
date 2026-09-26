@@ -42,9 +42,11 @@ An **HCT** input switches at a flat 2.0 V. An **HC** input switches at
 is marked HCT and behaves as HC - consistent with a shop that already supplied
 a flip-flop in place of a buffer.
 
-**Decision: build the diode clamp.** 1N4007 with its cathode at GPIO16, 470 ohm
-pull-up to +5 V (330 ohm is acceptable), node to the strip's DIN. The measured
-5.03 V adapter is comfortably inside where that circuit works.
+**Decision: build the diode clamp** - and it is now **bench-proven**. 1N4007
+with its cathode at GPIO16, 470 ohm pull-up to +5 V, node to the strip's DIN.
+Measured 26 Sep evening on the 1 m strip at ABL 600 mA: junction 0.79 V low,
+LED 1 steady and the correct colour, rail 4.71 V under load. The clamp has
+real margin on this strip at this rail.
 
 Note the margin is thinner than first estimated, because the 3V3 rail measures
 3.17 V rather than 3.3 V. Re-measure it on the 3 A adapter - a 5.03 V input

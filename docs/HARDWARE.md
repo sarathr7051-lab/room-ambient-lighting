@@ -10,15 +10,15 @@ Bought at SP Road (Om Technology Centre, F4 SRNG Complex) on 25 Sep 2026.
 | Part | Qty used | Note |
 |---|---|---|
 | ESP32 NodeMCU DevKit V1, 30-pin, CP2102 | 1 | the desk node |
-| WS2812 strip, 5 V, 60/m, black PCB | ~1.2 m of 3 m | "2812" without the B; same protocol, GRB |
+| WS2812 strip, 5 V, 60/m, black PCB | ~1.2 m of the 2 m | **two separate strips: 1 m (60 LEDs) and 2 m (120 LEDs)**, not one 3 m. "2812" without the B; GRB confirmed on the bench |
 | **74AHCT125 or 74HCT245** | **0 - TO BUY** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16), which cannot do this. Any 74HCT/74AHCT gate works - see BUILD_DESK_NODE.md |
 | 10 kohm, 1/4 W | 1 | pulldown on GPIO16, stops LEDs latching noise at reset |
 | 1 A resettable polyfuse | 1 | **bench test only**, in the strip's +5 V feed. Remove for the final build |
 | 1000 uF 25 V electrolytic | 1 | bulk across the 5 V rail |
 | 0.1 uF ceramic | 1 | decoupling across the 74HCT125 |
 | 330 ohm, 1/4 W | 1 | series resistor on DIN |
-| 1N4007 diode | 1 | drops the sacrificial pixel to ~4.2 V |
-| one extra WS2812 off the offcut | 1 | the sacrificial pixel - this IS the level shifter |
+| 1N4007 diode | 1 | the diode clamp - banded end to RX2 |
+| 470 ohm, 1/4 W (330 acceptable) | 1 | clamp pull-up, junction to +5 V |
 | 5 V 3 A adapter, 5.5 x 2.1 | 1 | **use this one.** The 5 A brick has an IEC C8 inlet and no mains lead |
 | DC barrel pigtail, female with leads | 1 | |
 | Silicone wire 22 AWG red/black/green | ~2 m | corner jumpers and injection run |
@@ -199,9 +199,13 @@ in colour, and the second feed costs two wires.
 
 ## The strip
 
-3 m of 5 V WS2812, 60 LEDs/m, black PCB, bought as "2812" without the B. Same
-one-wire protocol, same GRB colour order, same 800 kHz timing — WLED bus type
-`WS281x` covers it.
+**Two strips**, not one: a 1 m (60 LEDs) and a 2 m (120 LEDs), 5 V, 60/m,
+black PCB, bought as "2812" without the B. Discovered on the bench when only
+60 of a configured 180 lit - there was never a fault. Same one-wire protocol,
+**GRB colour order confirmed** (commanded red shows red), same 800 kHz timing;
+WLED bus type `WS281x`. The three build pieces come from the 2 m strip; the
+1 m stays whole as practice material and a bench tester with its factory
+connectors intact.
 
 - Cuttable every LED at the printed copper pads (60/m strips are).
 - Each cut piece needs its own +5 V, GND and DATA connection.

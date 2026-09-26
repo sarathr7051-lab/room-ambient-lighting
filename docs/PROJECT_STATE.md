@@ -4,30 +4,34 @@
 beginning; this one says where the build actually is. Update it whenever a step
 completes.
 
-Last updated: **26 Sep 2026** (second revision)
+Last updated: **26 Sep 2026, evening** - bench test passed
 
 ---
 
 ## Now
 
-**Bench bring-up, in this order** —
-[BUILD_DESK_NODE.md § 1.4 onward](BUILD_DESK_NODE.md#14-measure-the-adapter---next):
+**Bench test PASSED, 26 Sep evening.** The desk node drives a WS2812 strip
+correctly through the diode clamp. Measured on the 1 m strip at ABL 600 mA:
+LED 1 steady and correct colour, junction 0.79 V low, rail 4.71 V under load
+(5.03 V open-circuit), colour order GRB confirmed, live colour changes over
+Wi-Fi.
 
-1. **Establish how the strip's DIN end terminates** — flying leads, or bare
-   pads? Bare pads turns today into a soldering-practice day first.
-2. **Measure the 3 A adapter** and label the pigtail's polarity by measurement.
-   **Done: 5.03 V, red = +.** Below the 5.15 V line, so every level-shifter
-   option stays open. Strip threshold is 0.7 x 5.03 = **3.52 V**.
-3. Wire the bench circuit. Strip power straight off the pigtail, never through
-   breadboard rails.
-4. Staged power-up: capacitor alone, then the ESP32, then the strip.
-5. First light at LED count **180**, ABL **600 mA**, brightness 30%.
+**Tomorrow, 27 Sep, in order:**
 
-The 5 A adapter is unusable (IEC C8 inlet, no mains lead), so everything is
-sized for the 3 A brick and the final ABL cap is now **2000 mA**, not 3000.
+1. Solder three wires onto the **2 m strip's bare `Din` pads** - red +5V,
+   green Din, white GND. First joint of the build; they stay on for good.
+2. Test it at 120 LEDs. The node is already configured for 120 with six
+   20-LED colour bands (RED, GREEN, BLUE, WHITE, YELLOW, PINK); last colour
+   PINK and complete means all 120 are good.
+3. Cut the 2 m strip from its `Din` end: **18 (left) -> 34 (top) -> 18
+   (right)**. 70 used, 50 spare. The 1 m strip stays whole as practice
+   material and bench tester.
+4. Solder the two corner joints; test the assembled U flat on the bench.
+5. Mount; `apply` / `walk` / `presets`.
+6. Hyperion.
 
-**Do not cut the strip today**, and do not run `wled_push.py apply` — it would
-overwrite the bench settings with the final config.
+**Read the pad text on every fresh cut** - each piece has a `Din` end and a
+`DO` end and the 3-pin connectors look identical.
 
 ---
 
@@ -44,6 +48,8 @@ overwrite the bench settings with the final config.
 | ✅ | Monitor measured | strip path **57 × 30.5 cm** |
 | ✅ | **Adapter measured** | 5 V 3 A brick reads **5.03 V** open-circuit, red wire = **+**. Well regulated; most cheap bricks sit 5.1-5.4 |
 | ✅ | Strip ends | already wired, 3-pin connector both ends. No soldering needed for bench bring-up |
+| ✅ | **Bench test** | passed 26 Sep evening on the 1 m strip: clamp working, LED 1 steady, GRB confirmed, rail 4.71 V loaded |
+| ✅ | Chip test | CD74HCT112EX behaves as HC, not HCT - eliminated by measurement |
 | ✅ | Layout generated | **70 LEDs** = 18 left / 34 top / 18 right; `config/*.json` committed |
 
 ### Things that are settled, so don't reopen them
