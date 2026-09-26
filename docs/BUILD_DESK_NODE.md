@@ -188,6 +188,34 @@ buffers on with their inputs low, which drives nothing and is harmless.
 *away* from DIN, in the direction data travels. Connect to the end the arrows
 point away from. Getting this backwards lights nothing at all.
 
+#### Measure the adapter before anything else
+
+![How to measure the adapter voltage with a multimeter](img/measure-adapter.svg)
+
+Use the **5 V 5 A** adapter, not the 3 A one - the 3 A is for the shelf node
+later. They look alike, so read the fine print on the brick and put a strip of
+tape on each marked "5A desk" and "3A shelf".
+
+Every logic threshold in this build is 0.7 x whatever this adapter actually
+puts out, so the nominal 5 V is not good enough. Cheap 5 A bricks commonly sit
+at 5.1-5.3 V, and the level-shifting margins shrink as that number rises.
+
+1. Adapter unplugged from the wall. Nothing else connected.
+2. Push the **DC pigtail** onto the adapter's plug - that is the barrel socket
+   with two bare wires, and it is far easier to probe than the plug itself.
+3. Multimeter: **black lead into COM**, **red lead into the socket marked V or
+   VOhmmA**. NOT the socket marked 10A or 20A - that one is for measuring
+   current, and touching it across a supply is a dead short.
+4. Dial to **V with the straight line** (DC volts). If the dial has numbers,
+   choose 20. Not V with the wavy line - that is AC.
+5. Plug the adapter into the wall and switch on.
+6. Black probe on the pigtail's black wire, red probe on the red wire. Do not
+   let the two bare wires touch each other.
+7. Read the number and write it down. Then switch off at the wall.
+
+A minus sign just means the probes are the other way round - harmless, swap
+them. Anything from 4.9 to 5.3 is normal. Above 5.3, stop and say so.
+
 #### Check before you plug anything in
 
 1. **Capacitor polarity.** The stripe is the negative side, and the short leg.

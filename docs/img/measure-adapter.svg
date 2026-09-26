@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="510" viewBox="0 0 680 510" role="img">
+  <title>How to measure the adapter voltage with a multimeter</title>
+  <desc>Black probe in the COM socket, red probe in the V-ohm-milliamp socket, never
+  the 10 A socket. Dial on DC volts. Probes touch the two bare wires of the DC
+  pigtail plugged into the 5 V adapter.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .th { font-size: 14px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 14px; font-weight: 400; fill: #3d3d3a; }
+    .ts { font-size: 12px; font-weight: 400; fill: #6b6b66; }
+    .big { font-size: 26px; font-weight: 600; fill: #1a1a18; }
+    .body { fill: #f2f1ed; stroke: #8a8a82; stroke-width: 0.8; }
+    .faint { stroke: #9a9891; fill: none; }
+    .gnd { stroke: #3d3d3a; } .gndf { fill: #3d3d3a; }
+    @media (prefers-color-scheme: dark) {
+      .th { fill: #f5f3ee; } .t { fill: #d6d3cc; } .ts { fill: #9a9891; }
+      .big { fill: #f5f3ee; }
+      .body { fill: #2a2a2e; stroke: #77756e; }
+      .faint { stroke: #77756e; }
+      .gnd { stroke: #d6d3cc; } .gndf { fill: #d6d3cc; }
+    }
+  </style>
+
+  <text class="th" x="40" y="52">Measuring the adapter - probe the pigtail, not the plug</text>
+
+  <rect x="55" y="95" width="200" height="280" rx="12" class="body"/>
+  <rect x="72" y="112" width="166" height="52" rx="4" class="faint"/>
+  <text class="big" x="226" y="146" text-anchor="end" dominant-baseline="central">5.18</text>
+  <text class="ts" x="84" y="146" dominant-baseline="central">DC V</text>
+
+  <circle cx="155" cy="245" r="52" class="faint"/>
+  <line x1="155" y1="245" x2="188" y2="207" class="gnd" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="155" cy="245" r="5" class="gndf"/>
+  <text class="th" x="196" y="196" dominant-baseline="central">V (DC)  &lt;- this one</text>
+  <text class="ts" x="214" y="250" dominant-baseline="central">V~  (AC, no)</text>
+  <text class="ts" x="196" y="300" dominant-baseline="central">ohms</text>
+
+  <circle cx="100" cy="345" r="11" class="faint"/>
+  <line x1="92" y1="337" x2="108" y2="353" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="108" y1="337" x2="92" y2="353" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+  <text class="ts" x="100" y="368" text-anchor="middle">10A</text>
+  <circle cx="155" cy="345" r="11" class="gndf"/>
+  <text class="ts" x="155" y="368" text-anchor="middle">COM</text>
+  <circle cx="210" cy="345" r="11" fill="#DC3545"/>
+  <text class="ts" x="210" y="368" text-anchor="middle">V ohm mA</text>
+
+  <path d="M155 356 C 210 430 380 400 472 332" fill="none" class="gnd" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M210 356 C 290 455 430 420 524 322" fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+
+  <rect x="448" y="110" width="100" height="60" rx="6" class="body"/>
+  <text class="th" x="498" y="132" text-anchor="middle" dominant-baseline="central">5 V 5 A</text>
+  <text class="ts" x="498" y="150" text-anchor="middle" dominant-baseline="central">adapter</text>
+  <line x1="498" y1="170" x2="498" y2="210" class="faint" stroke-width="1.5"/>
+
+  <rect x="448" y="210" width="100" height="42" rx="6" class="body"/>
+  <text class="ts" x="498" y="231" text-anchor="middle" dominant-baseline="central">DC pigtail</text>
+
+  <line x1="472" y1="252" x2="472" y2="332" class="gnd" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="524" y1="252" x2="524" y2="322" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+  <text class="ts" x="462" y="300" text-anchor="end" dominant-baseline="central">- black</text>
+  <text class="ts" x="536" y="286" dominant-baseline="central">+ red</text>
+
+  <text class="t" x="40" y="440">Black probe into COM. Red probe into V ohm mA. Never the 10 A socket.</text>
+  <text class="t" x="40" y="462">Dial on V with the straight line (DC) - not V with the wavy line (AC).</text>
+  <text class="th" x="40" y="486">Touch the probes to the pigtail's two bare wires. Keep them apart.</text>
+</svg>
