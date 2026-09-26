@@ -59,8 +59,10 @@ the uncut strip, where a mistake costs nothing.
 
 ## The strip's ends - RESOLVED 26 Sep 2026
 
-**Both ends already carry wires and a 3-pin connector.** No soldering is needed
-to get the strip onto the bench. Confirmed from a photo of the reel.
+**Two strips.** The **1 m** strip has wires and a 3-pin connector on both ends
+and was the bench-test strip; it stays whole. The **2 m** strip, which the
+build pieces come from, has **bare pads on its `Din` end** and a connector on
+its `DO` end - the Din leads are the first solder joint of the build.
 
 - Three wires per end: **red, green, white**, into a black 3-pin JST-SM housing.
 - Plus a separate pair of flying leads for power injection.
@@ -109,8 +111,8 @@ python tools/wled_push.py probe --host wled-desk.local
 ```
 
 > **Do not run `wled_push.py apply` during bring-up.** It pushes the committed
-> 70-LED / skip-1 / 2000 mA config and would silently overwrite your bench
-> settings. Only `probe` is safe today.
+> 70-LED / skip-0 / 800 mA config and would silently overwrite the 120-LED
+> bench settings. Only `probe` is safe until the U is joined and mounted.
 
 ---
 
@@ -426,7 +428,7 @@ python tools/led_layout.py --width 57 --height 30.5 --write
 | left | 18 | **30.0 cm** |
 | top | 34 | **56.7 cm** |
 | right | 18 | **30.0 cm** |
-| **total** | **70** | 116.7 cm of 300 cm, **183 cm spare** |
+| **total** | **70** | 116.7 cm of the 2 m strip, **50 LEDs (83 cm) spare** with the DO connector on it |
 
 `config/hyperion_leds.json` and `config/wled_desk_cfg.json` are committed. The
 count is insensitive to width — 56 to 57.5 cm all give 34/18/18.
@@ -451,10 +453,11 @@ cut and three short wires. Two corners, six wires, twelve joints.
 
 ### Practise on the offcut first
 
-The run uses 117 cm of 300 cm. **183 cm of spare exists so that the first
-joints you ever make are not the ones on the monitor.** Cut three practice
-pieces off the far end, join them, power them, and move to the real lengths
-only when three joints in a row look right and pass continuity.
+The run uses 117 cm of the 2 m strip; 50 LEDs remain, with the DO connector
+on their far end. **Do not cut practice pieces off that end.** The rehearsal
+joint is the spare piece's own fresh `Din` pads (LED 71) after the 70/71 cut:
+a 10 cm lead soldered there is a real joint on a piece that does not matter,
+and it leaves the spare with a usable lead.
 
 Three things decide whether soldering feels easy or impossible, and beginners
 get all three wrong at once:
@@ -474,12 +477,17 @@ Ventilated spot, and do not lean into the smoke.
 **Bad:** dull and grainy (moved while cooling), or a ball sitting on top
 without wetting it (not enough heat, or no flux — add flux, not more solder).
 
-### Before any cut: check the arrows
+### Before any cut: check the arrows and the corners
 
-Lay all three pieces out in the U shape and confirm **every arrow points the
-same way round** — up the left, across the top, down the right. A piece fitted
-backwards lights nothing downstream of it, and you will not notice until the
-whole thing is stuck to the monitor.
+On the **uncut** strip confirm the printed arrows point *away* from the bare
+`Din` end. After each cut, lay the pieces in the U and confirm **every arrow
+points the same way round** — up the left, across the top, down the right —
+and that the marked +5V edge is on the same side (all outside, or all inside)
+on all three pieces. A piece fitted backwards lights nothing downstream of it.
+
+**Corners:** the top piece runs the full width; each side piece tucks *under*
+the end of the top piece, its cut edge ~5 mm below the top piece's lower edge.
+The pad-to-pad gap is 5–10 mm; corner wires are cut at 4 cm and trimmed.
 
 ### Cutting
 
@@ -493,7 +501,9 @@ The chip sits a couple of millimetres from its pads, and heat is what kills it.
 
 1. Flux the pads.
 2. **Tin each pad** — iron plus a little solder, 1–2 s, off. A small dome.
-3. **Tin the wires** — about 3 cm, stripped 3–4 mm, twisted, tinned.
+3. **Tin the wires** — stripped 3 mm, twisted, tinned, tinned end trimmed to
+   ~2 mm. If heat-shrink is going on, **slide it onto the wire now**, before
+   the second end is soldered.
 4. **Join** — hold the tinned wire on the tinned pad, iron 1–2 s until the two
    pools flow together, remove the iron, then **hold still until it sets**.
 5. If it will not take, add flux and retry briefly. Never hold the iron longer.
@@ -509,6 +519,10 @@ wires come out the right length.
 | GND | black | GND |
 
 **Match pad names, not positions** — at a corner one strip is rotated 90°.
+Solder the **middle (data) wire first**, then the two edge wires; 22 AWG is
+chunky for 3.3 mm pad pitch and the middle one is the hardest to reach last.
+Tape the strip flat and tape each wire to the bench 3 cm from the pad before
+soldering — a flopping 60 cm lead peels a half-pad off the flex.
 
 ### Test after every connection, not at the end
 

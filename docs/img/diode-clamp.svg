@@ -67,9 +67,9 @@
   <text class="t" x="50" y="516">Result: a HIGH of about 3.8 V instead of 3.17 V - enough for the strip to read it.</text>
   <text class="h" x="50" y="546">The wires</text>
   <rect x="50" y="561" width="12" height="12" rx="3" fill="#DC3545"/>
-  <text class="t" x="70" y="570" dominant-baseline="central">to the 5 V rail:  ESP32 VIN,  strip +5V,  top of the 470 ohm</text>
+  <text class="t" x="70" y="570" dominant-baseline="central">to the 5 V rail:  ESP32 VIN,  top of the 470 ohm   (strip +5V: pigtail, not the rail)</text>
   <rect x="50" y="584" width="12" height="12" rx="3" class="gndf"/>
-  <text class="t" x="70" y="593" dominant-baseline="central">to the GND rail:  ESP32 GND,  strip GND,  1000 uF striped leg</text>
+  <text class="t" x="70" y="593" dominant-baseline="central">to the GND rail:  ESP32 GND,  1000 uF striped leg   (strip GND: pigtail)</text>
   <rect x="50" y="607" width="12" height="12" rx="3" fill="#2E9E5B"/>
   <text class="t" x="70" y="616" dominant-baseline="central">signal:  RX2  ->  diode  ->  junction  ->  strip DIN</text>
   <text class="h" x="50" y="647" style="fill:#DC3545">Diode backwards = nothing lights. Silver band faces the ESP32.</text>

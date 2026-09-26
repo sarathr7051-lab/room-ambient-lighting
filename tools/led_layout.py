@@ -146,13 +146,8 @@ def wled_cfg(total: int, pin: int, abl_ma: int, ma_per_led: int,
         "pin": [pin],
         "order": WLED_ORDER_GRB,
         "rev": False,
-        # Sacrificial pixel: one WS2812 powered through a 1N4007 sits ahead
-        # of the run and does the 3.3 V -> 5 V level shifting. WLED drives it
-        # dark and addresses the real LEDs from 0, so nothing downstream
-        # changes. Whether "len" should also count the skipped pixel is not
-        # clearly documented - wled_push.py apply reads the config back and
-        # diffs it, so a wrong guess shows up immediately rather than as a
-        # strip that is one LED out.
+        # No skipped pixel: data comes through the diode clamp, so LED 1 is
+        # the first real LED. A non-zero skip here shifts the whole map.
         "skip": skip,
         "type": WLED_TYPE_WS281X,
         "ref": False,
@@ -199,17 +194,15 @@ def main() -> int:
                    help="how far into the screen each LED samples, 0..1")
     p.add_argument("--pin", type=int, default=16,
                    help="ESP32 GPIO driving DIN (default 16, per HARDWARE.md)")
-    p.add_argument("--abl", type=int, default=2000,
-                   help="WLED auto-brightness-limiter cap in mA (default 2000, "
-                        "sized for the 5 V 3 A adapter)")
+    p.add_argument("--abl", type=int, default=800,
+                   help="WLED auto-brightness-limiter cap in mA (default 800 "
+                        "while the node lives on a breadboard; 2000 once it is "
+                        "on a dot board with the 5 V 3 A adapter)")
     p.add_argument("--ma-per-led", type=int, default=55,
                    help="mA per LED at full white, for ABL's model")
     p.add_argument("--stock-length", type=float, default=200.0,
                    help="length of the strip being cut, cm (default 200: the "
                         "build pieces come from the 2 m strip; the 1 m stays whole)")
-    p.add_argument("--no-sacrificial", action="store_true",
-                   help="omit the sacrificial level-shifter pixel "
-                        "(only if a real 74HCT125 buffer is fitted)")
     p.add_argument("--write", action="store_true",
                    help="write config/hyperion_leds.json and config/wled_desk_cfg.json")
     a = p.parse_args()
@@ -230,19 +223,15 @@ def main() -> int:
 
     spare = a.stock_length - used_cm
     print(f"  spare strip   {spare:>17.1f} cm "
-          f"({int(spare / pitch_cm)} LEDs) of {a.stock_length:.0f} cm owned")
+          f"({round(a.stock_length / pitch_cm) - total} LEDs) of {a.stock_length:.0f} cm owned")
     if spare < 0:
         print("  *** NOT ENOUGH STRIP - the path is longer than what you have.")
 
     joints = len(runs) - 1
-    if not a.no_sacrificial:
-        print()
-        print("  Plus ONE sacrificial WS2812 ahead of the run, powered through a")
-        print("  1N4007, doing the 3.3 V -> 5 V level shift. WLED skip = 1.")
-
     print(f"\n  Corner joints to solder: {joints}  "
           f"({joints * 3} wires: +5V, GND, DATA at each)")
-    print("  Cut only on the printed copper pads. Keep corner wires under 3 cm.")
+    print("  Cut through the middle of the copper pads. Corner wires: cut 3 cm,")
+    print("  finished span 1.5-2 cm; the pad-to-pad gap is only 5-10 mm.")
 
     print(f"\n  Power: {total} LEDs x {a.ma_per_led} mA = "
           f"{total * a.ma_per_led / 1000:.1f} A at full white; "
@@ -265,8 +254,7 @@ def main() -> int:
     print("    Confirm with:  python tools/wled_push.py walk --host <ip>")
 
     leds = hyperion_leds(runs, a.depth, a.sides)
-    cfg = wled_cfg(total, a.pin, a.abl, a.ma_per_led,
-                   skip=0 if a.no_sacrificial else 1)
+    cfg = wled_cfg(total, a.pin, a.abl, a.ma_per_led, skip=0)
 
     assert len(leds) == total, "layout/count mismatch"
 

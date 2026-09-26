@@ -121,8 +121,8 @@ the cap is now **2000 mA** on the 3 A adapter. Argued in
 ### Three-sided strip, no bottom run
 
 The bottom edge lights the desk rather than the wall, it collides with the
-stand and the future monitor arm, and it doubles the corner joints. 183 cm of
-strip stays spare, so this is reversible for the cost of solder.
+stand and the future monitor arm, and it doubles the corner joints. 50 LEDs of
+strip stay spare, so this is reversible for the cost of solder.
 
 ### DDP, not WARLS
 

@@ -221,6 +221,8 @@ def cmd_apply(a) -> None:
         ("order", want_bus["order"], after_bus.get("order")),
         ("bus maxpwr", want_bus["maxpwr"], after_bus.get("maxpwr")),
         ("ledma", want_bus["ledma"], after_bus.get("ledma")),
+        ("skip", want_bus["skip"], after_bus.get("skip")),
+        ("reversed", want_bus["rev"], after_bus.get("rev")),
     ]
     print(f"  {'-' * 46}")
     for name, expect, got in checks:

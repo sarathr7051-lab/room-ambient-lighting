@@ -67,7 +67,7 @@ Measured and committed — these are facts, not estimates.
 | Left run | 18 LEDs, cut to **30.0 cm** |
 | Top run | 34 LEDs, cut to **56.7 cm** |
 | Right run | 18 LEDs, cut to **30.0 cm** |
-| Strip used / spare | 116.7 cm of 300 cm — **183 cm spare** |
+| Strip used / spare | 116.7 cm of the 2 m strip — **50 LEDs spare**, DO connector intact |
 | Corner joints | 2 |
 | Node | `wled-desk.local` · 192.168.1.6 · 2.4 GHz ch 4 · 100% signal |
 
@@ -114,7 +114,7 @@ python tools/wled_push.py probe --host wled-desk.local
 Still outstanding, once the strip is cut and joined:
 
 ```bash
-python tools/wled_push.py apply   --host wled-desk.local   # 70 LEDs, ABL 3000 mA
+python tools/wled_push.py apply   --host wled-desk.local   # 70 LEDs, skip 0, ABL 800 mA on the breadboard
 python tools/wled_push.py walk    --host wled-desk.local   # verify orientation
 python tools/wled_push.py presets --host wled-desk.local
 ```

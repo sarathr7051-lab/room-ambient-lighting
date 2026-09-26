@@ -2,7 +2,7 @@
   "hw": {
     "led": {
       "total": 70,
-      "maxpwr": 2000,
+      "maxpwr": 800,
       "ledma": 55,
       "ins": [
         {
@@ -13,12 +13,12 @@
           ],
           "order": 0,
           "rev": false,
-          "skip": 1,
+          "skip": 0,
           "type": 22,
           "ref": false,
           "rgbwm": 0,
           "freq": 0,
-          "maxpwr": 2000,
+          "maxpwr": 800,
           "ledma": 55
         }
       ]
