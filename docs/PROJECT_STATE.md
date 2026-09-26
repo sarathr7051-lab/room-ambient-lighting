@@ -91,6 +91,7 @@ Windows x64 installer, DXGI DDA grabber, WLED device over DDP, paste
 
 | Item | Waiting on |
 |---|---|
+| **Level shifter for L2** | a real 74HCT125, or any 74HCT gate - the shop substituted a CD74HCT112E, which cannot work. Not blocking: the bench test runs without it |
 | **L3** under-desk warm strip | 12 V 1 A adapter (Robu SKU 24715) |
 | **L4** shelf node, Wemos D1 mini | Gesto 12 V neon strip to arrive |
 | Music reactive, auto-dim, presence | custom WLED build with `USERMOD_AUDIOREACTIVE`, `USERMOD_LDR`, `USERMOD_PIR_SENSOR_SWITCH` — goes on by **OTA**, not USB |

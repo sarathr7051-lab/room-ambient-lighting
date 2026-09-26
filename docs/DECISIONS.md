@@ -17,7 +17,35 @@ someone new looks at the project.
 | Home Assistant / Raspberry Pi as the brain | A whole extra always-on machine to do what WLED presets and Hyperion already do between them. Parked, not refused — if the room grows more nodes it may earn its place. |
 | Alexa for music-reactive lighting | It cannot. There is no audio stream out of an Echo to react to. Sound reactivity needs the INMP441 on the node doing its own FFT. |
 | 5 V COB for the warm layers | The original design was a single 5 V rail. Gesto's 12 V neon won because the 12 V adapter is included in the price and a low-side MOSFET does not care what voltage it is switching. The 12 V never touches the ESP32. |
+| **CD74HCT112E as a level shifter** | Sold as a substitute for the 74HCT125 and cannot work. It is a *sequential* part - a dual JK flip-flop whose outputs depend on clock edges and stored state, not on the present input level. Its asynchronous Set and Reset could force Q high or low, but making Q *follow* the input needs both the signal and its inverse, and generating that inverse is the exact problem the buffer exists to solve. There is no combinational path from any input to Q. Keep the chip - a JK flip-flop is useful elsewhere - but it is not this. |
 | Scripted serial / `arduino-cli` flashing | Separate hard-won lesson from the JiffyTrails build (a different repo, not linked here): scripted serial opens toggle DTR/RTS, which drives the ESP32's auto-reset circuit and can leave the board in reset or download mode while looking like it worked. Moot here anyway — WLED is flashed once from the browser and everything after that is HTTP. |
+
+---
+
+## What to actually buy for the level shifter
+
+**It is the HCT that matters, not the 125.** Any 74**HCT** logic gate works as
+a 3.3 V -> 5 V level shifter, because the HCT family pairs TTL input thresholds
+(logic high from about 2 V) with CMOS outputs that swing the full 5 V. The part
+number only decides how many wires it takes.
+
+| Part | How to use it |
+|---|---|
+| 74HCT125 / 74HCT126 | buffer - direct, one gate. What the design assumes |
+| 74AHCT125 | same, faster. Equally good |
+| 74HCT245 | octal bus transceiver - direct, tie DIR and OE |
+| 74HCT08 (AND) | tie one input high -> non-inverting buffer, one gate |
+| 74HCT32 (OR) | tie one input low -> non-inverting buffer, one gate |
+| 74HCT04 / 74HCT14 | inverters - two in series to get back to non-inverting |
+| 74HCT00 (NAND) | tie one input high -> inverter; two in series |
+
+So at the counter, ask for "any 74HCT gate" rather than walking away empty
+handed. **Do not** accept a 74HC part without the T - that is already on the
+rejected list above, because CMOS input thresholds put 3.3 V uncomfortably
+close to the switching point, which is the very problem being solved.
+
+Om Technology delivers by Porter, so WhatsApp the part rather than making the
+trip, and ask about exchanging the CD74HCT112E at the same time.
 
 ---
 

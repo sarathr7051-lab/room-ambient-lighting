@@ -74,6 +74,26 @@ throughout. Plug in only at 1.5.
 | - | breadboard, jumper wires, multimeter |
 | - | the 3 m WS2812 strip, uncut |
 
+> ### The 74HCT125 is missing - build without it
+>
+> The SP Road shop substituted a **CD74HCT112E** (dual JK flip-flop, DIP-16)
+> for the 74HCT125 (quad buffer, DIP-14). It cannot do this job - see
+> DECISIONS.md. Until a real buffer arrives:
+>
+> **Skip table rows 7-12 entirely and wire ESP32 GPIO16 -> 330 ohm -> strip
+> DIN.** Leave the chip out of the board. Keep the data wire under 30 cm.
+>
+> This is out of spec - WS2812 wants 0.7 x VDD = 3.5 V for a logic high and the
+> ESP32 gives 3.3 V - but it usually works, and the failure mode is specific:
+> the **first LED** misbehaves while the rest are fine, because that first LED
+> retransmits a clean 5 V signal downstream.
+>
+> If the first LED does misbehave, put a **1N4007 in series with the strip's
+> +5 V**, band (cathode) toward the strip. That drops the strip to about
+> 4.0-4.3 V, which pulls its logic-high threshold down to roughly 2.9 V and
+> gives the 3.3 V signal real margin. Keep ABL at 1000 mA or below - the
+> 1N4007 is only rated 1 A, so this is a bench fix, not the finished build.
+
 #### First, how a breadboard is joined up inside
 
 ![What is connected to what inside a breadboard](img/breadboard-internals.svg)
