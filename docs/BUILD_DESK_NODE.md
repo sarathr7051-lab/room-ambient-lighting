@@ -57,8 +57,11 @@ USB (Basic mode, Plain variant, adapter unplugged).
 - The board enumerates as `Silicon Labs CP210x USB to UART Bridge`; on this
   machine it appeared on COM12. Read the chip name, never the COM number.
 - The cable is a repurposed Fire TV Stick micro-USB lead that carries data.
-- **Check the metal can says `ESP32-WROOM-32`.** On a **WROVER** module GPIO16
-  is the PSRAM chip-select and this whole pin choice is invalid.
+- **WROOM confirmed** from a photo of the board: GPIO16 and GPIO17 are broken
+  out as `RX2` / `TX2`, which a WROVER cannot do - those pins are its PSRAM
+  interface. The pin choice stands.
+- **The silkscreen says `RX2`, not `D16`.** HARDWARE.md has where each pin
+  physically sits.
 
 ### 1.2 Node address - DONE
 
@@ -144,8 +147,8 @@ pigtail leads** — screw terminal, WAGO, or twisted and taped.
 | 4 | 1000 µF other leg | + rail |
 | 5 | ESP32 **VIN** | + rail |
 | 6 | ESP32 **GND** | − rail |
-| 7 | ESP32 **GPIO16** | one end of the **330 Ω** |
-| 8 | **10 kΩ** from GPIO16 | − rail |
+| 7 | ESP32 **GPIO16** - silkscreen says **`RX2`**, 6th pin up from the bottom-right corner | one end of the **330 Ω** |
+| 8 | **10 kΩ** from GPIO16 (`RX2`) | − rail |
 | 9 | other end of the 330 Ω | strip **DIN** |
 | 10 | strip **+5 V** | **1 A polyfuse** → pigtail **+**, not the breadboard |
 | 11 | strip **GND** | pigtail **−**, not the breadboard |

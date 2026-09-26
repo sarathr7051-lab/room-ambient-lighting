@@ -82,6 +82,32 @@ matters for screen sync.
 
 **Keep free:** GPIO0, 2, 12 (strapping), GPIO1/3 (UART0), GPIO6–11 (flash).
 
+### Finding the pins on this actual board
+
+The DevKit V1 silkscreen does **not** say "D16". Confirmed from a photo of the
+board in hand (module marked ESP-32, USB bridge marked SILABS CP2102):
+
+| Needed | Silkscreen label | Where it physically is |
+|---|---|---|
+| **GPIO16** | **`RX2`** | right column, **6th pin up from the bottom-right corner**: 3V3, GND, D15, D2, D4, **RX2** |
+| VIN | `VIN` | **bottom-left corner pin** |
+| GND | `GND` | immediately above VIN. A second GND sits above 3V3 on the right |
+| 3V3 | `3V3` | bottom-right corner pin |
+
+GPIO16 is UART2's receive pin, hence `RX2`. Nothing in this project uses UART2,
+so the label is only a label.
+
+Full silkscreen, bottom to top:
+
+```
+ left  : VIN GND D13 D12 D14 D27 D26 D25 D33 D32 D35 D34 VN VP EN
+ right : 3V3 GND D15 D2  D4  RX2 TX2 D5  D18 D19 D21 RX0 TX0 D22 D23
+```
+
+**GPIO16 and GPIO17 being broken out at all confirms a WROOM-class module, not
+a WROVER** - on WROVER those two pins are the PSRAM interface and are not
+available. The pin choice stands.
+
 ### 74HCT125 (DIP-14)
 
 ![74HCT125 pinout and where every pin goes](img/74hct125-pinout.svg)
