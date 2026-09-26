@@ -146,9 +146,11 @@ Then, three things:
 - **Turn the dial away from the current ranges** when you are done, so you
   cannot probe a live rail in amps by accident.
 
-> **Go / no-go:** if the adapter reads **above 5.15 V**, do not build any of the
-> diode level-shifter workarounds. See
-> [Level shifting](#level-shifting---unresolved).
+> **MEASURED 26 Sep 2026: 5.03 V open-circuit, red wire positive.** Comfortably
+> under the 5.15 V go/no-go line, and better regulated than most cheap bricks.
+> The strip's logic-high threshold is 0.7 x 5.03 = **3.52 V**, so a bare 3.3 V
+> drive is 0.22 V short - marginal, as expected. Every level-shifter option
+> remains available. Re-measure under load once the strip is running.
 
 ### 1.5 Wire the bench circuit - NEXT
 

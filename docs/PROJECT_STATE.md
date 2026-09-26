@@ -16,7 +16,8 @@ Last updated: **26 Sep 2026** (second revision)
 1. **Establish how the strip's DIN end terminates** — flying leads, or bare
    pads? Bare pads turns today into a soldering-practice day first.
 2. **Measure the 3 A adapter** and label the pigtail's polarity by measurement.
-   The reading is a go/no-go: above 5.15 V, no diode workaround gets built.
+   **Done: 5.03 V, red = +.** Below the 5.15 V line, so every level-shifter
+   option stays open. Strip threshold is 0.7 x 5.03 = **3.52 V**.
 3. Wire the bench circuit. Strip power straight off the pigtail, never through
    breadboard rails.
 4. Staged power-up: capacitor alone, then the ESP32, then the strip.
@@ -41,6 +42,8 @@ overwrite the bench settings with the final config.
 | ✅ | Node named | `wled-desk`; `wled-desk.local` resolves |
 | ✅ | Tooling verified | `wled_push.py` tested against the live node; four bugs found and fixed |
 | ✅ | Monitor measured | strip path **57 × 30.5 cm** |
+| ✅ | **Adapter measured** | 5 V 3 A brick reads **5.03 V** open-circuit, red wire = **+**. Well regulated; most cheap bricks sit 5.1-5.4 |
+| ✅ | Strip ends | already wired, 3-pin connector both ends. No soldering needed for bench bring-up |
 | ✅ | Layout generated | **70 LEDs** = 18 left / 34 top / 18 right; `config/*.json` committed |
 
 ### Things that are settled, so don't reopen them
