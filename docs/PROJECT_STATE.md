@@ -86,12 +86,14 @@ The monitor strip, per the **Now** section above. Nothing else.
 
 5. Heat-shrink or hot glue over the two corner joints and the three end joints
    before anything goes near the monitor; they are held by half a pad each.
+5a. **Move the node onto the dot board** - [PERFBOARD.md](PERFBOARD.md). About
+   60 joints; the breadboard stays wired as the fallback until the board
+   lights the U. Then ABL 2000.
 6. Tack-It test patch on hidden paint first thing. Flash the **Wemos D1 mini**
    (ESP8266 build, CH340) while the IPA dries - no soldering.
 7. IPA the monitor back; mount the U starting at the `Din` corner; corner ties.
 8. Wire to the node. Strip power **straight from the pigtail**, not the rails,
-   and keep ABL at **800 mA while it lives on the breadboard** (raise to 2000 only
-   on the dot board). `apply` / `walk` / `presets`.
+   ABL 2000 on the dot board (800 if it is still on the breadboard). `apply` / `walk` / `presets`.
 9. Hyperion: Windows installer, DXGI DDA grabber, WLED device by mDNS, paste
    `config/hyperion_leds.json`. **Screen sync done.**
 
@@ -133,7 +135,6 @@ this plan.
 |---|---|
 | **5 A adapter** | an IEC C7 figure-8 mains lead. Until then the desk node runs on the 3 A brick |
 | **L3** under-desk warm strip | 12 V 1 A adapter (Robu SKU 24715) |
-| Desk node onto dot board | an evening, not this weekend. Breadboard is fine at ABL 800 |
 | Music reactive, auto-dim, presence | custom WLED build with `USERMOD_AUDIOREACTIVE`, `USERMOD_LDR`, `USERMOD_PIR_SENSOR_SWITCH` - by **OTA**, not USB |
 | LD2420 presence sensor | deferred; GPIO27 reserved |
 | A1 prints, Itachi A3 | not ordered; not in this plan |
