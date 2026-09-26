@@ -57,22 +57,21 @@ the uncut strip, where a mistake costs nothing.
 
 ---
 
-## Before you start: how does your strip's input end connect?
+## The strip's ends - RESOLVED 26 Sep 2026
 
-**Establish this before anything else.** WS2812 strip ships either with three
-flying leads (sometimes a JST plug) at the DIN end, or with **bare copper
-pads**.
+**Both ends already carry wires and a 3-pin connector.** No soldering is needed
+to get the strip onto the bench. Confirmed from a photo of the reel.
 
-- **Leads or a plug** → good, carry on.
-- **Bare pads** → Stage 1 needs three soldered joints in the signal path, and
-  they would be your first joints ever, on the circuit you are about to
-  energise. That defeats the whole point of this staging. **Today becomes a
-  soldering-practice day instead**: cut three practice pieces off the far
-  (DOUT) end, practise until three joints in a row pass continuity, then solder
-  leads onto the DIN end. Technique is in
-  [Stage 3](#stage-3---corners-cut-and-solder).
+- Three wires per end: **red, green, white**, into a black 3-pin JST-SM housing.
+- Plus a separate pair of flying leads for power injection.
 
----
+Conventional colour code for this strip type, **to be confirmed against the pad
+labels rather than assumed**: red = +5 V, green = DATA, white = GND.
+
+**Which end is DIN:** read the tiny silkscreen where the wires are soldered.
+The input end is marked `DI` or `DIN`; the output end `DO` or `DOUT`. The
+printed arrows also point *away* from DIN, in the direction data travels.
+Do not rely on connector gender - it is not a reliable convention.
 
 ## Stage 1 - bench bring-up
 
