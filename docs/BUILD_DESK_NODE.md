@@ -299,7 +299,67 @@ said no.
 **Never a 74HC without the T.** CMOS thresholds put 3.3 V right at the
 switching point — that is the problem, not the fix.
 
-### The workarounds, and why neither is committed
+### FIRST: the CD74HCT112E may be a real buffer after all
+
+The chip the shop wrongly supplied has **genuine HCT input thresholds** -
+TI's datasheet specifies **VIH = 2 V min, VIL = 0.8 V max** at VCC 4.5-5.5 V,
+identical to the SN74AHCT125. A 3.3 V drive clears that by **1.3 V**, versus
+0.2-0.4 V for any diode trick.
+
+It can be coerced into a combinational buffer. From TI's own truth table:
+
+| PRE (SD) | CLR (RD) | Q | Qbar |
+|---|---|---|---|
+| L | H | H | **L** |
+| L | L | H | **H** |
+
+**Hold SD low permanently and Qbar becomes NOT(RD)** - an inverter with no
+clock involved. Chain both flip-flops and you have a non-inverting 5 V buffer.
+Propagation delay CLR to Q is 37 ns max at 25 C, 46 ns over temperature, so two
+stages cost 74-92 ns against a 350 ns pulse. Comfortable.
+
+The footnote hazard ("output states unpredictable if both S and R go high
+simultaneously after both being low") **cannot occur here**, because SD is
+hard-wired low and never goes high.
+
+![CD74HCT112E wired as a level-shifting buffer](img/hct112-buffer.svg)
+
+#### The catch, and the two-minute test that settles it
+
+**The both-asserted output state is not the same between manufacturers.**
+
+| Datasheet | SD=L, RD=L | Works? |
+|---|---|---|
+| **TI** CD74HCT112, SCHS141J | Q = H, **Qbar = H** | **yes** |
+| **Philips / Nexperia** 74HC/HCT112 | nQ = H, **nQbar = L** | **no** - set-dominant |
+
+Your part is marked CD74HCT112E, a TI number, so TI's table should apply. But
+this is the same shop that supplied a flip-flop for a buffer, and re-marked
+parts exist. **Test before building.**
+
+DC test, multimeter only, no scope, nothing at risk:
+
+1. Pin 16 to +5 V, pin 8 to GND, 0.1 uF across them at the chip.
+2. Pin 4 (1SD) to GND. Pins 1, 2, 3 to GND - never leave CMOS inputs floating.
+3. Meter black on GND, red on **pin 6**.
+4. Touch **pin 15** to **GND** -> pin 6 should read about **5 V**.
+5. Touch **pin 15** to the ESP32's **3V3** pin -> pin 6 should read about **0 V**.
+
+Both correct: the trick works on your chip, and you have simultaneously proved
+3.3 V clears the input threshold. Build the buffer.
+
+Pin 6 stuck near 0 V in both cases: set-dominant die. Fall back to the clamp.
+
+Pinout verified against the Philips/Nexperia pin description table (TI is
+pin-compatible): 1 = 1CP, 2 = 1K, 3 = 1J, 4 = 1SD, 5 = 1Q, 6 = 1Qbar,
+7 = 2Qbar, 8 = GND, 9 = 2Q, 10 = 2SD, 11 = 2J, 12 = 2K, 13 = 2CP, 14 = 2RD,
+15 = 1RD, 16 = VCC.
+
+**Do not combine the buffer with a supply dropper.** The chip needs VCC >= 4.5 V,
+and driving DIN to 5 V while the strip sat at 4.2 V would exceed the WS2812's
+absolute-maximum input of VDD + 0.5 V.
+
+### The diode workarounds, if the test fails
 
 Both were analysed in detail and **neither closes on worst case**:
 
