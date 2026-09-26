@@ -74,6 +74,20 @@ throughout. Plug in only at 1.5.
 | - | breadboard, jumper wires, multimeter |
 | - | the 3 m WS2812 strip, uncut |
 
+> ## HOLD - 26 Sep 2026: do not build the sacrificial pixel from this section
+>
+> A third independent review overturned it. The sacrificial pixel has LESS
+> worst-case margin than the diode-clamp alternative, not more, and the
+> two-diode version is too sensitive to which brand of 1N4007 you happen to
+> own (vendor curves disagree by 80 mV at the relevant current, and it is a
+> two-diode stack). Neither diode circuit closes on datasheet worst case.
+>
+> The correct answer is a **74AHCT125 or 74HCT245** buffer, which does close on
+> worst case and whose margin grows rather than shrinks as the rail rises.
+>
+> The go/no-go is the measured adapter voltage. This section is being rewritten;
+> do not wire from it yet.
+
 > ### No 74HCT125 - use a sacrificial pixel instead
 >
 > The SP Road shops do not have one (five or six asked) and mail order would
