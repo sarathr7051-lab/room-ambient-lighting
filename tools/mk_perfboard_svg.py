@@ -17,8 +17,8 @@ RIGHT = ["VIN", "GND", "D13", "D12", "D14", "D27", "D26", "D25", "D33", "D32", "
 BUS_ROWS = range(2, 17)
 CAP = 16                            # row of the 1000 uF
 # bus pads that never receive a leg: soldered at step 2. The rest are soldered when their leg arrives.
-BUS_FREE_5V = [4, 8, 9, 11, 12, 14, 15]
-BUS_FREE_GND = [3, 8, 9, 10, 11, 12, 14, 15]
+BUS_FREE_5V = [4, 8, 9, 11, 12, 13, 14, 15]
+BUS_FREE_GND = [3, 8, 9, 10, 11, 12, 13, 14, 15]
 EXT = [((19, 5), RED, "pigtail  +  (red wire)"),
        ((23, 5), GND, "pigtail  -  (black wire)"),
        ((19, 6), RED, "LED 1 end:  +5V wire"),
@@ -83,12 +83,11 @@ def panel(Y0, mirror, title, sub, xoff=0):
         ex, ey = P(4.4, 1.6); ex2, ey2 = P(15.6, 18.4)
         add(f'<rect x="{ex}" y="{ey}" width="{ex2-ex}" height="{ey2-ey}" rx="6" fill="#eeece7" fill-opacity="0.5" stroke="#6f6d66" stroke-width="1.4" stroke-dasharray="6 4"/>')
         ux, uy = P(10, 1.6)
-        add(f'<rect x="{ux-16}" y="{uy-14}" width="32" height="18" rx="3" fill="#9a9891"/>')
-        add(f'<text class="s" x="{ux}" y="{uy-3}" text-anchor="middle" style="fill:#fff">USB</text>')
-        label(10, 12.5, "ESP32 on two female headers,", "t", "middle"); label(10, 13.3, "USB at the top. The antenna end", "t", "middle")
-        label(10, 14.1, "reaches ~5 rows below this drawing", "t", "middle")
+        add(f'<rect x="{ux-16}" y="{uy-2}" width="32" height="14" rx="3" fill="#9a9891" fill-opacity="0.8"/>')
+        add(f'<text class="s" x="{ux}" y="{uy+6}" text-anchor="middle" style="fill:#fff">USB</text>')
+        label(10, 9.6, "ESP32 on two female headers, USB at the top.", "s", "middle"); label(10, 10.2, "The antenna end reaches ~5 rows below this drawing.", "s", "middle")
     else:
-        label(10, 16.3, "no ESP32 on this side: 30 header pins to solder", "t", "middle")
+        label(10, 18, "no ESP32 on this side: 30 header pins to solder", "t", "middle")
 
     for i in range(15):
         y = 3 + i
@@ -117,22 +116,26 @@ def panel(Y0, mirror, title, sub, xoff=0):
     wire([(16, 8), (17, 8)], GRN, dash=ud, wd=4)
     if mirror:
         for y in BUS_ROWS:
-            blob(19, y, RED if y in BUS_FREE_5V else "#1a1a18", 4)
-            blob(23, y, GND if y in BUS_FREE_GND else "#1a1a18", 4)
+            for x, free, col in ((19, BUS_FREE_5V, RED), (23, BUS_FREE_GND, GND)):
+                px, py = P(x, y)
+                if y in free:
+                    add(f'<circle cx="{px}" cy="{py}" r="4.5" fill="{col}"/>')
+                else:
+                    add(f'<circle cx="{px}" cy="{py}" r="4.5" fill="none" stroke="{col}" stroke-width="2"/>')
         for (x, y) in [(15, 3), (15, 4), (5, 8), (17, 8), (21, 8), (21, 9), (21, 10), (21, 11), (16, 3), (16, 4), (4, 8), (16, 8), (21, CAP)]:
             blob(x, y, "#1a1a18", 3.5)
-        label(14, 6, "link ends: through (16,3) and (16,4), bent onto the VIN and GND pins", "s", "start", None, 0, 4, bg=True)
-        label(14, 9, "(17,8): diode band leg + the green link's bare end from (16,8), one joint", "s", "start", None, 0, 4, bg=True)
-        label(14, 10, "junction: the diode's plain leg bent down (21,8) to (21,11), cut 1 mm past (21,11)", "s", "start", AMB, 0, 4, bg=True)
-        label(14, 17, f"1000 uF short leg bent from (21,{CAP}) to the GND bus at (23,{CAP}), cut 1 mm past it", "s", "start", None, 0, 4, bg=True)
-        label(21, 17.6, "coloured bus dots: soldered at step 2.  Black dots: soldered when the leg arrives", "s", "middle", None, 10, bg=True)
-        label(3, 7.1, "green link end from (4,8), bent onto the RX2 pin", "s", "end", None, 0, 8, bg=True)
+        label(27.5, 3.5, "link ends: through (16,3) and (16,4), bent onto the VIN and GND pins", "s", "end", None, 0, -6)
+        label(27.5, 8, "(17,8): diode band leg + green link end from (16,8), one joint", "s", "end", None, 0, -6)
+        label(27.5, 9.5, "junction: diode's plain leg down (21,8)-(21,11), cut past (21,11)", "s", "end", AMB, 0, -6)
+        label(27.5, CAP, f"1000 uF short leg from (21,{CAP}) to the GND bus at (23,{CAP})", "s", "end", None, 0, -6)
+        label(27.5, 17.2, "solid bus dots: soldered at step 2. Open rings: joined at the step that brings that leg", "s", "end", None, 0, -6)
+        label(27.5, 8.8, "green link's other end from (4,8), bent onto the RX2 pin", "s", "end", None, 0, -6)
         return
 
     # ---- top side: links (solid, they live up here), parts, external wires
-    wire([(4, 8), (4, 1.3), (16.5, 1.3), (16.5, 7.5), (16, 8)], GRN)   # around the top end of the header
     wire([(16, 3), (19, 3)], RED); wire([(16, 4), (23, 4)], GND)
-    label(10, 1.3, "green link runs round the top end of the ESP32, on this side", "s", "middle", GRN, -10)
+    wire([(4, 8), (4, 1), (17.5, 1), (17.5, 7.5), (16, 8)], GRN)   # around the top end of the header, over the red/black links
+    label(4.6, 1, "green link: round the top end of the ESP32, on this side, crossing over the red and black links", "s", "start", GRN, -11, 0)
     # diode (17,8)-(21,8), DO-41 body 5.2 mm
     dx1, dy = P(17, 8); dx2, _ = P(21, 8)
     wire([(17, 8), (21, 8)], LEG, wd=2)
@@ -144,7 +147,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
     rx, ry = P(19, 10)
     add(f'<circle cx="{rx}" cy="{ry}" r="{1.25*MM}" fill="#d8c9a8" stroke="#8a7c5e"/>')
     wire([(19.5, 10), (21, 10)], LEG, wd=2)
-    label(24.2, 9.6, "470 ohm standing on (19,10); its top leg comes down at an angle into (21,10)", "s", "start", None, 0, 0)
+    label(24.2, 10.2, "470 ohm standing on (19,10); its top leg slants down into (21,10), sleeved", "s", "start", None, 0, 0)
     # 1000 uF, 10 mm can drawn to scale, translucent so the pads show
     cx, cy = P(20, CAP)
     add(f'<circle cx="{cx}" cy="{cy}" r="{5*MM}" fill="#2f3a52" fill-opacity="0.75" stroke="#1b2233"/>')
@@ -153,7 +156,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
     cx, cy = P(21, 2)
     add(f'<ellipse cx="{cx}" cy="{cy}" rx="{2.5*MM}" ry="{1.6*MM}" fill="#d9a441" stroke="#8a6a20"/>')
     wire([(19, 2), (23, 2)], LEG, wd=2)
-    label(21, 2, "0.1 uF", "s", "middle", dy=-16)
+    label(21, 1, "0.1 uF", "s", "middle", dy=-6)
     # external wires: red ones jog up half a row so they do not run through the black ones' holes
     ylab = [3.6, 4.6, 5.6, 6.6, 7.6, 8.6, 11.6]
     for ((x, y), col, lbl), y2 in zip(EXT, ylab):
@@ -190,7 +193,8 @@ for col, txt in [
     add(f'<text class="t" x="86" y="{Y}" dominant-baseline="central">{txt}</text>'); Y += 22
 Y += 6
 add(f'<text class="t" x="40" y="{Y}">Hole numbers are (column, row) from the corner mark. Only three ESP32 pins are used: VIN, the GND right below VIN, and RX2. Nothing goes to 3V3 or the other GND.</text>'); Y += 20
-add(f'<text class="h" x="40" y="{Y}" style="fill:{RED}">Nothing bare may reach from one bus to the other. Between them there is only the junction (column 21) and the capacitor leg into the GND bus.</text>')
+add(f'<text class="h" x="40" y="{Y}" style="fill:{RED}">Nothing bare may reach from one bus to the other. Between them there are only three things:</text>'); Y += 22
+add(f'<text class="h" x="40" y="{Y}" style="fill:{RED}">the junction (column 21), the capacitor leg into the GND bus, and the two legs of the 0.1 uF.</text>')
 H = Y + 30
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img">'
        f'<title>Desk node on a dot board</title>{ST}' + "".join(s) + "</svg>\n")
