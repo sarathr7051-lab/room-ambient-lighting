@@ -4,22 +4,29 @@
 beginning; this one says where the build actually is. Update it whenever a step
 completes.
 
-Last updated: **26 Sep 2026**
+Last updated: **26 Sep 2026** (second revision)
 
 ---
 
 ## Now
 
-**Build the bench circuit** - [BUILD_DESK_NODE.md § 1.4](BUILD_DESK_NODE.md#14-wire-the-breadboard---next).
-Nothing electrical has been powered up yet, and this must happen before the
-strip is cut. Diagrams in [docs/img/](img/).
+**Bench bring-up, in this order** —
+[BUILD_DESK_NODE.md § 1.4 onward](BUILD_DESK_NODE.md#14-measure-the-adapter---next):
 
-The missing 74HCT125 does **not** block it. A sacrificial WS2812 powered through
-a 1N4007 does the level shifting instead, from parts already in the bin - see
-[DECISIONS.md](DECISIONS.md#level-shifting-sacrificial-pixel-not-a-chip).
+1. **Establish how the strip's DIN end terminates** — flying leads, or bare
+   pads? Bare pads turns today into a soldering-practice day first.
+2. **Measure the 3 A adapter** and label the pigtail's polarity by measurement.
+   The reading is a go/no-go: above 5.15 V, no diode workaround gets built.
+3. Wire the bench circuit. Strip power straight off the pigtail, never through
+   breadboard rails.
+4. Staged power-up: capacitor alone, then the ESP32, then the strip.
+5. First light at LED count **180**, ABL **600 mA**, brightness 30%.
 
-Then, and only once the breadboard lights the uncut strip: cut the three
-lengths and solder the two corner joints. Practise on the offcut first.
+The 5 A adapter is unusable (IEC C8 inlet, no mains lead), so everything is
+sized for the 3 A brick and the final ABL cap is now **2000 mA**, not 3000.
+
+**Do not cut the strip today**, and do not run `wled_push.py apply` — it would
+overwrite the bench settings with the final config.
 
 ---
 
@@ -54,7 +61,7 @@ lengths and solder the two corner joints. Practise on the offcut first.
 ### 1. Build the bench circuit — not yet started
 
 ESP32 + 74HCT125 + 1000 µF + 330 Ω on the breadboard, 5 V 5 A adapter, with the
-**uncut** strip. Diagrams in [docs/img/](img/). [BUILD_DESK_NODE.md § 1.4](BUILD_DESK_NODE.md#14-wire-the-breadboard---next).
+**uncut** strip. Diagrams in [docs/img/](img/). [BUILD_DESK_NODE.md § 1.5](BUILD_DESK_NODE.md#15-wire-the-bench-circuit---next).
 
 > **Do this before cutting.** Nothing electrical has ever been powered up. If
 > the first time you energise the circuit is also the first time you energise
@@ -72,7 +79,7 @@ assembled U flat before any backing paper comes off.
 The node still reports the default **30 LEDs**. After the strip is joined:
 
 ```bash
-python tools/wled_push.py apply   --host wled-desk.local   # 70 LEDs, ABL 3000 mA
+python tools/wled_push.py apply   --host wled-desk.local   # 70 LEDs, ABL 2000 mA
 python tools/wled_push.py walk    --host wled-desk.local   # verify orientation
 python tools/wled_push.py presets --host wled-desk.local
 ```
@@ -92,6 +99,8 @@ Windows x64 installer, DXGI DDA grabber, WLED device over DDP, paste
 
 | Item | Waiting on |
 |---|---|
+| **Level shifter** | a 74AHCT125 or 74HCT245. Not blocking the bench test |
+| **5 A adapter** | an IEC C7 figure-8 mains lead |
 | **L3** under-desk warm strip | 12 V 1 A adapter (Robu SKU 24715) |
 | **L4** shelf node, Wemos D1 mini | Gesto 12 V neon strip to arrive |
 | Music reactive, auto-dim, presence | custom WLED build with `USERMOD_AUDIOREACTIVE`, `USERMOD_LDR`, `USERMOD_PIR_SENSOR_SWITCH` — goes on by **OTA**, not USB |

@@ -199,8 +199,9 @@ def main() -> int:
                    help="how far into the screen each LED samples, 0..1")
     p.add_argument("--pin", type=int, default=16,
                    help="ESP32 GPIO driving DIN (default 16, per HARDWARE.md)")
-    p.add_argument("--abl", type=int, default=3000,
-                   help="WLED auto-brightness-limiter cap in mA (default 3000)")
+    p.add_argument("--abl", type=int, default=2000,
+                   help="WLED auto-brightness-limiter cap in mA (default 2000, "
+                        "sized for the 5 V 3 A adapter)")
     p.add_argument("--ma-per-led", type=int, default=55,
                    help="mA per LED at full white, for ABL's model")
     p.add_argument("--stock-length", type=float, default=300.0,
@@ -245,7 +246,12 @@ def main() -> int:
     print(f"\n  Power: {total} LEDs x {a.ma_per_led} mA = "
           f"{total * a.ma_per_led / 1000:.1f} A at full white; "
           f"ABL caps it at {a.abl / 1000:.1f} A.")
-    print(f"  Inject +5V and GND at BOTH ends of the run.")
+    print(f"  WLED treats that as a WHOLE-SYSTEM budget and reserves 120 mA for")
+    print(f"  the ESP32, so the strip gets {(a.abl - 120) / 1000:.2f} A, about "
+          f"{100 * (a.abl - 120) / (total * a.ma_per_led):.0f}% of full white.")
+    print(f"  Never set the cap or the mA/LED to 0 - that DISABLES the limiter.")
+    print(f"  Inject +5V and GND at BOTH ends of the run, straight from the")
+    print(f"  supply. Never through breadboard rails - they are good for ~1 A.")
 
     print("\n  Orientation - data enters at the corner marked DIN:")
     if a.sides == 3:

@@ -2,7 +2,7 @@
   "hw": {
     "led": {
       "total": 70,
-      "maxpwr": 3000,
+      "maxpwr": 2000,
       "ledma": 55,
       "ins": [
         {
@@ -18,7 +18,7 @@
           "ref": false,
           "rgbwm": 0,
           "freq": 0,
-          "maxpwr": 3000,
+          "maxpwr": 2000,
           "ledma": 55
         }
       ]

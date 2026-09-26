@@ -22,36 +22,32 @@ someone new looks at the project.
 
 ---
 
-## Level shifting: sacrificial pixel, not a chip
+## Level shifting: RETRACTED, buy the buffer
 
-**Decided 26 Sep 2026.** No 74HCT125, and no other 74HCT gate, could be found
-at five or six SP Road shops, and Robu would cost days. The build uses a
-**sacrificial WS2812** instead, and that is the permanent answer rather than a
-stopgap.
+**26 Sep 2026.** This section previously concluded that a sacrificial WS2812
+was "the permanent answer rather than a stopgap". **That was wrong.** Four
+independent reviews later:
 
-One LED cut from the offcut is powered through a 1N4007 at about 4.2 V. Its own
-logic threshold falls to roughly 2.9 V, so it accepts the ESP32's 3.3 V; its
-output then swings to its own 4.2 V, which clears the 3.5 V that the 5 V main
-strip requires. One LED already in the parts bin bridges the gap from both ends.
+- The rail-tracking argument that favoured it applies to the **output** hop,
+  which was never the limiting one. Its ESP32-to-pixel hop degrades with rail
+  voltage exactly as the alternative does, and a series diode lowers that
+  threshold by only 0.7 x Vf where a clamp adds a full 1.0 x Vf to the drive.
+- Worst-case failure rail: **5.19 V** for the sacrificial pixel against
+  **5.40 V** for the diode clamp. 5.19 V is a voltage cheap adapters produce.
+- Two reviews disagreed by **80 mV** on the 1N4007's forward voltage at the
+  relevant current, having read Vishay and Diodes Inc curves respectively.
+  Doubled across a two-diode stack, that is 160 mV of uncertainty on a design
+  with 300-500 mV of margin. Which brand is in the bag would decide it.
+- **Neither diode circuit closes on datasheet worst case.** Both depend on
+  typical behaviour, and the failure mode is the worst kind for a fixture you
+  mount and forget: fine on the bench, first pixel glitching in August.
 
-Why this is not a compromise:
+**The decision is to buy a 74AHCT125 or 74HCT245.** Over 1 V of input margin on
+pure worst case, and its margin grows rather than shrinks as the rail rises. A
+diode clamp is an acceptable interim **only** if the measured adapter reads
+5.10 V or below.
 
-- It is the technique WLED itself expects - "Skip first LED(s)" exists for
-  exactly this case - and it is documented by Adafruit and widely used.
-- Only the sacrificial LED draws through the diode, 60 mA against a 1 A part,
-  so there is no heat, no current sharing and no derating.
-- The main strip keeps a full 5 V, so no brightness or colour shift.
-
-Rejected along the way:
-
-| Idea | Why not |
-|---|---|
-| IRL540N or IRFZ44N as an RC level shifter | Power MOSFETs with large gate capacitance. WS2812 needs roughly 300 ns pulse fidelity at 800 kHz, and a pull-up driving that much capacitance is orders of magnitude too slow. |
-| A diode dropping the whole strip's supply | Works electrically, but needs a 3 A diode, costs brightness across all 70 LEDs, and parallel 1N4007s share current badly - forward voltage falls as they heat, so the hottest one takes more. |
-| Coercing the CD74HCT112E into service | See the rejected table above. It is sequential; there is no combinational path from any input to Q. |
-
-The buying table below still applies if a proper buffer ever turns up. It would
-be a marginal improvement, not a fix for anything broken.
+The lesson for the shop counter: **it is the HCT that matters, not the 125.**
 
 ---
 
@@ -84,12 +80,11 @@ trip, and ask about exchanging the CD74HCT112E at the same time.
 
 ## Settled, and now baked into the committed config
 
-### ABL cap: 3000 mA, revised up from 1500
+### ABL cap: 2000 mA
 
-Argued in [HARDWARE.md](HARDWARE.md#why-3000-ma-and-not-the-1500-ma-in-the-original-plan).
-Short version: the 12 V strip has its own adapter, so the 5 V rail only carries
-the ESP32 and the bias strip, and 1500 mA was sized for a shared-rail design
-that no longer exists.
+Superseded on 26 Sep 2026. The 5 A adapter cannot be used (no mains lead), so
+the cap is now **2000 mA** on the 3 A adapter. Argued in
+[HARDWARE.md](HARDWARE.md#why-the-abl-cap-is-2000-ma).
 
 ### Three-sided strip, no bottom run
 

@@ -11,13 +11,15 @@ Bought at SP Road (Om Technology Centre, F4 SRNG Complex) on 25 Sep 2026.
 |---|---|---|
 | ESP32 NodeMCU DevKit V1, 30-pin, CP2102 | 1 | the desk node |
 | WS2812 strip, 5 V, 60/m, black PCB | ~1.2 m of 3 m | "2812" without the B; same protocol, GRB |
-| 74HCT125 quad buffer, DIP-14 | **0 - NOT IN HAND, and not needed** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16) instead, which cannot do this. See DECISIONS.md |
+| **74AHCT125 or 74HCT245** | **0 - TO BUY** | 3.3 V -> 5 V level shift. The shop supplied a CD74HCT112E (dual JK flip-flop, DIP-16), which cannot do this. Any 74HCT/74AHCT gate works - see BUILD_DESK_NODE.md |
+| 10 kohm, 1/4 W | 1 | pulldown on GPIO16, stops LEDs latching noise at reset |
+| 1 A resettable polyfuse | 1 | **bench test only**, in the strip's +5 V feed. Remove for the final build |
 | 1000 uF 25 V electrolytic | 1 | bulk across the 5 V rail |
 | 0.1 uF ceramic | 1 | decoupling across the 74HCT125 |
 | 330 ohm, 1/4 W | 1 | series resistor on DIN |
 | 1N4007 diode | 1 | drops the sacrificial pixel to ~4.2 V |
 | one extra WS2812 off the offcut | 1 | the sacrificial pixel - this IS the level shifter |
-| 5 V 5 A adapter, 5.5 x 2.1 | 1 | |
+| 5 V 3 A adapter, 5.5 x 2.1 | 1 | **use this one.** The 5 A brick has an IEC C8 inlet and no mains lead |
 | DC barrel pigtail, female with leads | 1 | |
 | Silicone wire 22 AWG red/black/green | ~2 m | corner jumpers and injection run |
 | Dot board, isolated pad, 6 x 4 inch | 1 | final assembly |
@@ -114,31 +116,56 @@ shelf node.
 
 ## Power budget, 5 V rail
 
+**The 5 A adapter is unusable** — it arrived with an IEC C8 figure-8 inlet and
+no mains lead. The build runs on the **5 V 3 A** adapter until that lead turns
+up, and the power budget below is sized for 3 A.
+
 | Load | Current |
 |---|---|
 | ESP32 with Wi-Fi active | ~0.25 A, peaks higher on TX |
-| WS2812 strip, ABL capped | 3.0 A ceiling |
-| **Total ceiling** | **~3.25 A of 5 A** |
+| WS2812 strip, ABL capped at 2000 mA | 1.88 A (WLED reserves 120 mA for the ESP) |
+| **Worst case including a Wi-Fi TX peak** | **~2.4 A of 3 A — 79%** |
 
-The ABL number is a **ceiling, not a draw**. A bias light showing real video
-sits nearer 0.5–1.0 A; the cap only exists so a full-white frame cannot brown
-out the node.
+### Why the ABL cap is 2000 mA
 
-### Why 3000 mA and not the 1500 mA in the original plan
+Earlier revisions of this file argued for 3000 mA on a 5 A supply. That number
+is now wrong twice over: the 5 A supply cannot be used, and 3000 mA on a 3 A
+brick means the LED budget alone equals the adapter's entire nameplate rating
+before the ESP32 transmits.
 
-The 12 V warm strip runs off its own Gesto adapter, so the 5 V rail carries
-only the ESP32 and the bias strip. 1500 mA was sized for a design where both
-strips shared the rail. At ~70 LEDs a 3000 mA cap is roughly 78% of full white
-— bright enough that the limiter never visibly clamps during normal video, and
-still 1.75 A of headroom on the adapter.
+| ABL | Strip gets | Fraction of full white | Worst case total | % of 3 A |
+|---|---|---|---|---|
+| 3000 | 2.88 A | 73% | ~3.4 A | **113% — no** |
+| 2500 | 2.38 A | 61% | ~2.9 A | 97% — too close |
+| **2000** | **1.88 A** | **49%** | **~2.4 A** | **79%** |
+| 1500 | 1.38 A | 35% | ~1.9 A | 63% — conservative |
 
-If the node browns out or resets on bright scenes, that is the cheap 5 A
-adapter sagging, not the maths. Drop to 2500 and retest before blaming wiring.
+**49% of full white is much brighter than "half".** Perceived brightness goes
+roughly as the cube root of luminous flux, and a bias light essentially never
+shows full white across all 70 LEDs — real video sits nearer 0.5–1.0 A. The
+limiter will rarely clamp visibly. 2000 is sensible, not stingy; 3000 is not
+headroom, it is the cliff edge.
+
+Two things about WLED's limiter that are easy to get wrong:
+
+- **It is an estimate, not a measurement.** WLED's own source says so. It sums
+  brightness-scaled colour channels against your mA-per-LED figure. Keep your
+  own margin.
+- **The number is a whole-system budget.** WLED subtracts a fixed 120 mA for
+  the ESP32 before allocating the rest to LEDs, so do not add the ESP32's
+  draw on top of the figure you type.
+- **Never set the cap, or the mA-per-LED, to 0.** Either one *disables* the
+  limiter entirely.
+
+If the node browns out or resets on bright scenes, drop to 1500 and retest
+before blaming wiring.
 
 ### Injection
 
-Feed +5 V and GND to **both ends** of the strip run, straight from the rail —
-not through the ESP32, and not through a breadboard rail on the final build.
+Feed +5 V and GND to **both ends** of the strip run, **straight from the
+supply** — not through the ESP32, and never through breadboard rails at any
+stage. Breadboard contacts are good for roughly 1 A and they fail by
+slackening permanently, not by tripping.
 At ~70 LEDs a single feed would work, but the far end would run visibly warmer
 in colour, and the second feed costs two wires.
 
