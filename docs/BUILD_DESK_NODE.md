@@ -160,7 +160,29 @@ Read that first. The rails run the length of the board, the columns are groups
 of five, and nothing conducts across the centre channel — which is why a chip
 must straddle it.
 
-![Breadboard layout for the desk node](img/breadboard-layout.svg)
+![The diode clamp: ESP32 through a 1N4007 into a junction pulled up by 470 ohm](img/diode-clamp.svg)
+
+Wiring is now the **diode clamp**, decided by measurement on 26 Sep: the
+CD74HCT112EX responds at 5 V and not at 3.17 V, so it is an HC part in HCT
+marking and is out of the build. See DECISIONS.md.
+
+| # | From | To |
+|---|---|---|
+| 1 | pigtail **+** | **+ rail** |
+| 2 | pigtail **-** | **- rail** |
+| 3 | 1000 uF **stripe leg** | - rail |
+| 4 | 1000 uF other leg | + rail |
+| 5 | ESP32 **VIN** | + rail |
+| 6 | ESP32 **GND** | - rail |
+| 7 | ESP32 **RX2** | the 1N4007's **banded end** |
+| 8 | 1N4007's other end | a spare row - the **junction** |
+| 9 | **470 ohm** from the junction | + rail |
+| 10 | the junction | strip **DIN** |
+| 11 | strip **+5V** | pigtail **+**, not the breadboard |
+| 12 | strip **GND** | pigtail **-**, not the breadboard |
+
+330 ohm works if there is no 470. No 10 kohm pulldown with this topology - the
+470 ohm already sets the line's resting state.
 
 **Adapter unplugged throughout.** The strip stays **uncut**.
 

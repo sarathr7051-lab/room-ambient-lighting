@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="627" viewBox="0 0 680 627" role="img">
+  <title>Diode clamp level shifter</title>
+  <desc>The 5 V rail across the top and GND across the bottom. The ESP32 on the left drives RX2 through a 1N4007, banded end toward the ESP32, into a junction held up by a 470 ohm resistor to 5 V. That junction feeds the strip data input.</desc>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .h  { font-size: 15px; font-weight: 600; fill: #1a1a18; }
+    .t  { font-size: 13px; font-weight: 400; fill: #3d3d3a; }
+    .n  { font-size: 12px; font-weight: 600; fill: #1a1a18; }
+    .body { fill: #eeece7; stroke: #6f6d66; stroke-width: 1.2; }
+    .gnd { stroke: #4a4844; } .gndf { fill: #4a4844; }
+    @media (prefers-color-scheme: dark) {
+      .h{fill:#f5f3ee;} .t{fill:#d6d3cc;} .n{fill:#f5f3ee;}
+      .body{fill:#35353c;stroke:#9a9891;}
+      .gnd{stroke:#b9b6ae;} .gndf{fill:#b9b6ae;}
+    }
+  </style>
+  <text class="t" x="630" y="54" text-anchor="end">The 5 V 3 A adapter feeds these two rails through the pigtail.</text>
+  <rect x="50" y="71" width="580" height="18" rx="9" fill="#DC3545" opacity="0.9"/>
+  <text class="h" x="64" y="80" dominant-baseline="central" style="fill:#ffffff">5 V rail</text>
+  <rect x="50" y="421" width="580" height="18" rx="9" class="gndf"/>
+  <text class="h" x="64" y="430" dominant-baseline="central" style="fill:#ffffff">GND rail</text>
+  <path d="M96 80 L96 240" fill="none" class="gnd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 274 L96 430" fill="none" class="gnd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="88" y="240" width="16" height="34" rx="3" class="body"/>
+  <text class="t" x="112" y="248" dominant-baseline="central">1000 uF</text>
+  <text class="t" x="112" y="266" dominant-baseline="central">stripe down</text>
+  <path d="M196 200 L196 80" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="196" cy="200" r="4.5" fill="#DC3545"/>
+  <path d="M232 340 L232 430" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="232" cy="340" r="4.5" class="gndf"/>
+  <rect x="160" y="200" width="122" height="140" rx="6" class="body"/>
+  <text class="t" x="221" y="270" text-anchor="middle" dominant-baseline="central">ESP32</text>
+  <text class="n" x="202" y="186">VIN</text>
+  <text class="n" x="238" y="356">GND</text>
+  <text class="n" x="274" y="236" text-anchor="end">RX2</text>
+  <path d="M282 250 L303 250" fill="none" stroke="#2E9E5B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M325 250 L392 250" fill="none" stroke="#2E9E5B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="325,240 325,260 305,250" fill="#2E9E5B"/>
+  <line x1="303" y1="238" x2="303" y2="262" stroke="#2E9E5B" stroke-width="4" stroke-linecap="round"/>
+  <text class="n" x="314" y="284" text-anchor="middle">1N4007</text>
+  <text class="t" x="314" y="302" text-anchor="middle">banded end toward RX2</text>
+  <circle cx="392" cy="250" r="4.5" fill="#2E9E5B"/>
+  <path d="M392 250 L392 174" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M392 140 L392 80" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="383" y="140" width="18" height="34" rx="3" class="body"/>
+  <text class="t" x="408" y="157" dominant-baseline="central">470 ohm</text>
+  <path d="M392 250 L470 250" fill="none" stroke="#2E9E5B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M540 200 L540 80" fill="none" stroke="#DC3545" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="540" cy="200" r="4.5" fill="#DC3545"/>
+  <path d="M580 340 L580 430" fill="none" class="gnd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="580" cy="340" r="4.5" class="gndf"/>
+  <rect x="470" y="200" width="148" height="140" rx="6" class="body"/>
+  <text class="t" x="544" y="261" text-anchor="middle" dominant-baseline="central">WS2812 strip</text>
+  <text class="t" x="544" y="281" text-anchor="middle" dominant-baseline="central">uncut, unrolled</text>
+  <text class="n" x="478" y="236">DIN</text>
+  <text class="n" x="546" y="186">+5V</text>
+  <text class="n" x="586" y="356">GND</text>
+  <text class="h" x="50" y="476">Five wires and two components</text>
+  <rect x="50" y="493" width="12" height="12" rx="3" fill="#DC3545"/>
+  <text class="t" x="70" y="502" dominant-baseline="central">to the 5 V rail:  ESP32 VIN,  strip +5V,  and the top of the 470 ohm</text>
+  <rect x="50" y="516" width="12" height="12" rx="3" class="gndf"/>
+  <text class="t" x="70" y="525" dominant-baseline="central">to the GND rail:  ESP32 GND,  strip GND,  and the 1000 uF stripe leg</text>
+  <rect x="50" y="539" width="12" height="12" rx="3" fill="#2E9E5B"/>
+  <text class="t" x="70" y="548" dominant-baseline="central">signal:  RX2  ->  1N4007  ->  junction  ->  strip DIN</text>
+  <text class="h" x="50" y="579" style="fill:#DC3545">The diode is directional. Its BANDED end must face RX2, or nothing lights.</text>
+  <text class="t" x="50" y="601">No level-shifter chip. The CD74HCT112EX failed its bench test and is not used.</text>
+</svg>
