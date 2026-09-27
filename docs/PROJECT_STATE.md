@@ -55,9 +55,13 @@ to buy (the nano tape shown with the Gesto listing was Rs 198 / 3 m on 27 Sep).
 
 **Moods and sync, 27 Sep evening.** Desk node UDP sync **send** on (`if.sync.send.en`
 - the `dir` flag alone does nothing), shelf node receives: brightness and on/off
-follow the desk (tested 40 -> 40, off -> off, 255 -> 255). Desk presets:
-1 Work, 2 Evening, 3 Movie, 4 Music (placeholder), 5 Night, 6 Screen sync,
-9 pieces-70. **Presets do not store `lor`**, so a mood must be called as
+follow the desk (tested 40 -> 40, off -> off, 255 -> 255). Desk presets, judged by the owner 27 Sep evening and locked: 1 Work = full,
+warm white (255,197,143); 2 Evening = 47 %, amber-warm (255,160,80); 3 Movie
+= 12 %, (255,140,60); 5 Night = off; 6 Screen sync = full, override off;
+9 pieces-70 (test pattern). All are one full-strip segment - a preset saved
+while the three-band test pattern's segments still existed only recoloured
+the first 18 LEDs, and a preset saved mid-fade captured the previous state:
+save with `tt:0`, delete segments 1-15, wait 2 s, then `psave`. **Presets do not store `lor`**, so a mood must be called as
 `{"ps":N,"lor":2}` to take over from Hyperion, and "Screen sync" as
 `{"ps":6,"lor":0}` to hand back. That is what the NFC tags / HTTP Shortcuts
 send. Hyperion: Startup-folder shortcut added (`Hyperion.lnk` ->
