@@ -42,6 +42,19 @@ URLs instead of WLED URLs, so one tap also sets the bulb:
 | Screen sync | `https://www.home-assistant.io/tag/room-screen-sync` |
 | (Movie, Night - no tag yet) | `https://www.home-assistant.io/tag/room-movie`, `.../room-night` |
 
+**How they were actually written (27 Sep, late):** a URL record written with
+NFC Tools opened the home-assistant.io web page instead of the app, even with
+the app's "open supported links" on. What works is the Companion app's own
+writer: HA app -> Settings -> Companion app -> NFC tags -> **Write NFC tag**.
+It writes a random tag ID; the automations accept both the planned IDs and
+the phone-written ones:
+
+| Tag | phone-written ID |
+|---|---|
+| Work | `d99cd210-72e0-4512-9f31-5a04578ada0b` |
+| Screen sync | `f2baca31-0f1d-4c4a-88b3-54c78f6b23fa` |
+| Evening | `b83f854a-9311-4e0b-896b-1de18b20e057` |
+
 The WLED URLs above still work as a fallback if HA is down.
 
 ## Artist tags
