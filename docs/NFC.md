@@ -60,7 +60,22 @@ Spotify engineers acknowledged it). The same links work when another app
 opens them normally. So the tag must point at an intermediary app, which then
 tells Spotify what to play.
 
-### The zero-tap method: HTTP Shortcuts + a "play from search" intent
+### The zero-tap method that WORKS (27 Sep 2026): Samsung Modes and Routines
+
+No extra app. Settings -> Modes and Routines -> **Routines** -> + ->
+**If** -> *NFC tagged* (under Connections; hold the phone on the tag to
+register it) -> **Then** -> search **Spotify** -> **Play playlist** -> pick
+the official **"This Is <artist>"** playlist (save it to your library in
+Spotify first so it appears) -> Save. Tap the tag with the phone unlocked:
+Spotify starts playing. Tested with Rahman.
+
+Notes: the routine keys on the tag's ID, so the tag should be **blank** (NFC
+Tools -> Other -> Erase) or the phone will also open whatever URL is on it.
+Shuffle is Spotify's own setting. The Spotify integration in Routines has
+been known to go quiet after a Spotify update; recreating the routine with
+Spotify open fixed it for others.
+
+### Fallback: HTTP Shortcuts + a "play from search" intent
 
 **HTTP Shortcuts** (free, open source, already in the handover plan for the
 lighting tags) can run a tiny script when opened by a deep link, and the deep
