@@ -61,7 +61,11 @@ warm white (255,197,143); 2 Evening = 47 %, amber-warm (255,160,80); 3 Movie
 9 pieces-70 (test pattern). All are one full-strip segment - a preset saved
 while the three-band test pattern's segments still existed only recoloured
 the first 18 LEDs, and a preset saved mid-fade captured the previous state:
-save with `tt:0`, delete segments 1-15, wait 2 s, then `psave`. **Presets do not store `lor`**, so a mood must be called as
+save with `tt:0`, delete segments 1-15, wait 2 s, then `psave`. A third trap
+bit on 27 Sep late: a re-save loop captured the *Night* state into slot 6, so
+"Screen sync" after "Night" left the strip off. The HA screen-sync script now
+also sends an explicit `light.turn_on` at full brightness before releasing
+the live override, so it cannot depend on what the preset holds. **Presets do not store `lor`**, so a mood must be called as
 `{"ps":N,"lor":2}` to take over from Hyperion, and "Screen sync" as
 `{"ps":6,"lor":0}` to hand back. That is what the NFC tags / HTTP Shortcuts
 send. Hyperion: Startup-folder shortcut added (`Hyperion.lnk` ->
