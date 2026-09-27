@@ -19,3 +19,12 @@ services:
       - TZ=Asia/Kolkata
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  whisper:
+    container_name: whisper
+    image: rhasspy/wyoming-whisper:latest
+    restart: unless-stopped
+    command: --model small-int8 --language en
+    ports:
+      - "10300:10300"
+    volumes:
+      - ./whisper-data:/data

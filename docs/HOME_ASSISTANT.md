@@ -94,6 +94,19 @@ light to green*, *set the bedroom light to 30 percent*, *turn off the desk
 light*. Tested by text through the conversation API: all answered "Done" /
 "Color set" / "Brightness set".
 
+### Speech-to-text (the mic)
+
+Assist shows only a keyboard until the pipeline has an STT engine. Added a
+local one: `whisper` service in the compose file (`rhasspy/wyoming-whisper`,
+model `small-int8`, English, port 10300), the **Wyoming** integration pointed
+at `host.docker.internal:10300`, and the default "Home Assistant" pipeline set
+to `stt.faster_whisper`. Runs on the PC's CPU; a sentence takes a second or
+two. Model cache in `tools/homeassistant/whisper-data/` (git-ignored).
+
+The Overview dashboard was replaced with a "Room" view: a 3 x 2 grid of mood
+buttons (Work, Evening, Screen sync, Movie, Night, Bulb toggle) and an
+entities card - the phone app shows it as its home screen.
+
 ## Not tonight
 
 Setup order once the host exists: install HA container -> open
