@@ -75,8 +75,21 @@ Desktop on this PC (free, only while the PC is on) or a Raspberry Pi (a
 purchase). The Havells bulb can only join a mood via HA (Tuya/Havells
 integration) or a Google Home routine; WLED nodes need no hub for the moods.
 
-**Next: posters tonight; L4 build once tape + extension board arrive; NFC
-tags when they arrive; Home Assistant as its own evening.**
+**Purchases decided 27 Sep evening (sourced):** Amazon - Sunjet nano gel tape
+3 m Rs 108 (fastest delivery next morning); extension board: GM 3206 2-socket
+2.5 m Rs 235 (universal sockets, 4.4 stars) is enough - only the 12 V adapter
+and the USB charger plug in; a 4-socket GM 3060 is Rs 459; cheaper 4-socket
+boards found were unreviewed and 5 days out. The Orient 4-way at Rs 309 on
+quick commerce is fine if it must be tonight.
+
+Shelf driver design in [SHELF_NODE.md](SHELF_NODE.md), reviewed once and
+reworked; second review running. NFC plan in [NFC.md](NFC.md) - artist IDs
+still needed from the owner's Spotify app. Home Assistant plan in
+[HOME_ASSISTANT.md](HOME_ASSISTANT.md) - host not decided (Docker Desktop is
+not installed).
+
+**Next: breadboard test of the shelf driver tonight; mount when the tape
+arrives; NFC tags when they arrive; Home Assistant once a host is chosen.**
 
 ---
 
