@@ -36,13 +36,17 @@ Artist IDs come from the Spotify app: artist page -> share -> copy link ->
 the 22-character string after `/artist/`. Searching by name is not reliable -
 "Pradeep Kumar" returns a dozen artists.
 
-| Poster | Artist | ID | Record |
+| Card | Artist | Spotify ID (verified on open.spotify.com, 27 Sep) | Record to write |
 |---|---|---|---|
-| | A. R. Rahman | _to fill_ | `spotify:artist:<id>:play` |
-| | Michael Jackson | _to fill_ | |
-| | Pradeep Kumar | _to fill_ | |
-| | Coldplay | _to fill_ | |
-| | Queen / Freddie Mercury | _to fill_ | |
+| Rahman | A. R. Rahman | `1mYsTxnqsietFxj1OgoGbG` | `spotify:artist:1mYsTxnqsietFxj1OgoGbG:play` |
+| MJ | Michael Jackson | `3fMbdgg4jU18AjLCKBhRSm` | `spotify:artist:3fMbdgg4jU18AjLCKBhRSm:play` |
+| Pradeep Kumar | Pradeep Kumar (Tamil; Nee Kavithaigala, 7M monthly) | `15ClyGUe5g2vllncIC4tp6` | `spotify:artist:15ClyGUe5g2vllncIC4tp6:play` |
+| Coldplay | Coldplay | `4gzpq5DPGxSnKTe4SA8HAU` | `spotify:artist:4gzpq5DPGxSnKTe4SA8HAU:play` |
+| Freddie | Queen | `1dfeR4HaWDbWqFHLkxsg1d` | `spotify:artist:1dfeR4HaWDbWqFHLkxsg1d:play` |
+
+Ten NTAG213 tags in the pack: 5 artists + Work, Evening, Movie, Night, Screen
+sync = 10. The bedside sleep-playlist tag from the handover waits for a second
+pack.
 
 The `:play` suffix is the old Spotify URI form that still autoplays on
 Android; if a phone update breaks it, the fallback is the plain
