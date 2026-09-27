@@ -10,7 +10,7 @@ hyperion_token.txt (git-ignored).
 """
 import json, pathlib, subprocess, time, urllib.request
 
-HYPERIOND = r"D:\games\Hyperionin\hyperiond.exe"
+HYPERIOND = "D:/games/Hyperion/bin/hyperiond.exe"
 
 URL = "http://localhost:8090/json-rpc"
 TOKEN = (pathlib.Path(__file__).with_name("hyperion_token.txt")).read_text().strip()
