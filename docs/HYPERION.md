@@ -7,7 +7,7 @@
 > |---|---|
 > | LED controller | type `wled`, host `wled-desk.local` (found by mDNS), DDP, 70 LEDs, colour order `rgb` (WLED does the GRB itself) |
 > | Brightness override | **off** - WLED's ABL (1000 mA) stays in charge |
-> | Screen capture | `dda` (DXGI), **input 1 = DISPLAY2 = the Dell, 2560 x 1440**; input 0 is the laptop panel. 30 fps requested, decimation 8 |
+> | Screen capture | `dda` (DXGI), the Dell (2560 x 1440), 30 fps requested, decimation 8. **The `input` index moves**: with the laptop panel active the Dell is input 1; with the lid closed / panel off it becomes input 0 and a config pointing at 1 grabs nothing (grabber shows `active=false`, WLED shows `live` but 0 fps). Currently **input 0**. If the strip goes static, check `inputsource discover` and fix the index |
 > | Instance capture | screen enabled, device `dda`, priority 250 |
 > | Smoothing | linear, 180 ms |
 > | Layout | the 70 entries from `config/hyperion_leds.json` |
