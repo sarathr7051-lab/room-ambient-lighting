@@ -43,10 +43,12 @@ the 22-character string after `/artist/`. Searching by name is not reliable -
 | Pradeep Kumar | Pradeep Kumar (Tamil; Nee Kavithaigala, 7M monthly) | `15ClyGUe5g2vllncIC4tp6` | `spotify:artist:15ClyGUe5g2vllncIC4tp6:play` |
 | Coldplay | Coldplay | `4gzpq5DPGxSnKTe4SA8HAU` | `spotify:artist:4gzpq5DPGxSnKTe4SA8HAU:play` |
 | Freddie | Queen | `1dfeR4HaWDbWqFHLkxsg1d` | `spotify:artist:1dfeR4HaWDbWqFHLkxsg1d:play` |
+| Anirudh | Anirudh Ravichander | `4zCH9qm4R2DADamUHMCa6O` | `spotify:artist:4zCH9qm4R2DADamUHMCa6O:play` |
+| Karan Aujla | Karan Aujla | `6DARBhWbfcS9E4yJzcliqQ` | `spotify:artist:6DARBhWbfcS9E4yJzcliqQ:play` |
 
-Ten NTAG213 tags in the pack: 5 artists + Work, Evening, Movie, Night, Screen
-sync = 10. The bedside sleep-playlist tag from the handover waits for a second
-pack.
+**The pack of 10 (decided 27 Sep):** all seven musicians get a tag, plus three
+lighting tags - **Screen sync**, **Work**, **Evening**. Movie and Night are
+phone taps (bookmarks) until a second pack; the bedside sleep tag too.
 
 The `:play` suffix is the old Spotify URI form that still autoplays on
 Android; if a phone update breaks it, the fallback is the plain
