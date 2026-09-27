@@ -6,3 +6,4 @@ venv/
 *.local.json
 config/*.backup.json
 .DS_Store
+tools/homeassistant/config/

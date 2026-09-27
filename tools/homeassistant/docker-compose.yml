@@ -1,0 +1,21 @@
+# Home Assistant on this Windows PC via Docker Desktop.
+#   cd tools/homeassistant && docker compose up -d
+# Then open http://localhost:8123 and create the owner account (the owner does
+# this; nobody else). Config persists in ./config next to this file.
+#
+# Docker Desktop on Windows has no real host networking, so mDNS/SSDP
+# discovery does not reach the LAN: add the two WLED nodes and Hyperion by
+# address instead (WLED: 192.168.1.6 and 192.168.1.7; Hyperion: host.docker.internal:8090).
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=Asia/Kolkata
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -40,6 +40,18 @@ wants it always-on.
 Each scene is one tap in the Companion app, and the NFC tags can point at
 HA scenes instead of raw WLED URLs later.
 
+## Install log
+
+- 27 Sep 2026, evening: Docker Desktop 4.91.0 installed by winget. WSL2
+  enabled with admin rights; Windows reports "WSL2 is unable to start since
+  virtualization is not enabled" until the PC restarts (the Virtual Machine
+  Platform component needs the reboot). If it still says that after the
+  restart, Intel VT-x is off in the BIOS - the owner enables it there.
+- Compose file: `tools/homeassistant/docker-compose.yml`. Config lives in
+  `tools/homeassistant/config/` (git-ignored).
+- Docker Desktop on Windows has no true host networking, so HA will not
+  auto-discover the WLED nodes or Hyperion; they are added by address.
+
 ## Not tonight
 
 Setup order once the host exists: install HA container -> open
