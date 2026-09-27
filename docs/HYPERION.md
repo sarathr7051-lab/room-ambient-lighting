@@ -104,6 +104,19 @@ strobe — exactly the RGB-gaming-room look this room is meant to avoid.
 
 ---
 
+## Starting, stopping, surviving a reboot
+
+- Hyperion runs as `hyperiond.exe` with a tray icon. A shortcut in the Startup
+  folder (`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Hyperion.lnk`)
+  starts it at login, so a PC restart does not lose it.
+- **Stop screen sync without stopping Hyperion:** dashboard -> "LED Output" Off
+  (or "Capture Screen" Off). WLED then falls back to its preset after 2.5 s.
+- **If the strip goes static while Hyperion runs:** (1) the DDA display index
+  moved (see above); (2) "LED Output" switched itself off because the WLED node
+  rebooted mid-stream - every `/json/cfg` write reboots it. Turn it back on.
+- From WLED's side a mood is `{"ps":N,"lor":2}` (override the live stream) and
+  `{"ps":6,"lor":0}` hands control back to Hyperion.
+
 ## Handoff between Hyperion and WLED
 
 While Hyperion streams, it owns the LEDs. When it stops, WLED falls back to

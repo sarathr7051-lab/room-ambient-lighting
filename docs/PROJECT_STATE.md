@@ -53,7 +53,30 @@ router on the top shelf is an unpowered spare) - power comes from the wall
 socket by the door via an extension board. No double-sided tape in the house;
 to buy (the nano tape shown with the Gesto listing was Rs 198 / 3 m on 27 Sep).
 
-**Next: L4 build (board + cuts), then posters, then the NFC tags.**
+**Moods and sync, 27 Sep evening.** Desk node UDP sync **send** on (`if.sync.send.en`
+- the `dir` flag alone does nothing), shelf node receives: brightness and on/off
+follow the desk (tested 40 -> 40, off -> off, 255 -> 255). Desk presets:
+1 Work, 2 Evening, 3 Movie, 4 Music (placeholder), 5 Night, 6 Screen sync,
+9 pieces-70. **Presets do not store `lor`**, so a mood must be called as
+`{"ps":N,"lor":2}` to take over from Hyperion, and "Screen sync" as
+`{"ps":6,"lor":0}` to hand back. That is what the NFC tags / HTTP Shortcuts
+send. Hyperion: Startup-folder shortcut added (`Hyperion.lnk` ->
+`D:\games\Hyperionin\hyperiond.exe`), so it starts at login. Its LED
+output component switches itself off when the WLED node reboots mid-stream
+(every `/json/cfg` write reboots the node); re-enable it from the Hyperion
+dashboard ("LED Output" On) or `componentstate LEDDEVICE true`.
+
+**Extension board for the niche** (no socket there, adapter lead < 1 m; sourced
+Amazon.in 27 Sep): Goldmedal Gio 2-pin, 2.5 m, Rs 260; GM 3060 4-socket 2 m,
+Rs 459. Length to confirm by taping the socket-to-top-shelf path first.
+
+**Home Assistant:** not set up. Needs an always-on host; options are Docker
+Desktop on this PC (free, only while the PC is on) or a Raspberry Pi (a
+purchase). The Havells bulb can only join a mood via HA (Tuya/Havells
+integration) or a Google Home routine; WLED nodes need no hub for the moods.
+
+**Next: posters tonight; L4 build once tape + extension board arrive; NFC
+tags when they arrive; Home Assistant as its own evening.**
 
 ---
 
