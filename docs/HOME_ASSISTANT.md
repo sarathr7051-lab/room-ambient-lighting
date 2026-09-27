@@ -74,6 +74,26 @@ scripts now switch `switch.wled_desk_sync_send` on first.
 Config lives in `tools/homeassistant/config/` (git-ignored). Everything above
 was created through the REST config API from the logged-in browser session.
 
+## Voice, without Google or Alexa
+
+Google Assistant / Alexa need either the paid Home Assistant Cloud or an
+HTTPS route into this network with port forwarding - and this router's admin
+page is not reachable, so port forwarding is out. **HA's own Assist** does the
+job locally and free: the Companion app can be set as the phone's default
+assistant (Android: Settings -> Apps -> Default apps -> Digital assistant app
+-> Home Assistant), so the power-button / long-press gesture opens Assist and
+the phone's own speech recognition feeds it.
+
+Set up 27 Sep: bulb, desk and shelf lights and the five mood scripts exposed
+to Assist; bulb named **"Bedroom light"** (aliases bulb / bedroom bulb);
+conversation-trigger automations `Voice: Work / Evening / Movie / Night /
+Screen sync` answering to: *work mode, work, work lights / evening mode,
+evening / movie mode, movie / night mode, night, lights off, good night /
+screen sync, sync, ambilight*. Built-in phrases also work: *set the bedroom
+light to green*, *set the bedroom light to 30 percent*, *turn off the desk
+light*. Tested by text through the conversation API: all answered "Done" /
+"Color set" / "Brightness set".
+
 ## Not tonight
 
 Setup order once the host exists: install HA container -> open
