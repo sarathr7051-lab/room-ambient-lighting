@@ -111,6 +111,13 @@ strobe — exactly the RGB-gaming-room look this room is meant to avoid.
   starts it at login, so a PC restart does not lose it.
 - **Stop screen sync without stopping Hyperion:** dashboard -> "LED Output" Off
   (or "Capture Screen" Off). WLED then falls back to its preset after 2.5 s.
+- **Watchdog:** `tools/hyperion_watchdog.py` runs at login (Startup shortcut
+  `HyperionWatchdog.lnk`, pythonw) and re-enables LED Output within 20 s
+  whenever Hyperion has switched it off - which it does every time the WLED
+  node reboots or is turned off mid-stream (a `/json/cfg` write, the Night
+  preset, a power cut). It authenticates with an API token in
+  `tools/hyperion_token.txt` (git-ignored; create a new one in Hyperion ->
+  Network Services -> API Token if the file is lost).
 - **If the strip goes static while Hyperion runs:** (1) the DDA display index
   moved (see above); (2) "LED Output" switched itself off because the WLED node
   rebooted mid-stream - every `/json/cfg` write reboots it. Turn it back on.

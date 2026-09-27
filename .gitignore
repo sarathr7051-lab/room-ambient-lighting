@@ -7,3 +7,4 @@ venv/
 config/*.backup.json
 .DS_Store
 tools/homeassistant/config/
+tools/hyperion_token.txt
