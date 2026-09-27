@@ -74,7 +74,10 @@ dashboard ("LED Output" On) or `componentstate LEDDEVICE true`.
 Amazon.in 27 Sep): Goldmedal Gio 2-pin, 2.5 m, Rs 260; GM 3060 4-socket 2 m,
 Rs 459. Length to confirm by taping the socket-to-top-shelf path first.
 
-**Home Assistant:** not set up. Needs an always-on host; options are Docker
+**Home Assistant: RUNNING** (Docker Desktop on this PC) with both WLED nodes,
+Hyperion and the Havells bulb; five mood scripts and five tag automations -
+see HOME_ASSISTANT.md. Owner's next step: HA Companion app on the phone and
+rewrite the three lighting tags with the HA tag URLs (NFC.md). Needs an always-on host; options are Docker
 Desktop on this PC (free, only while the PC is on) or a Raspberry Pi (a
 purchase). The Havells bulb can only join a mood via HA (Tuya/Havells
 integration) or a Google Home routine; WLED nodes need no hub for the moods.

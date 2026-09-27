@@ -56,6 +56,24 @@ HA scenes instead of raw WLED URLs later.
 - Docker Desktop on Windows has no true host networking, so HA will not
   auto-discover the WLED nodes or Hyperion; they are added by address.
 
+## Built 27 Sep 2026, late evening
+
+| Thing | State |
+|---|---|
+| WLED desk, WLED shelf | added by IP; entities `light.wled_desk`, `select.wled_desk_preset`, `select.wled_desk_live_override`, `switch.wled_desk_sync_send`, `light.wled_shelf` |
+| Hyperion | added at `host.docker.internal:19444`; `light.first_led_hardware_instance` = its LED output (left alone - the watchdog keeps it on) |
+| Havells Glamax bulb | via **Tuya** (Smart Life user code + QR, done by the owner); `light.glamax_bulb_tw_rgb`, colour-temp + colour |
+| Scripts | `script.mood_work / mood_evening / mood_movie / mood_night / mood_screen_sync` - each: sync-send on, live override 2 (0 for screen sync), desk preset, bulb (Work 80 % 4000 K, Evening 40 % 2700 K, Movie/Night off, Screen sync 15 % 2700 K). Shelf follows the desk over UDP |
+| Automations | `Tag: Work / Evening / Movie / Night / Screen sync` - trigger `tag_id` `room-work`, `room-evening`, `room-movie`, `room-night`, `room-screen-sync` -> the script |
+| Tag URLs | `https://www.home-assistant.io/tag/room-work` etc. Written to the tags with NFC Tools (URL record); read by the **HA Companion app**, which must be installed and logged in on the phone (server `http://<PC LAN IP>:8123`, 192.168.1.4 on 27 Sep) |
+
+Gotcha found while testing: WLED's *runtime* sync-send flag (`state.udpn.send`) was
+off although the config flag was on, so the shelf did not follow. The
+scripts now switch `switch.wled_desk_sync_send` on first.
+
+Config lives in `tools/homeassistant/config/` (git-ignored). Everything above
+was created through the REST config API from the logged-in browser session.
+
 ## Not tonight
 
 Setup order once the host exists: install HA container -> open

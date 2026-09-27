@@ -30,6 +30,20 @@ for this, so the IP it is.
 `LO=0` releases it. Without `LO`, a preset call while Hyperion streams does
 nothing visible - that is why the plain preset URLs did not work.
 
+## Lighting tags, final form (Home Assistant)
+
+Once the HA Companion app is on the phone, the lighting tags carry HA tag
+URLs instead of WLED URLs, so one tap also sets the bulb:
+
+| Tag | URL record |
+|---|---|
+| Work | `https://www.home-assistant.io/tag/room-work` |
+| Evening | `https://www.home-assistant.io/tag/room-evening` |
+| Screen sync | `https://www.home-assistant.io/tag/room-screen-sync` |
+| (Movie, Night - no tag yet) | `https://www.home-assistant.io/tag/room-movie`, `.../room-night` |
+
+The WLED URLs above still work as a fallback if HA is down.
+
 ## Artist tags
 
 Artist IDs come from the Spotify app: artist page -> share -> copy link ->
