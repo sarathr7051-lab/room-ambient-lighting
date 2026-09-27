@@ -48,7 +48,7 @@ Facts a beginner might otherwise "improve":
   heatsink. **Hot** means the part is an IRF, a gate-drain bridge, or the gate
   is not reaching 3.3 V.
 - **The one thing that kills the D1 mini:** a solder bridge between the gate
-  and drain cones puts 12 V onto D2 through the 100 ohm. That is why the
+  and drain cones puts 12 V onto D2 through the 470 ohm. That is why the
   gate-to-drain meter check happens **before** the D2 wire is connected.
 - The 10 k keeps the strip off while the D1 mini boots, whichever supply
   comes up first. Power-up order does not matter.
@@ -144,7 +144,7 @@ the drain wire on row 009.
 - **Diode range**, red L010, black L009: about 500-700; swapped: `1`.
 - Ω 2000, L008 to L009, both ways: `1`. A number = gate-drain bridge - fix
   before anything else.
-Then solder the D2 wire at M003.
+Then solder the D2 wire at L003.
 
 **Piece B - the cut end that gets wires.** Cut exactly **on** a mark so both
 halves keep half-pads. Do not slice down onto the strip inside - its copper is
