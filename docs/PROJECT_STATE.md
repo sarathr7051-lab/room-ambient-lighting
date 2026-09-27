@@ -10,33 +10,23 @@ Last updated: **26 Sep 2026, evening** - bench test passed
 
 ## Now
 
-**Bench test PASSED, 26 Sep evening.** The desk node drives a WS2812 strip
-correctly through the diode clamp. Measured on the 1 m strip at ABL 600 mA:
-LED 1 steady and correct colour, junction 0.79 V low, rail 4.71 V under load
-(5.03 V open-circuit), colour order GRB confirmed, live colour changes over
-Wi-Fi.
+**27 Sep 2026, afternoon: the desk node is on the dot board and the U is
+mounted on the monitor. Screen-sync hardware is complete.**
 
-**The U is built and tested, 26 Sep, late evening.** Cut 70/71 first; the
-rehearsal joint went on the spare piece (50 LEDs, plug end, now with a 10 cm
-red/green/black lead - all 50 lit). Then: injection tails (red/black 60 cm)
-on LED 70's +5V/GND, Din leads (60 cm) on LED 1, all 70 lit RED/GREEN/BLUE/
-WHITE, far-end tails read **+4.43 V** against ~4.7 V at LED 1 (polarity
-right, and the reason the injection exists). Cut 18/19, corner 1, tested.
-Cut 52/53, corner 2, tested. **All 70 lit through both corners.** Corner
-wires 4 cm; the joints were soldered with the pieces in a straight line and
-bend to 90 degrees on the monitor.
+- Dot board built per PERFBOARD.md, all 70 lit on first power-up.
+- Config on the node: 70 LEDs, skip 0, GPIO16, GRB, **ABL 1000 mA**. Measured
+  at full white across the buses: 4.03 V at the 2000 cap, 4.2 V at 1500,
+  **4.39 V at 1000** - the 3 A adapter and pigtail drop ~0.6 V per amp, and
+  the ESP32 dropped off Wi-Fi at 4.03 V. 1000 mA is the working cap until the
+  5 A brick has its mains lead.
+- Preset 9 = one colour per piece (RED left / GREEN top / BLUE right from the
+  front); presets 1-4 pushed by `wled_push.py presets`.
+- Strain relief: velcro tie round the five strip wires 3-4 cm from the board,
+  second tie to the monitor stand. (Heat-shrink over the bundle would have
+  had to go on before soldering - missed; velcro does the job.)
+- 0.1 uF fitted at L002/H002. 1000 uF at L016/J016-H016.
 
-Because only 30 cm of red and black silicone wire was left, the +5V and GND
-leads at LED 1 are JiffyTrails 22/24 AWG silicone in other colours (green is
-still DIN). Colours to be recorded here.
-
-Node still on the 120-LED bench config (preset 9 = six colour bands,
-re-saved after it had been overwritten with solid red). The injection tails
-and the LED 1 leads are all in the breadboard rails for now - fine at ABL
-600-800 mA, not at 2000.
-
-**Read the pad text on every fresh cut** - each piece has a `Din` end and a
-`DO` end and the 3-pin connectors look identical.
+**Next: Hyperion on Windows** - [HYPERION.md](HYPERION.md).
 
 ---
 
@@ -55,6 +45,7 @@ and the LED 1 leads are all in the breadboard rails for now - fine at ABL
 | ✅ | Strip ends | 1 m strip: connectors both ends (bench tester). 2 m strip: bare `Din` pads, connector on `DO` |
 | ✅ | **Bench test** | passed 26 Sep evening on the 1 m strip: clamp working, LED 1 steady, GRB confirmed, rail 4.71 V loaded |
 | ✅ | Chip test | CD74HCT112EX behaves as HC, not HCT - eliminated by measurement |
+| ✅ | **Dot board + mounted** | 27 Sep: node on the LABTECH board, U on the monitor, ABL 1000 |
 | ✅ | **Strip cut and joined** | 18/34/18 from the 2 m strip's Din end, two corner joints, injection at LED 70, tested through both corners 26 Sep |
 | ✅ | Layout generated | **70 LEDs** = 18 left / 34 top / 18 right; `config/*.json` committed |
 

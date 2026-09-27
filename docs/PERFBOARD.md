@@ -275,7 +275,11 @@ python tools/wled_push.py apply --host wled-desk.local
 ```
 
 The U is joined, so `apply` is safe now; Stage 6 of BUILD_DESK_NODE.md
-repeats it after mounting. Then set full white in the WLED page (colour picker to white, brightness
+repeats it after mounting. > **Built 27 Sep 2026.** Full-white bus voltage: 4.03 V at ABL 2000 (ESP32
+> dropped off Wi-Fi), 4.2 V at 1500, 4.39 V at 1000. **ABL 1000** is the
+> committed cap until the 5 A adapter is usable.
+
+Then set full white in the WLED page (colour picker to white, brightness
 slider to maximum) and, on the underside, DCV 20 across the bus cones at the
 capacitor end, L016 and H016: above 4.5 V is fine. Below it, regenerate
 with `--abl 1500` and apply again.
