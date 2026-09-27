@@ -1,7 +1,21 @@
 # Hyperion on Windows
 
-> **Status: not installed yet.** Nothing in this file has been done. It is the
-> last stage of the screen sync build - see [PROJECT_STATE.md](PROJECT_STATE.md).
+> **Status: INSTALLED AND STREAMING, 27 Sep 2026.** Hyperion 2.2.1 on the
+> Windows PC; WLED reports a live DDP stream at ~25 fps. Settings as applied:
+>
+> | | |
+> |---|---|
+> | LED controller | type `wled`, host `wled-desk.local` (found by mDNS), DDP, 70 LEDs, colour order `rgb` (WLED does the GRB itself) |
+> | Brightness override | **off** - WLED's ABL (1000 mA) stays in charge |
+> | Screen capture | `dda` (DXGI), **input 1 = DISPLAY2 = the Dell, 2560 x 1440**; input 0 is the laptop panel. 30 fps requested, decimation 8 |
+> | Instance capture | screen enabled, device `dda`, priority 250 |
+> | Smoothing | linear, 180 ms |
+> | Layout | the 70 entries from `config/hyperion_leds.json` |
+>
+> Configured through the web UI's own session (`requestWriteConfig`) - the
+> bare JSON-RPC endpoint refuses `config` commands without the session token,
+> and a write that includes a key the schema does not list (e.g. `rewriteTime`
+> for the WLED device) is rejected whole with "Property not required".
 
 Hyperion grabs the framebuffer, averages each edge region down to one colour
 per LED, and streams the result to WLED. It runs on the same Windows PC that

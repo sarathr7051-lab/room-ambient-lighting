@@ -10,8 +10,8 @@ Last updated: **26 Sep 2026, evening** - bench test passed
 
 ## Now
 
-**27 Sep 2026, afternoon: the desk node is on the dot board and the U is
-mounted on the monitor. Screen-sync hardware is complete.**
+**27 Sep 2026: SCREEN SYNC IS WORKING.** Desk node on the dot board, U on
+the monitor, Hyperion 2.2.1 streaming DDP to it from the Windows PC.
 
 - Dot board built per PERFBOARD.md, all 70 lit on first power-up.
 - Config on the node: 70 LEDs, skip 0, GPIO16, GRB, **ABL 1000 mA**. Measured
@@ -26,7 +26,8 @@ mounted on the monitor. Screen-sync hardware is complete.**
   had to go on before soldering - missed; velcro does the job.)
 - 0.1 uF fitted at L002/H002. 1000 uF at L016/J016-H016.
 
-**Next: Hyperion on Windows** - [HYPERION.md](HYPERION.md).
+Hyperion settings in [HYPERION.md](HYPERION.md). **Next: posters, then the
+shelf light (L4), then the NFC tags.**
 
 ---
 
@@ -45,6 +46,7 @@ mounted on the monitor. Screen-sync hardware is complete.**
 | ✅ | Strip ends | 1 m strip: connectors both ends (bench tester). 2 m strip: bare `Din` pads, connector on `DO` |
 | ✅ | **Bench test** | passed 26 Sep evening on the 1 m strip: clamp working, LED 1 steady, GRB confirmed, rail 4.71 V loaded |
 | ✅ | Chip test | CD74HCT112EX behaves as HC, not HCT - eliminated by measurement |
+| ✅ | **Screen sync live** | 27 Sep: Hyperion 2.2.1, DXGI on the Dell, DDP to wled-desk.local at ~25 fps |
 | ✅ | **Dot board + mounted** | 27 Sep: node on the LABTECH board, U on the monitor, ABL 1000 |
 | ✅ | **Strip cut and joined** | 18/34/18 from the 2 m strip's Din end, two corner joints, injection at LED 70, tested through both corners 26 Sep |
 | ✅ | Layout generated | **70 LEDs** = 18 left / 34 top / 18 right; `config/*.json` committed |
