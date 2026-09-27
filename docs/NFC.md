@@ -50,10 +50,65 @@ the 22-character string after `/artist/`. Searching by name is not reliable -
 lighting tags - **Screen sync**, **Work**, **Evening**. Movie and Night are
 phone taps (bookmarks) until a second pack; the bedside sleep tag too.
 
-The `:play` suffix is the old Spotify URI form that still autoplays on
-Android; if a phone update breaks it, the fallback is the plain
-`https://open.spotify.com/artist/<id>` link (opens the page, one more tap to
-play).
+### Why a plain Spotify link on the tag does not work (tested 27 Sep)
+
+Both `spotify:artist:<id>:play` and `https://open.spotify.com/artist/<id>`
+written directly to a tag open Spotify at its home page and play nothing.
+That is a long-known Spotify bug: its NFC (NDEF) handler ignores the path
+([shkspr.mobi, 2020](https://shkspr.mobi/blog/2020/09/how-can-i-launch-a-spotify-album-from-an-nfc-tag/),
+Spotify engineers acknowledged it). The same links work when another app
+opens them normally. So the tag must point at an intermediary app, which then
+tells Spotify what to play.
+
+### The zero-tap method: HTTP Shortcuts + a "play from search" intent
+
+**HTTP Shortcuts** (free, open source, already in the handover plan for the
+lighting tags) can run a tiny script when opened by a deep link, and the deep
+link can live on the tag. The script sends Android's standard
+`MEDIA_PLAY_FROM_SEARCH` intent to Spotify - the same request the Google
+Assistant uses for "play X on Spotify" - which starts playback with no tap.
+
+One shortcut per artist, type **Scripting**, with this in the script box
+(change the two names):
+
+```javascript
+sendIntent({
+  type: 'activity',
+  action: 'android.media.action.MEDIA_PLAY_FROM_SEARCH',
+  packageName: 'com.spotify.music',
+  newTask: true,
+  extras: [
+    { name: 'query', type: 'string', value: 'A. R. Rahman' },
+    { name: 'android.intent.extra.focus', type: 'string', value: 'vnd.android.cursor.item/artist' },
+    { name: 'android.intent.extra.artist', type: 'string', value: 'A. R. Rahman' }
+  ]
+});
+```
+
+Then long-press the shortcut -> **Show Info** -> copy its **deep-linking URL**
+(`http-shortcuts://...`) -> that URL is what NFC Tools writes to the tag
+(URL / URI record). Tap the tag: HTTP Shortcuts opens for a moment, Spotify
+starts the artist. Shuffle is Spotify's own setting.
+
+**Fallback if the search intent only opens Spotify without playing** (Spotify
+has broken and unbroken this over the years): replace the script with the
+"browse" form, which the Tasker community found still autoplays where the
+search intent does not
+([Spotify community, 2019](https://community.spotify.com/t5/Android/Tasker-cannot-start-a-Playlist-anymore-Send-intent-does-not-wrok/td-p/4633926)):
+
+```javascript
+sendIntent({ type: 'activity', action: 'android.intent.action.VIEW',
+             dataUri: 'spotify:artist:1mYsTxnqsietFxj1OgoGbG:play',
+             packageName: 'com.spotify.music', newTask: true });
+```
+
+Test on **one** artist with the tag held loose before writing the other six.
+Screen must be unlocked either way - Android does not read tags on the lock
+screen.
+
+Sources: [Spotify community - NFC Tools or Tasker](https://community.spotify.com/t5/Android/NFC-Tools-or-Tasker/td-p/1555062),
+[HTTP Shortcuts scripting - sendIntent](https://http-shortcuts.rmy.ch/scripting),
+[HTTP Shortcuts FAQ - deep links and NFC](https://http-shortcuts.rmy.ch/faq).
 
 ## Writing a tag (NFC Tools)
 
