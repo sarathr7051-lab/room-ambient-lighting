@@ -8,7 +8,9 @@ on. Runs at login from a Startup shortcut (pythonw, no window).
 Token: an API token created in Hyperion, stored next to this file in
 hyperion_token.txt (git-ignored).
 """
-import json, pathlib, time, urllib.request
+import json, pathlib, subprocess, time, urllib.request
+
+HYPERIOND = r"D:\games\Hyperionin\hyperiond.exe"
 
 URL = "http://localhost:8090/json-rpc"
 TOKEN = (pathlib.Path(__file__).with_name("hyperion_token.txt")).read_text().strip()
@@ -20,7 +22,15 @@ def rpc(d):
     return json.load(urllib.request.urlopen(r, timeout=5))
 
 
+def hyperion_running():
+    out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq hyperiond.exe"], capture_output=True, text=True).stdout
+    return "hyperiond.exe" in out
+
+
 def once():
+    if not hyperion_running():
+        subprocess.Popen([HYPERIOND], creationflags=0x00000008)   # DETACHED_PROCESS
+        return "started hyperiond"
     info = rpc({"command": "serverinfo", "tan": 1}).get("info", {})
     comps = {c["name"]: c["enabled"] for c in info.get("components", [])}
     if comps.get("LEDDEVICE") is False:
