@@ -47,6 +47,10 @@ HA scenes instead of raw WLED URLs later.
   virtualization is not enabled" until the PC restarts (the Virtual Machine
   Platform component needs the reboot). If it still says that after the
   restart, Intel VT-x is off in the BIOS - the owner enables it there.
+- 27 Sep 2026, after the restart: WSL2 came up (virtualization is on),
+  Docker engine 29.8.0, `docker compose up -d` pulled
+  `ghcr.io/home-assistant/home-assistant:stable` and **HA answers on
+  http://localhost:8123**. Onboarding (owner account) is the owner's step.
 - Compose file: `tools/homeassistant/docker-compose.yml`. Config lives in
   `tools/homeassistant/config/` (git-ignored).
 - Docker Desktop on Windows has no true host networking, so HA will not
