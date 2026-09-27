@@ -11,8 +11,9 @@ Hyperion running on the Windows PC that drives the screen.
 >
 > Every other document here describes the whole build from the beginning.
 > **Read the state file first**, or you will follow an instruction for a step
-> that is already finished. As of 27 Sep 2026 the screen sync light is working: desk node on a dot
-board, 70-LED U on the monitor, Hyperion streaming from the Windows PC.
+> that is already finished. As of 27 Sep 2026 the screen sync light, Home Assistant (moods incl. the
+bulb), NFC tags and voice are built; the desk board has one open wiring
+fault to fix (see docs/PROJECT_STATE.md), and the shelf light L4 is next.
 
 ---
 

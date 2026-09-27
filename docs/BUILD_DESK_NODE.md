@@ -372,6 +372,18 @@ its WLED config move last.
 
 ---
 
+### If the node dies after the board is moved
+
+Seen 27 Sep: a ground wire came off, its bare tip brushed the board, the ESP32
+crashed and the strip froze on its last frame. Reflashing on USB brought the
+chip back, but on the board it would not boot - the board was loading it.
+Order of checks: adapter out, ESP32 off; L rod to H rod must read `1`; find
+and re-solder the loose wire; P004-H rod and P003-L rod = 0; re-seat counting
+pins. Recovery of the firmware side is two commands from the repo
+(`wled_push.py apply`, `presets`) plus the preset/sync notes in
+PROJECT_STATE.md - nothing on the node is unique. Strain relief (velcro to the
+stand) is what prevents this.
+
 ## Stage 6 - mount
 
 1. Tack-It test patch on hidden paint while the IPA dries.

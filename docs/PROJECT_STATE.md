@@ -99,18 +99,53 @@ still needed from the owner's Spotify app. Home Assistant plan in
 [HOME_ASSISTANT.md](HOME_ASSISTANT.md) - host not decided (Docker Desktop is
 not installed).
 
-**Open fault, 27 Sep 23:00:** the desk board was moved and a black wire
-(one of H005/H006/H007/O004) came off. ESP32 power LED on, node not on Wi-Fi
-(no WLED-AP either), strip latched on a static rainbow. Adapter unplugged for
-the night. Tomorrow: re-solder the wire; meter rod-to-rod `1` and P004 to the
-H rod `0`; power up. If still off the network, reflash from install.wled.me
-and restore with `wled_push.py apply` + `presets` (+ preset 9 and the udpn
-send flag by hand, see above). The shelf node was unplugged by the owner on
-purpose.
+**Open fault, 27 Sep, late night - state at stop:**
 
-**Next: fix the desk board; shelf light when tape + board arrive; posters
-(seven musicians up, five sports go on the window wall 35.5 cm from the
-corner at the same height); Google voice only via Tailscale Funnel later.**
+1. The desk board was moved; a black wire (one of the ground wires into
+   H005/H006/H007/O004) came off. Everything still worked until the loose
+   bare tip brushed something; then the ESP32 crashed, the strip latched a
+   static rainbow, and the node dropped off Wi-Fi.
+2. **ESP32 reflashed** from install.wled.me (erase + WLED 16.0.1) on USB:
+   it boots, joins Wi-Fi at 192.168.1.6 (100 % signal) - **the chip is fine.**
+   Restored from the repo while on USB: `wled_push.py apply` (70 LEDs, GPIO16,
+   GRB, skip 0, ABL 1000 - verified), presets 1 Work / 2 Evening / 3 Movie /
+   5 Night / 6 Screen sync (on, 255) / 9 pieces-70 (boot), name + mDNS
+   `wled-desk`, UDP sync send+receive on.
+3. **Seated back on the dot board it does not boot** - no Wi-Fi, strip stays
+   on the latched rainbow, power LED on. Adding USB power on top changed
+   nothing. So the board is loading the chip down, not the flash.
+4. Most likely: **+5V rod shorted to the GND rod** (the loose bare tip, or a
+   blob) so the adapter current-limits; second suspect: ESP32 seated one pin
+   off.
+
+**Tomorrow, in order (adapter out, USB out, ESP32 off the board):**
+- Ω 2000, L rod to H rod: climbs then `1` = fine; small steady number =
+  short -> find the loose wire tip / blob near the rods and L008-L010, move it,
+  re-measure.
+- Identify the empty ring among **H005 (pigtail -), H006 (LED 1 GND),
+  H007 (LED 70 black tail), O004 (ESP32 GND link)** and re-solder the black
+  wire there. If it is O004: wire through O004, bent onto the **P004** cone.
+- Ω 2000, P004 cone to H rod = 0; P003 cone to L rod = 0.
+- Re-seat the ESP32: USB toward the top edge, count 15 pins each side in the
+  headers. Adapter in: expect RED / GREEN / BLUE by piece within ~20 s, then
+  Hyperion (the watchdog re-enables its LED output).
+- The shelf node (D1 mini) was unplugged by the owner on purpose; plug back
+  in on its phone charger at the shelf.
+
+**Next:**
+1. Fix the desk board (above).
+2. Posters: the seven musicians are up on the desk wall. The five sports
+   cards (Sachin, Neymar, Rohit, Max, Kvara) go on the window wall at the
+   **same height**, first card **35.5 cm from the corner** (mirrors the
+   musicians' 35.5 cm gap), 2 cm between cards; the sheet on that wall
+   comes down. Waveform A3 / SDR A1 / Itachi move to the bathroom wall.
+3. Shelf light L4 when the nano tape and extension board arrive
+   (SHELF_NODE.md: breadboard test, then dot board, then mount).
+4. Tidy: velcro the desk board to the monitor stand so it cannot be dragged
+   by its wires again.
+5. Later: Google Assistant only via Tailscale Funnel + manual Google
+   integration (free, an evening); bulb already works with "Hey Google" via
+   Smart Life linked in Google Home.
 
 ---
 
