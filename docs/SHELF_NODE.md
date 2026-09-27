@@ -1,111 +1,158 @@
 # Shelf node (L4): D1 mini + IRL540N driving the 12 V neon
 
 One MOSFET switches the 12 V neon on and off (and dims it by PWM); the Wemos
-D1 mini running WLED drives the MOSFET's gate. Nothing else. The 12 V never
-touches the D1 mini; the D1 mini runs off a phone charger.
+D1 mini running WLED drives the MOSFET's gate. The D1 mini runs off a phone
+charger. **Only the +12 V never reaches the D1 mini.** The 12 V adapter's
+minus and the D1 mini's G are deliberately joined - that shared ground is what
+lets the gate signal mean anything. Reviewed independently 27 Sep 2026; this is
+the reworked version.
 
-## Parts - photograph these before anything is wired
+## Parts - verified 27 Sep
 
-The desk build taught us the shop can hand over the wrong chip. Check the
-markings:
-
-| Part | What the marking must say | Why it matters |
-|---|---|---|
-| MOSFET | **IRL540N** (IRL, with an L) | logic-level: switches fully on with the D1 mini's 3.3 V. An **IRF540N** looks identical and only half-opens at 3.3 V - the strip would be dim and the FET would get hot |
-| 100 ohm resistor | bands **brown - black - brown** | gate series resistor |
-| 10 kohm resistor | bands **brown - black - orange** | gate pull-down: keeps the strip OFF while the D1 mini boots |
-| D1 mini | headers soldered or loose? female or male? | decides how the two control wires attach |
-| Gesto socket lead | the short white lead between the strip's end cap and the barrel socket | it gets cut ~10 cm from the socket; the socket half becomes the 12 V input pigtail |
+| Part | Status |
+|---|---|
+| MOSFET | marking reads **IRL540** (Vishay) - logic-level, correct. An IRF540 would only half-open at 3.3 V |
+| 10 kohm | tan body, brown-black-orange-gold. Confirm on the meter, **Ω 20k range: about 10.0** |
+| 100 ohm | blue-green body - **measure it**: Ω 2000 range reads about 100. If it turns out to be another 10 k, use a **330 or 470 ohm** from the desk-node spares; anything 47-470 ohm does the job |
+| D1 mini | **no headers**. The two control wires are soldered straight into the **D2** and **G** holes - 2 joints, no headers |
+| Gesto socket lead | short white lead between the strip's end cap and the barrel socket. It gets cut 10 cm from the socket; the socket half becomes the 12 V input pigtail |
 
 ## The circuit
 
 ```
-12 V adapter +  ───────────────┬──── strip A +
-                               └──── strip B +
+12 V adapter +  ──── strip A +  ──── strip B +        (three-way splice, OFF the board)
 
-strip A −  ──┐
-strip B −  ──┴──── IRL540N DRAIN  (D, middle leg; the metal tab is also drain)
+strip A −  ──── strip B −  ─────────► IRL540N DRAIN   (one wire to the board; splice off-board)
 
-IRL540N SOURCE (S) ───┬──── 12 V adapter −
-                      └──── D1 mini G
+IRL540N SOURCE ◄──── 12 V adapter −
+IRL540N SOURCE ◄──── D1 mini G
 
-IRL540N GATE (G) ◄── 100 ohm ◄── D1 mini D2
-IRL540N GATE (G) ◄── 10 kohm ──► IRL540N SOURCE (S)
+IRL540N GATE ◄── 100 ohm ◄── D1 mini D2
+IRL540N GATE ◄── 10 kohm ──► IRL540N SOURCE
 
-D1 mini micro-USB ◄── phone charger. Nothing else on the D1 mini.
+D1 mini micro-USB ◄── phone charger.  On the D1 mini: D2, G, USB. Nothing else.
 ```
 
 TO-220 pin order, **label facing you, legs pointing down: G - D - S, left to
-right.**
+right.** The metal tab on the back is DRAIN: it must touch nothing.
 
-Current: the 12 V 2 A adapter drives 5 m; two 130 cm pieces draw about 1 A
-together. At 3.3 V on the gate an IRL540N passes that with well under a
-quarter of a watt of heat - no heatsink.
+Facts a beginner might otherwise "improve":
+- **No flyback diode.** The strip is LEDs plus resistors, essentially a
+  resistive load. A diode across it does nothing useful and, fitted the wrong
+  way, shorts the supply.
+- **100 ohm is right.** The gate draws a ~25 mA blip for a couple of
+  microseconds per edge at 880 Hz PWM; the resistor just softens the edge.
+- **Heat:** at 3.3 V on the gate the IRL540N passes 1 A with 0.1-0.5 W of
+  heat depending on the individual part. Warm to the touch is normal, no
+  heatsink. **Hot** means the part is an IRF, or the gate is not reaching 3.3 V.
+- **The one thing that kills the D1 mini:** a solder bridge between the gate
+  and drain cones puts 12 V onto D2 through the 100 ohm. That is why the
+  gate-to-drain meter check happens **before** the D2 wire is connected.
+- The 10 k keeps the strip off while the D1 mini boots, whichever supply
+  comes up first. Power-up order does not matter.
 
-## Stage 1 - breadboard test (10 minutes, nothing permanent)
+## Stage 1 - breadboard test (nothing permanent)
 
 The desk node's breadboard is free. One strip piece (about 0.5 A) is fine
-through breadboard contacts for a test; do not leave it there.
+through two breadboard tie-strips for a ten-minute test; not for keeps.
+
+Hold the breadboard with its **numbered rows running away from you** (row 1
+nearest you). Each numbered row is one 5-hole tie-strip.
 
 | # | From | To |
 |---|---|---|
-| 1 | IRL540N | three adjacent rows, label toward you. G in the top row, D middle, S bottom |
-| 2 | 100 ohm | from the G row to a spare row X |
+| 1 | IRL540N | legs into **three consecutive numbered rows, same lettered column**, label facing **you**: G nearest you, D next, S furthest. Each leg in its own row - if all three land in one row they are shorted together |
+| 2 | 100 ohm | from the G row to a spare row **X** |
 | 3 | 10 kohm | from the G row to the S row |
-| 4 | D1 mini **D2** (Dupont wire) | row X |
-| 5 | D1 mini **G** | S row |
-| 6 | Gesto socket pigtail **−** | S row |
-| 7 | Gesto socket pigtail **+** | strip piece **+** (twist together, or both into one spare row) |
-| 8 | strip piece **−** | D row |
+| 4 | Gesto socket pigtail **−** | S row |
+| 5 | D1 mini **G** wire | S row |
+| 6 | Gesto socket pigtail **+** and strip piece **+** | twisted together and **taped** - not on the breadboard |
+| 7 | strip piece **−** | D row |
+| 8 | D1 mini **D2** wire | row X - **last, after the meter checks** |
 | 9 | D1 mini micro-USB | phone charger |
 
-Order of power-up: D1 mini charger first (it boots with the strip off, that is
-what the 10 k is for). Then the 12 V adapter into the socket pigtail.
+**Before the pigtail: identify its + core.** After cutting the socket lead,
+find the core with a stripe or rib, or mark one core with a Sharpie along its
+length. Adapter into the socket and the wall, **DCV 20**, black probe on one
+core, red on the other: **+12** = red is on +. Mark it. **Adapter out.** The
+same-marked core on the strip-side stub is piece A's +. Bare ends apart at all
+times while the adapter is in.
 
-Meter checks before the 12 V goes in, adapter unplugged: ohms G-row to S-row
-= about **10 k**. D-row to S-row = `1`. If D-S reads low, the FET is in
-backwards or the wrong part.
+**Meter checks, D2 wire NOT connected, adapter out** (red lead is + on the
+ohms and diode ranges):
+- Ω **20k**, G row to S row, either way: **9.5-10.5** (the 10 k).
+- Ω **2000**, red on D row, black on S row: `1`. Swap the probes: **a number** -
+  that is the MOSFET's internal body diode, normal, and it confirms which leg
+  is D and which is S.
+- Ω 2000, G row to D row, both ways: `1`. A number = a bridge; do not go on.
 
-Then in the WLED page for `wled-shelf`: brightness slider up - the strip
-lights; down - it dims; off - it goes out. If it only gets dim at full
-brightness and the FET warms, the marking said IRF, not IRL.
+Then connect D2 (row 8), charger into the D1 mini, adapter into the socket.
+In the WLED page for `wled-shelf`: brightness up - the strip lights; down -
+it dims; off - out. Dim at full brightness with a warm FET = wrong part or a
+bad gate joint.
 
 ## Stage 2 - the dot board
 
 Second LABTECH board, same orientation as the desk node: white side up, row
-numbers on the left, 001 at the top; columns counted from the numbered edge
-(L = 19th, K = 20th, J = 21st, M = 18th, N = 17th, O = 16th, I = 22nd). About
-16 joints.
+numbers on your left, 001 at the top. Columns counted from the numbered edge:
+**N = 17th, M = 18th, L = 19th, K = 20th, J = 21st.** Flip it **left-to-right
+like a page** to solder, exactly as before; the letters then read normally.
+About 12 joints.
+
+Column **K, rows 006-012, stays empty on the top side**: the MOSFET's drain
+tab faces that way and sits right over it.
 
 | Part / wire | Holes | Note |
 |---|---|---|
-| IRL540N | **G L008, D L009, S L010** | standing upright, **label facing the numbered edge**. Legs straight, 2.54 mm apart, no splaying. The metal tab faces away from the numbers and touches nothing |
-| 100 ohm | **M004** and **M008** | lying flat along column M. Underside: the M008 leg is bent one pitch onto the **G cone at L008** and soldered with it |
-| 10 kohm | **K008** and **K010** | standing upright (hairpin, sleeved like the desk node's 470). Underside: K008 leg bent onto the **G cone L008**; K010 leg joins the SOURCE bus |
-| SOURCE bus | bare wire along **row 010, K010 to N010**, beside the holes | soldered at K010 (10 k leg), L010 (S leg), M010, N010 |
+| IRL540N | **G L008, D L009, S L010** | standing upright on its leg shoulders (body 3-4 mm off the board), **label facing the numbered edge**, tab facing column K. Sanity check: turn the board so the numbered edge is nearest you - 001 is now on your left - hold the FET label toward you, and G-D-S left to right lands on 008-009-010 |
+| 100 ohm | **M004** and **M008**, flat along column M | underside: the M008 leg bent one pitch onto the **G cone L008**, soldered with it, cut at the cone |
+| 10 kohm | **J008** and **J010**, flat along column J | underside: J008 leg bent **two pitches along row 008** (over the empty K008 pad) onto the **G cone L008**; J010 leg bent along row 010 onto the SOURCE bus. Both cut at the cone |
+| SOURCE bus | bare wire along **row 010, J010 to N010**, laid on the **011 side** of the holes | soldered at J010 (10 k leg), L010 (S leg), M010, N010 |
 | 12 V pigtail **−** | **M010** | onto the SOURCE bus |
 | D1 mini **G** wire | **N010** | onto the SOURCE bus |
-| D1 mini **D2** wire | **M003** | underside: bent onto the 100 ohm leg cone at **M004** |
-| strip A − and strip B − | twisted together, tinned, through **M009** | underside: bent onto the **D cone at L009**, one joint |
-| 12 V pigtail **+**, strip A **+**, strip B **+** | twisted together, tinned, through **I014** | one joint; nothing else on that pad. Slide heat-shrink over the three wires first |
+| strip **−** (one wire; A and B spliced off-board) | **M009** | underside: bent one pitch onto the **D cone L009**, cut at the cone |
+| D1 mini **D2** wire | **M003** | underside: bent onto the 100 ohm leg cone at **M004**. **Soldered last, after the meter checks** |
 
-Nothing bare may bridge L008 - L009 - L010: three cones one pitch apart carry
-gate, drain and source. Small cones, and the meter afterwards.
+**Off the board, two splices**, each twisted, soldered, and covered with
+heat-shrink slid on **before** soldering:
+- **+12 V:** pigtail + , piece A + , piece B + . Three wires, one splice. No
+  +12 V anywhere on the board.
+- **strip −:** piece A − , piece B − , and the single wire to M009.
 
-**Meter, before power** (ohms 2000): L008 to L010 = about 10 k. L009 to L010
-= `1`. L008 to L009 = `1`. I014 to anything = `1`.
+Three cones one pitch apart carry gate, drain and source (L008/L009/L010) -
+that is the TO-220's own pitch and is normal. Rules: small cones; every bent
+leg runs along its own row and is **cut at the cone, never past it**; the L008
+cone is reflowed once with both bent legs in it.
 
-**Strain relief:** a velcro tie round the seven wires 3 cm from the board,
-and the board velcro-tied to the shelf underside or the router.
+**Meter, D2 wire not yet soldered, adapter out:**
+- Ω **20k**, L008 to L010: **9.5-10.5**.
+- Ω **2000**, red L009, black L010: `1`; swapped: a number (body diode, normal).
+- **Diode range**, red L010, black L009: about 500-700; swapped: `1`.
+- Ω 2000, L008 to L009, both ways: `1`. A number = gate-drain bridge - fix
+  before anything else.
+Then solder the D2 wire at M003.
+
+**Piece B - the cut end that gets wires.** Cut on a mark. Trim ~8 mm of the
+silicone sleeve off the end to expose the internal strip's two pads. They are
+marked **+ / −** (or 12V / GND) on the strip's print; if the print is
+unreadable, either way round is safe - a reversed strip is just dark, swap
+the wires. Tin the pads, slide heat-shrink over the wires, solder, shrink it
+down over the joint. **Every cut end - piece A's far end, piece B's far end,
+the spare's ends - gets heat-shrink or tape over the exposed copper.**
+
+**Mounting:** the board's underside is bare 12 V cones - a piece of card or
+tape over it before it is stuck to anything. Velcro or double-sided tape to
+the shelf underside, near the router. Eight wires arrive at the board (D2, G,
+pigtail −, strip −, plus the splices' leads); a velcro tie round them 3 cm out.
 
 ## Wires to cut
 
 | Wire | Length |
 |---|---|
-| D1 mini D2 and G (2) | 15 cm each - the D1 mini sits next to the board |
-| Gesto socket pigtail | cut the factory lead **10 cm from the socket**; the strip-side stub stays on piece A |
-| piece B + and − (2) | **50 cm each** (29.5 cm down + across + slack), 24 AWG is fine |
-| piece A + and − | its own factory stub, ~10 cm, reaches the board |
+| D1 mini D2 and G | 15 cm each, soldered into the D1 mini's D2 and G holes |
+| Gesto socket pigtail | factory lead cut **10 cm from the socket**; the strip-side stub stays on piece A |
+| piece B + and − | **50 cm each** (29.5 cm down + across + slack), 24 AWG |
+| piece A + and − | its own ~10 cm factory stub reaches the splices |
 
 ## WLED
 

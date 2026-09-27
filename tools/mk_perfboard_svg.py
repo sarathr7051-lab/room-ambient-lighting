@@ -135,7 +135,7 @@ def panel(Y0, mirror, title, sub, xoff=0):
     rx0, ry0 = P(2, 25); rx1, ry1 = P(29, 28.4)
     lo, hi = min(rx0, rx1), max(rx0, rx1)
     add(f'<rect x="{lo}" y="{ry0}" width="{hi-lo}" height="{ry1-ry0}" rx="4" fill="none" stroke="#9a9891" stroke-dasharray="4 4"/>')
-    label(15.5, 26.7, "rows 025-050: kept free for the 12 V stage (IRL540N, 100 ohm, 10 k, 12 V pigtail) - later, gate from D25 = P010", "s", "middle")
+    label(15.5, 26.7, "rows 025-050: kept free (a future L3 under-desk 12 V stage could go here, gate from D25 = P010)", "s", "middle")
 
     # ---- underside features. Dashed in the top view, solid underneath.
     ud = "6 4" if not mirror else None

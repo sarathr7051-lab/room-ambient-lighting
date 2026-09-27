@@ -25,8 +25,10 @@ this guide is **letter + printed row**: `L010` is column L, row 010.
   (+5V bus), J = 21st (junction), H = 23rd (GND bus), E = 26th**.
 
 The node uses rows 001-023 and columns A'..D. **The board is not cut**; rows
-025-050 stay free for the 12 V stage later (IRL540N, 100 ohm, 10 k, 12 V
-pigtail, gate from D25 = P010). The four corner holes take a velcro tie.
+025-050 stay free. (An earlier plan put the 12 V under-desk stage there,
+driven from D25 = P010; the shelf light instead has its own D1 mini and its
+own board - see SHELF_NODE.md. L3 under-desk, if it happens, could still use
+this space.)
 
 ## Four things a dot board does differently from a breadboard
 
