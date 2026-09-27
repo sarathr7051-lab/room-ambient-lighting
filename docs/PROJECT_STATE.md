@@ -26,8 +26,29 @@ the monitor, Hyperion 2.2.1 streaming DDP to it from the Windows PC.
   had to go on before soldering - missed; velcro does the job.)
 - 0.1 uF fitted at L002/H002. 1000 uF at L016/J016-H016.
 
-Hyperion settings in [HYPERION.md](HYPERION.md). **Next: posters, then the
-shelf light (L4), then the NFC tags.**
+Hyperion settings in [HYPERION.md](HYPERION.md).
+
+**Shelf node (L4) flashed and configured, 27 Sep evening.** Wemos D1 mini,
+WLED 16.0.1 ESP8266 build, `wled-shelf` at 192.168.1.7 (no reservation).
+Output bus: **PWM White, type 41, GPIO4 (D2)**, 1 "LED". UDP sync receive on.
+
+> **ESP8266 lesson:** with WLED's default *Wi-Fi sleep = on*, the D1 mini
+> was on the network but answered only in ~20 s windows every 2-3 minutes;
+> the Airtel router does not wake it. It looked like a reboot loop and it was
+> not. `{"wifi":{"sleep":false}}` fixed it instantly - it had to be fired
+> repeatedly until a window opened (89 attempts). Also: install.wled.me's
+> "erase" did not clear the config (the name survived). Set sleep off on
+> every ESP8266 node before anything else.
+
+Shelf plan from the photos: electronics on the top shelf next to the router
+(MOSFET board, D1 mini on a phone charger, the 12 V adapter). Piece A under
+the top shelf, piece B under the middle shelf, each 130 cm (or the nearest
+cut mark); the strip is 5 m. The white cable out of the wall above the top
+shelf is a mains light point - **not touched**. Neon has no adhesive: needs
+double-sided tape or clips. Open: what powers the router, the top-to-middle
+shelf gap, tape.
+
+**Next: L4 build (board + cuts), then posters, then the NFC tags.**
 
 ---
 
@@ -46,6 +67,7 @@ shelf light (L4), then the NFC tags.**
 | ✅ | Strip ends | 1 m strip: connectors both ends (bench tester). 2 m strip: bare `Din` pads, connector on `DO` |
 | ✅ | **Bench test** | passed 26 Sep evening on the 1 m strip: clamp working, LED 1 steady, GRB confirmed, rail 4.71 V loaded |
 | ✅ | Chip test | CD74HCT112EX behaves as HC, not HCT - eliminated by measurement |
+| ✅ | **Shelf node flashed** | 27 Sep: D1 mini, wled-shelf, PWM white on GPIO4, Wi-Fi sleep off |
 | ✅ | **Screen sync live** | 27 Sep: Hyperion 2.2.1, DXGI on the Dell, DDP to wled-desk.local at ~25 fps |
 | ✅ | **Dot board + mounted** | 27 Sep: node on the LABTECH board, U on the monitor, ABL 1000 |
 | ✅ | **Strip cut and joined** | 18/34/18 from the 2 m strip's Din end, two corner joints, injection at LED 70, tested through both corners 26 Sep |
