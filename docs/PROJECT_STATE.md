@@ -35,18 +35,23 @@ Output bus: **PWM White, type 41, GPIO4 (D2)**, 1 "LED". UDP sync receive on.
 > **ESP8266 lesson:** with WLED's default *Wi-Fi sleep = on*, the D1 mini
 > was on the network but answered only in ~20 s windows every 2-3 minutes;
 > the Airtel router does not wake it. It looked like a reboot loop and it was
-> not. `{"wifi":{"sleep":false}}` fixed it instantly - it had to be fired
-> repeatedly until a window opened (89 attempts). Also: install.wled.me's
-> "erase" did not clear the config (the name survived). Set sleep off on
-> every ESP8266 node before anything else.
+> not. Two things fixed it, both needed: `{"wifi":{"sleep":false,"phy":1}}`
+> (sleep off, force 802.11g), fired repeatedly until a window opened, and
+> **moving the board away from the PC** - next to the PC's USB 3 ports it
+> managed 40-50 % of probes even with sleep off; on the shelf 2 m away it is
+> 20/20 at ~60 ms, ping 3-58 ms. Also: install.wled.me's "erase" did not
+> clear the config (the name survived). For any ESP8266 node: sleep off,
+> force-g, and keep it away from USB 3.
 
 Shelf plan from the photos: electronics on the top shelf next to the router
 (MOSFET board, D1 mini on a phone charger, the 12 V adapter). Piece A under
 the top shelf, piece B under the middle shelf, each 130 cm (or the nearest
 cut mark); the strip is 5 m. The white cable out of the wall above the top
 shelf is a mains light point - **not touched**. Neon has no adhesive: needs
-double-sided tape or clips. Open: what powers the router, the top-to-middle
-shelf gap, tape.
+double-sided tape or clips. Measured: top-to-middle shelf gap **29.5 cm**. No socket at the niche (the
+router on the top shelf is an unpowered spare) - power comes from the wall
+socket by the door via an extension board. No double-sided tape in the house;
+to buy (the nano tape shown with the Gesto listing was Rs 198 / 3 m on 27 Sep).
 
 **Next: L4 build (board + cuts), then posters, then the NFC tags.**
 
