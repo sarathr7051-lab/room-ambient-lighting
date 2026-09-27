@@ -99,8 +99,18 @@ still needed from the owner's Spotify app. Home Assistant plan in
 [HOME_ASSISTANT.md](HOME_ASSISTANT.md) - host not decided (Docker Desktop is
 not installed).
 
-**Next: breadboard test of the shelf driver tonight; mount when the tape
-arrives; NFC tags when they arrive; Home Assistant once a host is chosen.**
+**Open fault, 27 Sep 23:00:** the desk board was moved and a black wire
+(one of H005/H006/H007/O004) came off. ESP32 power LED on, node not on Wi-Fi
+(no WLED-AP either), strip latched on a static rainbow. Adapter unplugged for
+the night. Tomorrow: re-solder the wire; meter rod-to-rod `1` and P004 to the
+H rod `0`; power up. If still off the network, reflash from install.wled.me
+and restore with `wled_push.py apply` + `presets` (+ preset 9 and the udpn
+send flag by hand, see above). The shelf node was unplugged by the owner on
+purpose.
+
+**Next: fix the desk board; shelf light when tape + board arrive; posters
+(seven musicians up, five sports go on the window wall 35.5 cm from the
+corner at the same height); Google voice only via Tailscale Funnel later.**
 
 ---
 
