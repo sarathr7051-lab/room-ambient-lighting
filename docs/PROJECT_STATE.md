@@ -107,13 +107,11 @@ Switching the GRABBER component off and on re-attached it (25 fps). The
 watchdog now does that automatically as well as re-enabling LED output.
 
 **Next:**
-2. Posters: the seven musicians are up on the desk wall. The five sports
-   cards (Sachin, Neymar, Rohit, Max, Kvara) go on the window wall at the
-   **same height**, first card **35.5 cm from the corner** (mirrors the
-   musicians' 35.5 cm gap), 2 cm between cards; the sheet on that wall
-   comes down. Waveform A3 / SDR A1 / Itachi move to the bathroom wall.
-3. Shelf light L4 when the nano tape and extension board arrive
-   (SHELF_NODE.md: breadboard test, then dot board, then mount).
+2. Posters: **DONE 28 Sep** - seven musicians on the desk wall, the five
+   sports cards on the window wall at the same height, 35.5 cm from the
+   corner. Waveform A3 / SDR A1 / Itachi go to the bathroom wall later.
+3. Shelf light L4: **extension board and double-sided tape arrived 28 Sep**
+   - build now (SHELF_NODE.md: breadboard test, then dot board, then mount).
 4. Tidy: velcro the desk board to the monitor stand so it cannot be dragged
    by its wires again.
 5. Later: Google Assistant only via Tailscale Funnel + manual Google

@@ -23,7 +23,9 @@ def rpc(d):
 
 
 def hyperion_running():
-    out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq hyperiond.exe"], capture_output=True, text=True).stdout
+    # CREATE_NO_WINDOW: without it every check flashes a console window
+    out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq hyperiond.exe"], capture_output=True, text=True,
+                         creationflags=0x08000000).stdout
     return "hyperiond.exe" in out
 
 
