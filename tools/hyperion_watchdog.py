@@ -1,4 +1,4 @@
-"""Keeps Hyperion's LED output switched on.
+"""Keeps Hyperion (and the WSL Ubuntu that hosts Home Assistant) running.
 
 Hyperion 2.2.1 disables its LEDDEVICE component whenever the WLED node
 reboots or is switched off mid-stream (a cfg write, a Night preset, a power
@@ -29,6 +29,22 @@ def hyperion_running():
     return "hyperiond.exe" in out
 
 
+KEEPER = None
+
+
+def keep_wsl_alive():
+    """Home Assistant runs in Docker inside WSL Ubuntu. WSL stops an idle
+    distro, so hold one sleeping process open in it; systemd then keeps
+    dockerd - and the unless-stopped containers - running."""
+    global KEEPER
+    if KEEPER is None or KEEPER.poll() is not None:
+        KEEPER = subprocess.Popen(["wsl.exe", "-d", "Ubuntu", "-u", "root", "-e", "sleep", "infinity"],
+                                  creationflags=0x08000000, stdin=subprocess.DEVNULL,
+                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return "started WSL keeper"
+    return None
+
+
 def once():
     if not hyperion_running():
         subprocess.Popen([HYPERIOND], creationflags=0x00000008)   # DETACHED_PROCESS
@@ -54,6 +70,10 @@ if __name__ == "__main__":
     if "--once" in sys.argv:
         print(once()); sys.exit()
     while True:
+        try:
+            keep_wsl_alive()
+        except Exception:
+            pass
         try:
             once()
         except Exception:

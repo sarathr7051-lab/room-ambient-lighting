@@ -1,0 +1,25 @@
+# Home Assistant + Whisper on the Docker engine inside WSL Ubuntu (replaces
+# Docker Desktop, which crashes on this Windows build - see HOME_ASSISTANT.md).
+# WSL runs in mirrored networking, so host networking here = the PC's own
+# LAN address: the phone reaches http://192.168.1.4:8123 as before, and
+# Hyperion (Windows) is reachable from HA at 127.0.0.1:19444.
+# Config lives inside WSL at /opt/homeassistant (fast ext4, not /mnt/c).
+#   wsl -d Ubuntu -- docker compose -f /opt/homeassistant/docker-compose.yml up -d
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:2026.9.4
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /opt/homeassistant/config:/config
+    environment:
+      - TZ=Asia/Kolkata
+  whisper:
+    container_name: whisper
+    image: rhasspy/wyoming-whisper:latest
+    restart: unless-stopped
+    network_mode: host
+    command: --model small-int8 --language en --uri tcp://0.0.0.0:10300
+    volumes:
+      - /opt/homeassistant/whisper-data:/data
