@@ -33,6 +33,14 @@ def once():
         return "started hyperiond"
     info = rpc({"command": "serverinfo", "tan": 1}).get("info", {})
     comps = {c["name"]: c["enabled"] for c in info.get("components", [])}
+    grab = [x for x in info.get("priorities", []) if x.get("componentId") == "GRABBER"]
+    if comps.get("GRABBER") and grab and not grab[0].get("active"):
+        # after a reboot or a display change the DDA grabber can sit idle
+        # with no frames; switching it off and on re-attaches it
+        rpc({"command": "componentstate", "componentstate": {"component": "GRABBER", "state": False}, "tan": 3})
+        time.sleep(2)
+        rpc({"command": "componentstate", "componentstate": {"component": "GRABBER", "state": True}, "tan": 4})
+        return "restarted GRABBER"
     if comps.get("LEDDEVICE") is False:
         rpc({"command": "componentstate", "componentstate": {"component": "LEDDEVICE", "state": True}, "tan": 2})
         return "re-enabled LEDDEVICE"
