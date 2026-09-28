@@ -106,6 +106,14 @@ enabled but idle (`active=false`) after the reboots and display change.
 Switching the GRABBER component off and on re-attached it (25 fps). The
 watchdog now does that automatically as well as re-enabling LED output.
 
+**28 Sep evening - Home Assistant moved off Docker Desktop.** After an 11 h
+sleep, Docker Desktop could not start (open bug with its socket files), and
+C: was found 100 % full. Moved Docker Desktop's data and the new Ubuntu WSL
+disk to D: (C: now ~14 GB free), and runs HA + Whisper on Docker Engine inside
+WSL Ubuntu with mirrored networking - details in HOME_ASSISTANT.md. Also
+cleared a static Hyperion colour set from the HA dashboard. **C: needs a
+clean-up** - it is the system drive and will fill again.
+
 **Next:**
 2. Posters: **DONE 28 Sep** - seven musicians on the desk wall, the five
    sports cards on the window wall at the same height, 35.5 cm from the

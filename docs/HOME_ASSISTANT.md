@@ -40,6 +40,31 @@ wants it always-on.
 Each scene is one tap in the Companion app, and the NFC tags can point at
 HA scenes instead of raw WLED URLs later.
 
+## Where it runs now (28 Sep 2026): Docker Engine inside WSL Ubuntu
+
+**Docker Desktop was dropped.** After the PC slept, Docker Desktop 4.91 could
+not start: its backend fails renaming its own AF_UNIX socket files under
+`%LOCALAPPDATA%\Docker\run` ("The file cannot be accessed by the system") -
+an open Docker bug on this Windows 11 build
+([docker/for-win#15063](https://github.com/docker/for-win/issues/15063)),
+not fixed by restarting. The real root of that day's trouble was also **C:
+being 100 % full** (1.6 MB free).
+
+Now:
+
+| Piece | Where |
+|---|---|
+| WSL distro | **Ubuntu 26.04**, disk moved to **`D:\WSL\Ubuntu\ext4.vhdx`** (`wsl --manage Ubuntu --move`), systemd on, default user root (`/etc/wsl.conf`) |
+| Networking | `%USERPROFILE%\.wslconfig`: `networkingMode=mirrored`, `firewall=false`, `vmIdleTimeout=-1`. WSL shares the PC's LAN address 192.168.1.4. Hyper-V firewall default inbound set to Allow plus a rule for TCP 8123 (admin, done once) so the phone can reach it. From the PC itself use `http://localhost:8123`; the LAN address does not loop back |
+| Docker | Ubuntu's `docker.io` + `docker-compose-v2`, started by systemd |
+| Compose | `/opt/homeassistant/docker-compose.yml` = repo `tools/homeassistant/docker-compose.wsl.yml`: `home-assistant:2026.9.4` (pinned - a `stable` pull that half-failed on the full disk crashed on import) and `wyoming-whisper`, both `network_mode: host`, `restart: unless-stopped` |
+| Config | `/opt/homeassistant/config` (copied from the repo's config folder). Hyperion and Wyoming entries repointed from `host.docker.internal` to `127.0.0.1` |
+| Autostart | the watchdog (HKCU Run) holds a `wsl -d Ubuntu -e sleep infinity` open so the distro, dockerd and the containers stay up |
+| Old Docker Desktop data | moved to `D:\WSL\docker-desktop-data-backup.vhdx` (7 GB, only images; deletable). Docker Desktop's autostart removed |
+
+Do not put `light.first_led_hardware_instance` (Hyperion) on the dashboard:
+turning it on paints a static colour at priority 128 over the screen grabber.
+
 ## Install log
 
 - 27 Sep 2026, evening: Docker Desktop 4.91.0 installed by winget. WSL2
