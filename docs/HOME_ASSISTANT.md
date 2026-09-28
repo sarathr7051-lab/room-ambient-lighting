@@ -62,7 +62,7 @@ Now:
 | Autostart | the watchdog (HKCU Run) holds a `wsl -d Ubuntu -e sleep infinity` open so the distro, dockerd and the containers stay up |
 | Old Docker Desktop data | moved to `D:\WSL\docker-desktop-data-backup.vhdx` (7 GB, only images; deletable). Docker Desktop's autostart removed |
 
-### What starts itself after a restart (no manual steps)
+### What starts itself after a restart (no manual steps) - restart test PASSED 28 Sep
 
 1. Login -> HKCU Run starts `tools/hyperion_watchdog.py` (pythonw, no window).
    Windows' startup-app delay is switched off for this user

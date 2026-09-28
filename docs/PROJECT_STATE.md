@@ -112,7 +112,9 @@ C: was found 100 % full. Moved Docker Desktop's data and the new Ubuntu WSL
 disk to D: (C: now ~14 GB free), and runs HA + Whisper on Docker Engine inside
 WSL Ubuntu with mirrored networking - details in HOME_ASSISTANT.md. Also
 cleared a static Hyperion colour set from the HA dashboard. **C: needs a
-clean-up** - it is the system drive and will fill again.
+clean-up** - it is the system drive and will fill again. **Cold-restart test
+passed 28 Sep** with the fixed addresses: screen sync, tags and the phone app
+all came back with no manual step.
 
 **Next:**
 2. Posters: **DONE 28 Sep** - seven musicians on the desk wall, the five
