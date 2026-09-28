@@ -5,7 +5,8 @@
 #
 # Docker Desktop on Windows has no real host networking, so mDNS/SSDP
 # discovery does not reach the LAN: add the two WLED nodes and Hyperion by
-# address instead (WLED: 192.168.1.6 and 192.168.1.7; Hyperion: host.docker.internal:8090).
+# address instead. SUPERSEDED 28 Sep: Docker Desktop is no longer used - see
+# docker-compose.wsl.yml and HOME_ASSISTANT.md.
 services:
   homeassistant:
     container_name: homeassistant

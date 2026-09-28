@@ -76,7 +76,8 @@ correlates with the mouse — it's this.
 1. Configuration -> LED Hardware -> LED Controller
 2. Type **WLED**. The node should appear by mDNS as `wled-desk`. If discovery
    is flaky, enter `wled-desk.local`, or as a last resort the current IP
-   (192.168.1.6 as of 25 Sep 2026). There is **no DHCP reservation** - the
+   (**192.168.1.251**, fixed in the node since 28 Sep 2026; Hyperion's device host is now
+   that address). Before that there was **no DHCP reservation** - the
    router's admin page is not reachable - so the IP can move and mDNS is the
    address to prefer.
 3. Hyperion 2.0.13+ uses **DDP on port 4048**. You do not set this by hand —

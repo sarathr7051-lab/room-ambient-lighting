@@ -99,7 +99,7 @@ No DHCP reservation, and none is possible — the Airtel AirFiber CPE's admin
 page is unreachable. The node is addressed by mDNS:
 
 ```
-wled-desk.local   ->   192.168.1.6      2.4 GHz, channel 4, 100% signal
+wled-desk.local   ->   192.168.1.251 (fixed since 28 Sep; was DHCP .6)   2.4 GHz
 ```
 
 `wled_push.py` sweeps the subnet automatically if the name will not resolve.

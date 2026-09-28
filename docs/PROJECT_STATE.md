@@ -29,7 +29,7 @@ the monitor, Hyperion 2.2.1 streaming DDP to it from the Windows PC.
 Hyperion settings in [HYPERION.md](HYPERION.md).
 
 **Shelf node (L4) flashed and configured, 27 Sep evening.** Wemos D1 mini,
-WLED 16.0.1 ESP8266 build, `wled-shelf` at 192.168.1.7 (no reservation).
+WLED 16.0.1 ESP8266 build, `wled-shelf`, to be fixed at **192.168.1.252** when it is plugged back in (was DHCP .7).
 Output bus: **PWM White, type 41, GPIO4 (D2)**, 1 "LED". UDP sync receive on.
 
 > **ESP8266 lesson:** with WLED's default *Wi-Fi sleep = on*, the D1 mini
@@ -135,7 +135,7 @@ clean-up** - it is the system drive and will fill again.
 | ✅ | Repo created | public, `sarathr7051-lab/room-ambient-lighting` |
 | ✅ | **WLED flashed** | 16.0.1, via install.wled.me. **Do not flash again.** |
 | ✅ | USB cable sorted | a spare Fire TV Stick micro-USB lead turned out to be data-capable; nothing bought. Board enumerates as `Silicon Labs CP210x`, COM12 |
-| ✅ | Node on Wi-Fi | `192.168.1.6`, 2.4 GHz channel 4, **100% signal** |
+| ✅ | Node on Wi-Fi | **`192.168.1.251` (fixed)**, 2.4 GHz |
 | ✅ | Node named | `wled-desk`; `wled-desk.local` resolves |
 | ✅ | Tooling verified | `wled_push.py` tested against the live node; four bugs found and fixed |
 | ✅ | Monitor measured | strip path **57 × 30.5 cm** |

@@ -9,22 +9,21 @@ has to be running: Android reads a URL record and opens it.
 
 | Tap | Record written to the tag | What happens |
 |---|---|---|
-| Lighting mood | URL, e.g. `http://192.168.1.6/win&PL=2&LO=2` | the desk node loads preset 2 and overrides the screen sync; the shelf node follows over UDP |
-| Screen sync back on | URL `http://192.168.1.6/win&PL=6&LO=0` | hands the strip back to Hyperion |
+| Lighting mood | URL, e.g. `http://192.168.1.251/win&PL=2&LO=2` | the desk node loads preset 2 and overrides the screen sync; the shelf node follows over UDP |
+| Screen sync back on | URL `http://192.168.1.251/win&PL=6&LO=0` | hands the strip back to Hyperion |
 | Artist | URI `spotify:artist:<id>:play` | Spotify opens the artist and starts playing. Shuffle is a Spotify setting: turn it on once in the app and it stays on |
 
-The mood URLs need the desk node's address. It is `192.168.1.6` today but
-there is no DHCP reservation; if it ever moves, the tags are rewritten (NFC
-Tools -> Write, same 30 seconds). `wled-desk.local` does not work from Android
+The mood URLs need the desk node's address: **192.168.1.251, fixed** in the
+node's own Wi-Fi settings since 28 Sep (see ADDRESSES in HOME_ASSISTANT.md). `wled-desk.local` does not work from Android
 for this, so the IP it is.
 
 | Slot | Preset | Tag URL |
 |---|---|---|
-| Work | 1 | `http://192.168.1.6/win&PL=1&LO=2` |
-| Evening | 2 | `http://192.168.1.6/win&PL=2&LO=2` |
-| Movie | 3 | `http://192.168.1.6/win&PL=3&LO=2` |
-| Night (off) | 5 | `http://192.168.1.6/win&PL=5&LO=2` |
-| Screen sync | 6 | `http://192.168.1.6/win&PL=6&LO=0` |
+| Work | 1 | `http://192.168.1.251/win&PL=1&LO=2` |
+| Evening | 2 | `http://192.168.1.251/win&PL=2&LO=2` |
+| Movie | 3 | `http://192.168.1.251/win&PL=3&LO=2` |
+| Night (off) | 5 | `http://192.168.1.251/win&PL=5&LO=2` |
+| Screen sync | 6 | `http://192.168.1.251/win&PL=6&LO=0` |
 
 `LO=2` = "live override until reboot": the mood wins over Hyperion's stream.
 `LO=0` releases it. Without `LO`, a preset call while Hyperion streams does

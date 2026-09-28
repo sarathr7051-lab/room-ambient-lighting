@@ -70,7 +70,7 @@ Measured and committed — these are facts, not estimates.
 | Right run | 18 LEDs, cut to **30.0 cm** |
 | Strip used / spare | 116.7 cm of the 2 m strip — **50 LEDs spare**, DO connector intact |
 | Corner joints | 2 |
-| Node | `wled-desk.local` · 192.168.1.6 · 2.4 GHz ch 4 · 100% signal |
+| Node | `wled-desk.local` · **192.168.1.251 (fixed)** · 2.4 GHz |
 
 ---
 

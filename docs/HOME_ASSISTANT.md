@@ -55,7 +55,7 @@ Now:
 | Piece | Where |
 |---|---|
 | WSL distro | **Ubuntu 26.04**, disk moved to **`D:\WSL\Ubuntu\ext4.vhdx`** (`wsl --manage Ubuntu --move`), systemd on, default user root (`/etc/wsl.conf`) |
-| Networking | `%USERPROFILE%\.wslconfig`: `networkingMode=mirrored`, `firewall=false`, `vmIdleTimeout=-1`. WSL shares the PC's LAN address 192.168.1.4. Hyper-V firewall default inbound set to Allow plus a rule for TCP 8123 (admin, done once) so the phone can reach it. From the PC itself use `http://localhost:8123`; the LAN address does not loop back |
+| Networking | `%USERPROFILE%\.wslconfig`: `networkingMode=mirrored`, `firewall=false`, `vmIdleTimeout=-1`. WSL shares the PC's LAN addresses (192.168.1.250 fixed, plus the DHCP one). Hyper-V firewall default inbound set to Allow plus a rule for TCP 8123 (admin, done once) so the phone can reach it. From the PC itself use `http://localhost:8123`; the LAN address does not loop back |
 | Docker | Ubuntu's `docker.io` + `docker-compose-v2`, started by systemd |
 | Compose | `/opt/homeassistant/docker-compose.yml` = repo `tools/homeassistant/docker-compose.wsl.yml`: `home-assistant:2026.9.4` (pinned - a `stable` pull that half-failed on the full disk crashed on import) and `wyoming-whisper`, both `network_mode: host`, `restart: unless-stopped` |
 | Config | `/opt/homeassistant/config` (copied from the repo's config folder). Hyperion and Wyoming entries repointed from `host.docker.internal` to `127.0.0.1` |
@@ -75,9 +75,20 @@ Now:
    LED output.
 3. Firewall and `.wslconfig` changes are permanent.
 
-Known residual risk: the PC's LAN address 192.168.1.4 is not reserved (router
-admin page unreachable). If DHCP ever hands it a new address, the phone app's
-server URL changes with it.
+### ADDRESSES - fixed 28 Sep 2026 (no router access, so set on each device)
+
+| Device | Address | How it is fixed |
+|---|---|---|
+| Router | 192.168.1.1 | - |
+| **PC** | **192.168.1.250** | Windows **DHCP/static coexistence** on the Wi-Fi adapter: the PC keeps its DHCP address (192.168.1.4 today) *and* always holds .250 on top, so the laptop still works on other networks. `netsh interface ipv4 set interface interface="Wi-Fi" dhcpstaticipcoexistence=enabled` then `netsh interface ipv4 add address "Wi-Fi" 192.168.1.250 255.255.255.0` (admin). WSL mirrored networking carries .250 too |
+| **wled-desk** | **192.168.1.251** | static IP in WLED's Wi-Fi settings (gw .1, /24) |
+| **wled-shelf** | **192.168.1.252** | HA already points there; set it in WLED's Wi-Fi settings when the D1 mini is plugged back in |
+| Havells bulb | cloud (Tuya) | no address needed |
+
+Why .250-.252: the router hands addresses out from the bottom (.4, .6, .7
+seen), and all three were checked free (no ping, no ARP) before use.
+Phone app server URL: **http://192.168.1.250:8123**. Hyperion's WLED device
+and HA's WLED entries use the fixed addresses.
 
 Do not put `light.first_led_hardware_instance` (Hyperion) on the dashboard:
 turning it on paints a static colour at priority 128 over the screen grabber.
@@ -107,7 +118,7 @@ turning it on paints a static colour at priority 128 over the screen grabber.
 | Havells Glamax bulb | via **Tuya** (Smart Life user code + QR, done by the owner); `light.glamax_bulb_tw_rgb`, colour-temp + colour |
 | Scripts | `script.mood_work / mood_evening / mood_movie / mood_night / mood_screen_sync` - each: sync-send on, live override 2 (0 for screen sync), desk preset, bulb (Work 80 % 4000 K, Evening 40 % 2700 K, Movie/Night off, Screen sync 15 % 2700 K). Shelf follows the desk over UDP |
 | Automations | `Tag: Work / Evening / Movie / Night / Screen sync` - trigger `tag_id` `room-work`, `room-evening`, `room-movie`, `room-night`, `room-screen-sync` -> the script |
-| Tag URLs | `https://www.home-assistant.io/tag/room-work` etc. Written to the tags with NFC Tools (URL record); read by the **HA Companion app**, which must be installed and logged in on the phone (server `http://<PC LAN IP>:8123`, 192.168.1.4 on 27 Sep) |
+| Tag URLs | `https://www.home-assistant.io/tag/room-work` etc. Written to the tags with NFC Tools (URL record); read by the **HA Companion app**, which must be installed and logged in on the phone (server `http://192.168.1.250:8123`, fixed since 28 Sep) |
 
 Gotcha found while testing: WLED's *runtime* sync-send flag (`state.udpn.send`) was
 off although the config flag was on, so the shelf did not follow. The
