@@ -45,10 +45,42 @@ def keep_wsl_alive():
     return None
 
 
+LAST_SCREEN_CHECK = 0.0
+
+
+def pick_dell_screen():
+    """The DDA input index of the 2560-wide Dell moves: 0 with the laptop lid
+    closed, 1 with it open. Point Hyperion at whichever input is 2560 wide."""
+    d = rpc({"command": "inputsource", "subcommand": "discover", "sourceType": "screen", "tan": 5})
+    dda = [v for v in d.get("info", {}).get("video_sources", []) if v.get("device") == "dda"]
+    if not dda:
+        return None
+    want = None
+    for vi in dda[0].get("video_inputs", []):
+        res = vi["formats"][0]["resolutions"][0]
+        if res.get("width") == 2560:
+            want = vi["inputIdx"]
+    if want is None:
+        return None
+    cfg = rpc({"command": "config", "subcommand": "getconfig", "tan": 6})["info"]
+    fg = cfg["global"]["settings"]["framegrabber"]
+    if fg.get("input") == want and fg.get("width") == 2560:
+        return None
+    fg.update({"input": want, "width": 2560, "height": 1440, "device": "dda", "enable": True})
+    rpc({"command": "config", "subcommand": "setconfig", "config": {"global": {"settings": {"framegrabber": fg}}}, "tan": 7})
+    return "grabber moved to input %d" % want
+
+
 def once():
+    global LAST_SCREEN_CHECK
     if not hyperion_running():
         subprocess.Popen([HYPERIOND], creationflags=0x00000008)   # DETACHED_PROCESS
         return "started hyperiond"
+    if time.time() - LAST_SCREEN_CHECK > 60:
+        LAST_SCREEN_CHECK = time.time()
+        moved = pick_dell_screen()
+        if moved:
+            return moved
     info = rpc({"command": "serverinfo", "tan": 1}).get("info", {})
     comps = {c["name"]: c["enabled"] for c in info.get("components", [])}
     grab = [x for x in info.get("priorities", []) if x.get("componentId") == "GRABBER"]

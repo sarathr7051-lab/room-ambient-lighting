@@ -62,6 +62,23 @@ Now:
 | Autostart | the watchdog (HKCU Run) holds a `wsl -d Ubuntu -e sleep infinity` open so the distro, dockerd and the containers stay up |
 | Old Docker Desktop data | moved to `D:\WSL\docker-desktop-data-backup.vhdx` (7 GB, only images; deletable). Docker Desktop's autostart removed |
 
+### What starts itself after a restart (no manual steps)
+
+1. Login -> HKCU Run starts `tools/hyperion_watchdog.py` (pythonw, no window).
+   Windows' startup-app delay is switched off for this user
+   (`HKCU\...\Explorer\Serialize` `StartupDelayInMSec=0`), so this is ~1 min
+   after login instead of ~5.
+2. The watchdog, every 20 s: starts `hyperiond` if missing; holds WSL Ubuntu
+   open (systemd -> dockerd -> Home Assistant + Whisper, `unless-stopped`);
+   every 60 s points Hyperion's DDA grabber at the 2560-wide input (the Dell -
+   the index moves with the laptop lid); restarts an idle grabber; re-enables
+   LED output.
+3. Firewall and `.wslconfig` changes are permanent.
+
+Known residual risk: the PC's LAN address 192.168.1.4 is not reserved (router
+admin page unreachable). If DHCP ever hands it a new address, the phone app's
+server URL changes with it.
+
 Do not put `light.first_led_hardware_instance` (Hyperion) on the dashboard:
 turning it on paints a static colour at priority 128 over the screen grabber.
 
