@@ -62,18 +62,33 @@ Now:
 | Autostart | the watchdog (HKCU Run) holds a `wsl -d Ubuntu -e sleep infinity` open so the distro, dockerd and the containers stay up |
 | Old Docker Desktop data | moved to `D:\WSL\docker-desktop-data-backup.vhdx` (7 GB, only images; deletable). Docker Desktop's autostart removed |
 
-### What starts itself after a restart (no manual steps) - restart test PASSED 28 Sep
+### What starts itself after power-on - rebuilt 29 Sep 2026
 
-1. Login -> HKCU Run starts `tools/hyperion_watchdog.py` (pythonw, no window).
-   Windows' startup-app delay is switched off for this user
-   (`HKCU\...\Explorer\Serialize` `StartupDelayInMSec=0`), so this is ~1 min
-   after login instead of ~5.
-2. The watchdog, every 20 s: starts `hyperiond` if missing; holds WSL Ubuntu
-   open (systemd -> dockerd -> Home Assistant + Whisper, `unless-stopped`);
-   every 60 s points Hyperion's DDA grabber at the 2560-wide input (the Dell -
-   the index moves with the laptop lid); restarts an idle grabber; re-enables
-   LED output.
-3. Firewall and `.wslconfig` changes are permanent.
+**Why the first version failed:** "Shut down" on this PC is Windows *Fast
+Startup* (log off + hibernate). On 29 Sep the login ran every other startup
+app, but the old watchdog (a bare pythonw in the Run key) was not running
+afterwards and left no trace - it had no log and nothing restarted it.
+
+**Now:**
+
+1. **Task Scheduler task `RoomSupervisor`** runs `tools/hyperion_watchdog.py`
+   (pythonw) on three triggers - **at logon, on workstation unlock, on resume
+   from sleep/hibernate** (System log, Power-Troubleshooter event 1) - with
+   *restart every 1 min if it stops, up to 999 times*, no time limit, runs on
+   battery. The HKCU Run entry stays as a fallback; a single-instance lock
+   (TCP 127.0.0.1:47831) makes any second copy exit.
+2. The supervisor, every 20 s: starts `hyperiond` if missing; holds WSL
+   Ubuntu open (systemd -> dockerd -> Home Assistant + Whisper,
+   `unless-stopped`); if Home Assistant has not answered on
+   `localhost:8123` for 3 minutes it runs `docker compose up -d` in Ubuntu;
+   points Hyperion's DDA grabber at the 2560-wide Dell; restarts an idle
+   grabber; re-enables LED output.
+3. **Log:** `tools/logs/room_supervisor.log` (git-ignored, rotating). Every
+   start, action and error with a traceback. This is the first place to look.
+4. The old `Hyperion.lnk` Startup shortcut was moved to `tools/logs/` - the
+   supervisor starts hyperiond itself.
+5. Windows' startup-app delay is off for this user (`Serialize`
+   `StartupDelayInMSec=0`). Firewall and `.wslconfig` changes are permanent.
 
 ### ADDRESSES - fixed 28 Sep 2026 (no router access, so set on each device)
 

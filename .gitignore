@@ -9,3 +9,4 @@ config/*.backup.json
 tools/homeassistant/config/
 tools/hyperion_token.txt
 tools/homeassistant/whisper-data/
+tools/logs/
