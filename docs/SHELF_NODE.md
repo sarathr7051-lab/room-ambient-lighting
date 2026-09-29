@@ -15,7 +15,7 @@ the reworked version.
 | 10 kohm | tan body, brown-black-orange-gold. Confirm on the meter, **Ω 20k range: about 10.0** |
 | gate resistor | **use a 470 ohm from the desk-node spares.** The blue-green resistors look like 10 k too, and 470 is actually the better value here: the D1 mini's pin then peaks at 7 mA (a 100 ohm would push 33 mA, above the ESP8266's 12 mA rating). Anything 100-1000 ohm works |
 | D1 mini | **no headers**. The two control wires are soldered straight into the **D2** and **G** holes - 2 joints, no headers |
-| Gesto socket lead | short white lead between the strip's end cap and the barrel socket. It gets cut 10 cm from the socket; the socket half becomes the 12 V input pigtail |
+| 12 V input | the owner's **spare female DC barrel pigtail** (red/black leads, same kind as the desk node's). The adapter plugs into it; it feeds the board. **The Gesto strip's factory socket cable is NOT cut** - it stays on the leftover length, which keeps working as a plain light on its own |
 
 ## The circuit
 
@@ -53,6 +53,30 @@ Facts a beginner might otherwise "improve":
 - The 10 k keeps the strip off while the D1 mini boots, whichever supply
   comes up first. Power-up order does not matter.
 
+## Cut plan (decided 29 Sep: factory socket end kept)
+
+The Gesto strip is **5 m (500 cm)**, cut marks every ~3 cm (small white
+marks seen through the silicone on the LED face). One end has the factory
+socket cable; the other end has a factory **end cap**.
+
+Work from the **end-cap end**:
+
+| Piece | Length | Ends |
+|---|---|---|
+| **A** (under the top shelf) | first ~125 cm from the cap | far end = factory cap (already sealed); cut end = gets 2 wires |
+| **B** (under the middle shelf) | next ~125 cm | both ends cut: one gets 2 wires, the other is sealed with heat-shrink/tape |
+| **Leftover** | ~250 cm | its cut end is sealed; its factory socket end is untouched - plug the adapter straight in and it is a plain always-on light |
+
+**Why ~125 cm, not 130:** the shelves measure 130 cm wall to wall; the strip
+needs room at the wire end for the soldered joint and the bend of the wires,
+and a cut can only fall on a mark. Hold the strip under the shelf first and
+cut at **the last mark that leaves ~3-5 cm clear at the wire end**. Measure,
+do not add up.
+
+**Shelf light current:** two ~125 cm pieces, about 1 A together, from the
+12 V 2 A adapter. The leftover is never powered at the same time from this
+adapter.
+
 ## Stage 1 - breadboard test (nothing permanent)
 
 The desk node's breadboard is free. One strip piece (about 0.5 A) is fine
@@ -66,26 +90,25 @@ nearest you). Each numbered row is one 5-hole tie-strip.
 | 1 | IRL540N | legs into **three consecutive numbered rows of one lettered column**, so the line of legs runs away from you. Stand it with the **printed label facing your RIGHT hand, metal tab to your left**. Seen from the label side with legs down the order is G-D-S left to right, and with the label on your right "left" is toward you: **G in the nearest row, D next, S furthest.** Each leg in its own row - if all three land in one row they are shorted together. The body-diode check below confirms D and S |
 | 2 | 470 ohm | from the G row to a spare row **X** |
 | 3 | 10 kohm | from the G row to the S row |
-| 4 | Gesto socket pigtail **−** | S row |
+| 4 | spare DC pigtail **−** | S row |
 | 5 | D1 mini **G** wire | S row |
-| 6 | Gesto socket pigtail **+** and strip piece **+** | twisted together and **taped** - not on the breadboard |
-| 7 | strip piece **−** | D row |
+| 6 | spare DC pigtail **+** and piece A **+** wire | twisted together and **taped** - not on the breadboard |
+| 7 | piece A **−** wire | D row |
 | 8 | D1 mini **D2** wire | row X - **last, after the meter checks** |
 | 9 | D1 mini micro-USB | phone charger |
 
-**Before the pigtail: identify its + core, in this order.**
-1. **Before cutting**, mark one core with a Sharpie for 20 cm either side of
-   where the cut will be, so both halves carry the same mark.
-2. Cut 10 cm from the socket.
-3. **Adapter out.** Ω **200**: the socket-side core that reads ~0 to the
-   socket's **centre pin** is **+** (12 V LED adapters are centre-positive;
-   the symbol on the adapter label confirms it). Note whether that is the
-   marked core.
-4. Cores taped to the table 5 cm apart. Adapter into the socket and the wall,
-   **DCV 20**, red probe on the core you believe is +: **+12**. A minus sign
+**Before the pigtail: identify its + wire.** Colours are a guess, the meter is not.
+1. **Adapter out.** Ω **200**: one probe inside the pigtail's socket on the
+   **centre pin**, the other on each wire in turn. The one reading ~0 is **+**
+   (12 V LED adapters are centre-positive; the label symbol confirms it).
+2. Tape the two bare ends to the table 5 cm apart. Adapter into the pigtail
+   and the wall, **DCV 20**, red probe on the + wire: **+12**. A minus sign
    means the probes are swapped, not the wires. **Adapter out.**
-5. The same-marked core on the strip-side stub is piece A's +.
-Never hold two live bare cores in your fingers.
+Never hold two live bare wires in your fingers.
+
+**Piece A's wires** (needed for this test): cut piece A as in the cut plan,
+then wire its cut end as described under "Wiring a cut end" below. 40 cm
+wires are enough for piece A (it sits right by the board).
 
 **Meter checks, D2 wire NOT connected, adapter out** (red lead is + on the
 ohms and diode ranges):
@@ -146,7 +169,7 @@ the drain wire on row 009.
   before anything else.
 Then solder the D2 wire at L003.
 
-**Piece B - the cut end that gets wires.** Cut exactly **on** a mark so both
+**Wiring a cut end (piece A's cut end, piece B's board end).** Cut exactly **on** a mark so both
 halves keep half-pads. Do not slice down onto the strip inside - its copper is
 thin. Instead score the silicone all the way round, 8 mm from the end, with a
 blade, then **pull the sleeve off the end**; the flat strip inside slides out
@@ -154,8 +177,9 @@ of the silicone like a wire out of insulation. The two pads are on the LED
 face, marked **+ / −** (or 12V / GND). If the print is unreadable: wire it
 either way, power for a second - dark means reversed, swap. Don't leave it
 reversed for minutes. Tin the pads, slide heat-shrink over the wires, solder, shrink it
-down over the joint. **Every cut end - piece A's far end, piece B's far end,
-the spare's ends - gets heat-shrink or tape over the exposed copper.**
+down over the joint. **Every cut end that gets no wires - piece B's far end and the leftover's cut
+end - gets heat-shrink or tape over the exposed copper.** Piece A's far end
+is the factory cap and needs nothing.
 
 **Mounting:** the board's underside is bare 12 V cones - a piece of card or
 tape over it before it is stuck to anything. Double-sided tape to the shelf
@@ -170,9 +194,9 @@ both wires 1 cm from the D1 mini takes the strain.
 | Wire | Length |
 |---|---|
 | D1 mini D2 and G | 15 cm each, 24 AWG stranded, 3 mm stripped and tinned, in from the top of the D1 mini, soldered underneath, trimmed |
-| Gesto socket pigtail | factory lead cut **10 cm from the socket**; the strip-side stub stays on piece A |
+| 12 V input | the spare DC pigtail, as it is - nothing cut |
 | piece B + and − | **50 cm each** (29.5 cm down + across + slack), 24 AWG |
-| piece A + and − | its own ~10 cm factory stub reaches the splices |
+| piece A + and − | **40 cm each**, soldered to its cut end |
 
 ## WLED
 

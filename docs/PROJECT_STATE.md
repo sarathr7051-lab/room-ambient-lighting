@@ -45,8 +45,8 @@ Output bus: **PWM White, type 41, GPIO4 (D2)**, 1 "LED". UDP sync receive on.
 
 Shelf plan from the photos: electronics on the top shelf next to the router
 (MOSFET board, D1 mini on a phone charger, the 12 V adapter). Piece A under
-the top shelf, piece B under the middle shelf, each 130 cm (or the nearest
-cut mark); the strip is 5 m. The white cable out of the wall above the top
+the top shelf, piece B under the middle shelf, each ~125 cm (last mark that leaves room at the
+wire end on a 130 cm shelf); the strip is 5 m. The white cable out of the wall above the top
 shelf is a mains light point - **not touched**. Neon has no adhesive: needs
 double-sided tape or clips. Measured: top-to-middle shelf gap **29.5 cm**. No socket at the niche (the
 router on the top shelf is an unpowered spare) - power comes from the wall
@@ -205,8 +205,8 @@ NFC is phone work for the evening once the tags arrive.
 
 | | |
 |---|---|
-| Strip | Gesto 12 V neon, **two 1.25 m pieces in parallel**, one under each upper niche shelf |
-| Cut plan | cut the first 1.25 m **from the connector end**, so piece A keeps the factory lead and needs **no soldering**; piece B needs + and - soldered (2 joints on neon - cut the silicone back first) |
+| Strip | Gesto 12 V neon (5 m), **two ~125 cm pieces in parallel**, one under each upper niche shelf; cut from the end-cap end; the ~250 cm leftover keeps the factory socket - see SHELF_NODE.md 'Cut plan' |
+| Cut plan | SUPERSEDED 29 Sep - see SHELF_NODE.md. (Was: cut from the connector end so piece A keeps the factory lead; piece B needs + and - soldered (2 joints on neon - cut the silicone back first) |
 | 12 V | the Gesto's own 12 V 2 A adapter -> both strips' + |
 | Switching | both strips' - -> **IRL540N drain**; source -> GND; **gate <- D1 mini `D2` (GPIO4) through 100 ohm**, 10 k gate-to-GND. Logic-level FET: 3.3 V gate is enough at ~1 A, no buffer |
 | 5 V for the D1 mini | **a USB phone charger** into its micro-USB. It only powers itself (~80 mA); the strip is on 12 V. Tie the 12 V adapter's - to the D1 mini's GND |
