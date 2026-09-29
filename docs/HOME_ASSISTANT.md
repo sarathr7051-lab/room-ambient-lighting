@@ -88,6 +88,12 @@ afterwards and left no trace - it had no log and nothing restarted it.
    minutes it starts `docker compose up -d` in Ubuntu in the background;
    points Hyperion's DDA grabber at the 2560-wide Dell; restarts an idle
    grabber; re-enables LED output.
+   **Tested independently twice (29 Sep):** cold start via the task (Hyperion
+   6 s, HA 30 s); cold start with nothing started by hand (back via the
+   5-minute trigger); supervisor killed (back in 229 s); hyperiond killed
+   (~20 s); HA container stopped (~3.5 min via compose up); duplicate launch
+   (exits in 2 s); keeper count stable. Probes use 127.0.0.1, not
+   `localhost` (Windows tries a dead `::1` first).
 3. **Log:** `tools/logs/room_supervisor.log` (git-ignored, rotating). Every
    start, action and error with a traceback. This is the first place to look.
 4. The old `Hyperion.lnk` Startup shortcut was moved to `tools/logs/` - the

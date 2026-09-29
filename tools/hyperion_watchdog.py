@@ -24,8 +24,8 @@ import json, logging, logging.handlers, pathlib, socket, subprocess, sys, time, 
 
 HERE = pathlib.Path(__file__).resolve().parent
 HYPERIOND = pathlib.Path("D:/games/Hyperion/bin/hyperiond.exe")
-HYPERION_RPC = "http://localhost:8090/json-rpc"
-HA_URL = "http://localhost:8123/"
+HYPERION_RPC = "http://127.0.0.1:8090/json-rpc"
+HA_URL = "http://127.0.0.1:8123/"   # not localhost: Windows tries a dead ::1 first
 LOCK_PORT = 47831
 NO_WINDOW = 0x08000000          # CREATE_NO_WINDOW
 DETACHED = 0x00000008           # DETACHED_PROCESS
