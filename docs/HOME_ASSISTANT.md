@@ -72,15 +72,20 @@ afterwards and left no trace - it had no log and nothing restarted it.
 **Now:**
 
 1. **Task Scheduler task `RoomSupervisor`** runs `tools/hyperion_watchdog.py`
-   (pythonw) on three triggers - **at logon, on workstation unlock, on resume
-   from sleep/hibernate** (System log, Power-Troubleshooter event 1) - with
-   *restart every 1 min if it stops, up to 999 times*, no time limit, runs on
-   battery. The HKCU Run entry stays as a fallback; a single-instance lock
-   (TCP 127.0.0.1:47831) makes any second copy exit.
+   (pythonw) on four triggers - **at logon, on workstation unlock, on resume
+   from sleep/hibernate** (System log, Power-Troubleshooter event 1), and
+   **every 5 minutes, indefinitely**. The 5-minute trigger is what brings the
+   supervisor back if the process dies: an independent test (29 Sep) proved
+   Task Scheduler's "restart on failure" does *not* fire when the process is
+   killed. While it is alive the extra triggers do nothing (IgnoreNew, and a
+   single-instance lock on TCP 127.0.0.1:47831 makes any second copy exit).
+   The task is the only launcher - the old Run-key value and Startup shortcut
+   were removed so they cannot race it.
 2. The supervisor, every 20 s: starts `hyperiond` if missing; holds WSL
    Ubuntu open (systemd -> dockerd -> Home Assistant + Whisper,
-   `unless-stopped`); if Home Assistant has not answered on
-   `localhost:8123` for 3 minutes it runs `docker compose up -d` in Ubuntu;
+   `unless-stopped`) - reusing an existing keeper rather than starting
+   another; if Home Assistant has not answered on `localhost:8123` for 3
+   minutes it starts `docker compose up -d` in Ubuntu in the background;
    points Hyperion's DDA grabber at the 2560-wide Dell; restarts an idle
    grabber; re-enables LED output.
 3. **Log:** `tools/logs/room_supervisor.log` (git-ignored, rotating). Every

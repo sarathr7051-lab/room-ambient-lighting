@@ -1,9 +1,9 @@
 """Room supervisor: keeps screen sync and Home Assistant running, unattended.
 
-Started by the Windows scheduled task "RoomSupervisor" (at logon, on unlock,
-on resume from sleep/hibernate; restarted by Task Scheduler if it dies) and,
-as a fallback, by the HKCU Run key. Only one copy runs: a second copy exits
-at once (it cannot bind the lock port).
+Started only by the Windows scheduled task "RoomSupervisor": at logon, on
+unlock, on resume from sleep/hibernate, and every 5 minutes (so if this
+process ever dies, it is back within 5 minutes). Only one copy runs: a second
+copy exits at once (it cannot bind the lock port).
 
 Every 20 s it makes sure that:
   * hyperiond.exe is running (starts it if not);
@@ -26,7 +26,6 @@ HERE = pathlib.Path(__file__).resolve().parent
 HYPERIOND = pathlib.Path("D:/games/Hyperion/bin/hyperiond.exe")
 HYPERION_RPC = "http://localhost:8090/json-rpc"
 HA_URL = "http://localhost:8123/"
-TOKEN = (HERE / "hyperion_token.txt").read_text().strip()
 LOCK_PORT = 47831
 NO_WINDOW = 0x08000000          # CREATE_NO_WINDOW
 DETACHED = 0x00000008           # DETACHED_PROCESS
@@ -41,9 +40,14 @@ _h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
 log.addHandler(_h)
 
 
+def token():
+    # read on use, so a missing file is logged instead of killing the process
+    return (HERE / "hyperion_token.txt").read_text().strip()
+
+
 def rpc(d):
     r = urllib.request.Request(HYPERION_RPC, data=json.dumps(d).encode(),
-                               headers={"Content-Type": "application/json", "Authorization": "token " + TOKEN})
+                               headers={"Content-Type": "application/json", "Authorization": "token " + token()})
     return json.load(urllib.request.urlopen(r, timeout=5))
 
 
@@ -113,6 +117,14 @@ HA_DOWN_SINCE = None
 LAST_COMPOSE = 0.0
 
 
+def keeper_exists():
+    """A keeper left by an earlier supervisor still holds WSL open - reuse it."""
+    out = run_quiet(["powershell", "-NoProfile", "-Command",
+                     "(Get-CimInstance Win32_Process -Filter \"Name='wsl.exe'\" | "
+                     "Where-Object { $_.CommandLine -like '*sleep infinity*' } | Measure-Object).Count"]).stdout.strip()
+    return out.isdigit() and int(out) > 0
+
+
 def ha_up():
     try:
         urllib.request.urlopen(HA_URL, timeout=4)
@@ -123,7 +135,7 @@ def ha_up():
 
 def tend_home_assistant():
     global KEEPER, HA_DOWN_SINCE, LAST_COMPOSE
-    if KEEPER is None or KEEPER.poll() is not None:
+    if (KEEPER is None or KEEPER.poll() is not None) and not keeper_exists():
         KEEPER = subprocess.Popen(["wsl.exe", "-d", "Ubuntu", "-u", "root", "-e", "sleep", "infinity"],
                                   creationflags=NO_WINDOW, **QUIET)
         log.info("started WSL keeper (pid %d)", KEEPER.pid)
@@ -138,10 +150,9 @@ def tend_home_assistant():
         log.info("Home Assistant not answering yet")
     if now - HA_DOWN_SINCE > 180 and now - LAST_COMPOSE > 300:
         LAST_COMPOSE = now
-        r = run_quiet(["wsl.exe", "-d", "Ubuntu", "-u", "root", "-e", "docker", "compose", "-f",
-                       "/opt/homeassistant/docker-compose.yml", "up", "-d"], timeout=600)
-        log.warning("HA down for %.0f s - ran compose up: rc=%s %s", now - HA_DOWN_SINCE, r.returncode,
-                    (r.stdout + r.stderr).strip()[-300:])
+        subprocess.Popen(["wsl.exe", "-d", "Ubuntu", "-u", "root", "-e", "docker", "compose", "-f",
+                          "/opt/homeassistant/docker-compose.yml", "up", "-d"], creationflags=NO_WINDOW, **QUIET)
+        log.warning("HA down for %.0f s - started compose up in the background", now - HA_DOWN_SINCE)
 
 
 # ------------------------------------------------------------------- main
@@ -153,7 +164,7 @@ def main():
         log.info("another supervisor is already running - exiting")
         return
     lock.listen(1)
-    log.info("supervisor started (pid-less pythonw), python %s", sys.version.split()[0])
+    log.info("supervisor started, python %s", sys.version.split()[0])
     while True:
         for step in (tend_home_assistant, tend_hyperion):
             try:
